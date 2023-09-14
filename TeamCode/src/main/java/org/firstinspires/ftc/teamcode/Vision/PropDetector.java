@@ -128,7 +128,7 @@ public class PropDetector extends LinearOpMode {
         //builder.setAutoStopLiveView(false);
 
         // Set and enable the processor.
-        builder.addProcessor(new SimpleThresholdProcessor(telemetry));
+        builder.addProcessor(new PropVisionPortal(telemetry));
 
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();
