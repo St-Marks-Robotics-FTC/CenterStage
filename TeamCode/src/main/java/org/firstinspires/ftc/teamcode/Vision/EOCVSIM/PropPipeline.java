@@ -22,29 +22,29 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PropPipeline extends OpenCvPipeline {
     public static double location;
-    public static boolean DuckDetected;
-    public static boolean blue = true;
+    public static boolean blue = false;
     public static double filterContoursMinArea = 0.0;
     public static double filterContoursMinPerimeter = 0.0;
     public static double filterContoursMinWidth = 0.0;
     public static double filterContoursMinHeight = 0.0;
-    public static double filterContoursMaxHeight = 20.0;
-    public static double filterContoursMaxWidth = 30.0;
+    public static double filterContoursMaxHeight = 9000.0;
+    public static double filterContoursMaxWidth = 9000.0;
     public static double filterContoursMinX = 0.0;
     public static double filterContoursMaxX = 9000.0;
-    public static double filterContoursMinY = 80.0;
-    public static double filterContoursMinYBlue = 100.0;
+    public static double filterContoursMinY = 0.0;
+    public static double filterContoursMinYBlue = 0.0;
     public static double filterContoursMaxY = 9000.0;
     public static int leftSep = 109;
     public static int rightSep = 218;
     public static double cvThresholdThresh = 150;
     public static double cvThresholdThreshBlue = 120;
-    public static int cutoffLine =120;
+    public static int cutoffLine =50;
 
     public static double cvThresholdMaxval = 255.0;
     public static double cvDilateIterations = 1.0;
@@ -159,24 +159,27 @@ public class PropPipeline extends OpenCvPipeline {
 
             pipelineImg[6] = showContours;
             displayMat = source0;
+            //Imgproc.drawContours(displayMat, findContoursOutput, -1, new Scalar (0,255,0));
+            //telemetry.addData("Contour list size: ", findContoursOutput.size());
 
             ArrayList<Rect> filterOutput = (ArrayList<Rect>) filterContours(findContoursOutput);
+            //telemetry.addData("rect list size: ", filterOutput.size());
+            double highest = 320;
             for (Rect a : filterOutput) {
                 Point found = analyzeRect(source0, a);
+                //telemetry.addData("found: ", found);
+                //telemetry.addData("highest", highest);
                 if (found.x != -69) {//hohahehhehehe
-                    locationTSE = location(found);
+                    Imgproc.rectangle(displayMat,a,new Scalar (0,255,0),2);
+                    if (found.y<highest) {
+                        highest = found.y;
+                        locationTSE = location(found);
+                    }
                 }
             }
-            double minWidth = 999;
-            for(Rect rect : filterOutput){
-                Imgproc.rectangle(displayMat,rect,new Scalar (0,255,0),2);
-                boundingRect = rect.width < minWidth ? rect : boundingRect;
-                minWidth = Math.min(rect.width,minWidth);
-            }
-            pipelineImg[7] = displayMat;
 
             showContours.release();
-            telemetry.addData("locationTSE: ", locationTSE);
+            telemetry.addData("loationTSE: ", locationTSE);
             Imgproc.line(displayMat,new Point(0,cutoffLine),new Point(source0.width()-1,cutoffLine),new Scalar(255,0,0),2);
 
             return displayMat;
@@ -185,6 +188,8 @@ public class PropPipeline extends OpenCvPipeline {
         telemetry.update();
         return source0;
     }
+
+
     private List<Rect> filterContours(List<MatOfPoint> inputContours) {
         List<Rect> outputContours = new ArrayList<>();
         for (MatOfPoint contour : inputContours) {
@@ -196,7 +201,7 @@ public class PropPipeline extends OpenCvPipeline {
             final double area = Imgproc.contourArea(contour);
             if (area < filterContoursMinArea) continue;
             if (Imgproc.arcLength(new MatOfPoint2f(contour.toArray()), true) < filterContoursMinPerimeter) continue;
-            outputContours.add(Imgproc.boundingRect(contour));
+            outputContours.add(bb);
         }
         return outputContours;
     }

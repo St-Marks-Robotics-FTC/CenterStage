@@ -28,24 +28,23 @@ import java.util.List;
 @Config
 public class  PropPipeline extends PipelineWrapper {
     public static double location;
-    public static boolean DuckDetected;
-    public static boolean blue = true;
+    public static boolean blue = false;
     public static double filterContoursMinArea = 0.0;
     public static double filterContoursMinPerimeter = 0.0;
     public static double filterContoursMinWidth = 0.0;
     public static double filterContoursMinHeight = 0.0;
-    public static double filterContoursMaxHeight = 20.0;
-    public static double filterContoursMaxWidth = 30.0;
+    public static double filterContoursMaxHeight = 9000.0;
+    public static double filterContoursMaxWidth = 9000.0;
     public static double filterContoursMinX = 0.0;
     public static double filterContoursMaxX = 9000.0;
-    public static double filterContoursMinY = 80.0;
-    public static double filterContoursMinYBlue = 100.0;
+    public static double filterContoursMinY = 0.0;
+    public static double filterContoursMinYBlue = 0.0;
     public static double filterContoursMaxY = 9000.0;
     public static int leftSep = 109;
     public static int rightSep = 218;
-    public static double cvThresholdThresh = 150.0;
-    public static double cvThresholdThreshBlue = 120.0;
-    public static int cutoffLine =120;
+    public static double cvThresholdThresh = 150;
+    public static double cvThresholdThreshBlue = 120;
+    public static int cutoffLine =80;
 
     public static double cvThresholdMaxval = 255.0;
     public static double cvDilateIterations = 1.0;
@@ -158,10 +157,17 @@ public class  PropPipeline extends PipelineWrapper {
             displayMat = source0;
 
             ArrayList<Rect> filterOutput = (ArrayList<Rect>) filterContours(findContoursOutput);
+            double highest = 320;
             for (Rect a : filterOutput) {
                 Point found = analyzeRect(source0, a);
+                //telemetry.addData("found: ", found);
+                //telemetry.addData("highest", highest);
                 if (found.x != -69) {//hohahehhehehe
-                    covered[location(found)] = false;
+                    Imgproc.rectangle(displayMat,a,new Scalar (0,255,0),2);
+                    if (found.y<highest) {
+                        highest = found.y;
+                        locationTSE = location(found);
+                    }
                 }
             }
             double minWidth = 999;
@@ -183,18 +189,6 @@ public class  PropPipeline extends PipelineWrapper {
                     dashboard.sendImage(displayBitmap);
                 }
             }
-
-            //showFilteredContours.release();
-            showContours.release();
-            for (int u = 0; u<3; u++) {
-                if (covered[u]) {
-                    locationTSE = u;
-                    break;
-                }
-            }
-            covered[0] = true;
-            covered[1] = true;
-            covered[2] = true;
 
             Imgproc.line(displayMat,new Point(0,cutoffLine),new Point(source0.width()-1,cutoffLine),new Scalar(255,0,0),2);
 
