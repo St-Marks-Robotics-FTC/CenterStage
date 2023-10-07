@@ -42,7 +42,7 @@ public class PropPipeline extends OpenCvPipeline {
     public static double filterContoursMaxY = 9000.0;
     public static int leftSep = 109;
     public static int rightSep = 218;
-    public static double cvThresholdThresh = 150;
+    public static double cvThresholdThresh = 165;
     public static double cvThresholdThreshBlue = 120;
     public static int cutoffLine =50;
 
@@ -179,12 +179,12 @@ public class PropPipeline extends OpenCvPipeline {
             }
 
             showContours.release();
-            telemetry.addData("loationTSE: ", locationTSE);
+
             Imgproc.line(displayMat,new Point(0,cutoffLine),new Point(source0.width()-1,cutoffLine),new Scalar(255,0,0),2);
 
             return displayMat;
         }
-
+        telemetry.addData("loationTSE: ", locationTSE);
         telemetry.update();
         return source0;
     }

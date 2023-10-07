@@ -49,5 +49,6 @@ dependencies {
     implementation 'org.team11260:fast-load:0.1.1'
     implementation 'org.ftclib.ftclib:core:2.1.1'
     implementation 'org.apache.commons:commons-math3:3.6.1'
-    implementation 'com.acmerobotics.roadrunner:core:0.5.5'
+    implementation "com.acmerobotics.roadrunner:ftc:0.1.6"
+    implementation "com.acmerobotics.dashboard:dashboard:0.4.13"
 }
