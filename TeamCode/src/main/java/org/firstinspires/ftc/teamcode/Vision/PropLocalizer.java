@@ -24,9 +24,9 @@ public class PropLocalizer{
     private OpenCvWebcam webcam;
     int maxExp;
     int minExp;
-    boolean blue;
+    boolean blue = true;
     FtcDashboard dashboard;
-    public static int curExp = 10000;
+    public static int curExp = 512;
     int maxGain;
     int minGain;
     public static int curGain = 255;
@@ -34,18 +34,19 @@ public class PropLocalizer{
     GainControl gainControl;
     boolean cameraOpened = false;
 
-    public PropPipeline pipeline = new PropPipeline( blue,dashboard);
+    public PropPipeline pipeline;
     public PropLocalizer(Telemetry telemetry, HardwareMap hardwareMap, Gamepad gamepad1, boolean blue,FtcDashboard dashboard) {
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
         this.gamepad1 = gamepad1;
         this.blue = blue;
         this.dashboard = dashboard;
+        this.pipeline = new PropPipeline(blue,dashboard);
     }
 
     public void initLocalizer() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, blue?"WebcamR":"WebcamL"), cameraMonitorViewId);
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam 1"), cameraMonitorViewId);
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {

@@ -18,8 +18,8 @@ public class PropLocalizerExample extends LinearOpMode {
         propLocalizer = new PropLocalizer(telemetry, hardwareMap, gamepad1, false, dashboard);
         propLocalizer.initLocalizer();
 
-        waitForStart();
-        while (opModeIsActive()) {
+
+        while (opModeIsActive()&&!isStopRequested()) {
             propLocalizer.initLoop();
             loc = propLocalizer.getLoc();
             telemetry.addData("loc: ", loc);
@@ -27,6 +27,7 @@ public class PropLocalizerExample extends LinearOpMode {
             // Don't burn CPU cycles busy-looping in this sample
             idle();
         }
+
 
         propLocalizer.terminator();
     }
