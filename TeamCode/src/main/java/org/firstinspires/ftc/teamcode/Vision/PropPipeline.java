@@ -13,6 +13,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -44,7 +45,7 @@ public class  PropPipeline extends PipelineWrapper {
     public static int rightSep = 218;
     public static double cvThresholdThresh = 150;
     public static double cvThresholdThreshBlue = 120;
-    public static int cutoffLine =80;
+    public static int cutoffLine =50;
 
     public static double cvThresholdMaxval = 255.0;
     public static double cvDilateIterations = 1.0;
@@ -82,8 +83,13 @@ public class  PropPipeline extends PipelineWrapper {
     public int locationTSE = 0;
     static boolean processing = true;
     static boolean work = false;
-    FtcDashboard dashboard;
     boolean[] covered = {true, true, true};
+    private Telemetry telemetry;
+    private FtcDashboard dashboard;
+    public PropPipeline (Telemetry telemetry){
+        this.telemetry = telemetry;
+    }
+
     public PropPipeline (boolean blue, FtcDashboard dashboard){
         PropPipeline.blue = blue;
         this.dashboard = dashboard;
@@ -107,25 +113,30 @@ public class  PropPipeline extends PipelineWrapper {
     }
 
     @Override
-    public Mat processFrame(Mat source0, long captureTimeNanos) {
+    public void init(Mat firstFrame) {
+
+    }
+
+    @Override
+    public Mat processFrame(Mat source0, long nanoCaptureTime) {
         if (processing) {
             if(source0.width() == 0) return new Mat();
             invertThreshold  = blue;
             pipelineImg[0] = source0;// Step CV_cvtColor0:
             blueWorkingMat = source0;
-            cvCvtcolor(source0, cvCvtcolorCode, cvCvtcolorOutput);
+            org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvCvtcolor(source0, cvCvtcolorCode, cvCvtcolorOutput);
             pipelineImg[1] = cvCvtcolorOutput;
             blueWorkingMat = cvCvtcolorOutput;
 
-            cvExtractchannel(blueWorkingMat, blue?cvExtractchannelChannel:cvExtractchannelChannelRed, cvExtractchannelOutput);
+            org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvExtractchannel(blueWorkingMat, blue?cvExtractchannelChannel:cvExtractchannelChannelRed, cvExtractchannelOutput);
             pipelineImg[2] = cvExtractchannelOutput;
             blueWorkingMat = cvExtractchannelOutput;
 
             // Step CV_Threshold0:
             if (invertThreshold) {
-                cvThreshold(blueWorkingMat, cvThresholdThreshBlue, cvThresholdMaxval, Imgproc.THRESH_BINARY_INV, cvThresholdOutput);
+                org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvThreshold(blueWorkingMat, cvThresholdThreshBlue, cvThresholdMaxval, Imgproc.THRESH_BINARY_INV, cvThresholdOutput);
             } else {
-                cvThreshold(blueWorkingMat, cvThresholdThresh, cvThresholdMaxval, Imgproc.THRESH_BINARY, cvThresholdOutput);
+                org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvThreshold(blueWorkingMat, cvThresholdThresh, cvThresholdMaxval, Imgproc.THRESH_BINARY, cvThresholdOutput);
             }
 
             blueWorkingMat = cvThresholdOutput;
@@ -134,7 +145,7 @@ public class  PropPipeline extends PipelineWrapper {
 
             cvErodeKernel = new Mat();
 
-            cvErode(blueWorkingMat, cvErodeKernel, new Point(-1, -1), cvErodeIterations, Core.BORDER_CONSTANT, new Scalar(-1), cvErodeOutput);
+            org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvErode(blueWorkingMat, cvErodeKernel, new Point(-1, -1), cvErodeIterations, Core.BORDER_CONSTANT, new Scalar(-1), cvErodeOutput);
             blueWorkingMat = cvErodeOutput;
 
             pipelineImg[4] = cvErodeOutput;
@@ -143,7 +154,7 @@ public class  PropPipeline extends PipelineWrapper {
 
             cvDilateKernel = new Mat();
 
-            cvDilate(blueWorkingMat, cvDilateKernel, new Point(-1, -1), cvDilateIterations, Core.BORDER_CONSTANT, new Scalar(-1), cvDilateOutput);
+            org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvDilate(blueWorkingMat, cvDilateKernel, new Point(-1, -1), cvDilateIterations, Core.BORDER_CONSTANT, new Scalar(-1), cvDilateOutput);
             blueWorkingMat = cvDilateOutput;
             pipelineImg[5] = cvDilateOutput;
 
@@ -151,16 +162,19 @@ public class  PropPipeline extends PipelineWrapper {
             // Step Find_Contours0:
             Mat showContours = new Mat(source0.rows(), source0.cols(),source0.type());
 
-            findContours(blueWorkingMat, true, findContoursOutput);
+            org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.findContours(blueWorkingMat, true, findContoursOutput);
 
             pipelineImg[6] = showContours;
             displayMat = source0;
+            //Imgproc.drawContours(displayMat, findContoursOutput, -1, new Scalar (0,255,0));
+            //telemetry.addData("Contour list size: ", findContoursOutput.size());
 
             ArrayList<Rect> filterOutput = (ArrayList<Rect>) filterContours(findContoursOutput);
+            //telemetry.addData("rect list size: ", filterOutput.size());
             double highest = 320;
             for (Rect a : filterOutput) {
                 Point found = analyzeRect(source0, a);
-                //telemetry.addData("found: ", found);
+                //telemetry.addData("found: ", found);]  jlljk
                 //telemetry.addData("highest", highest);
                 if (found.x != -69) {//hohahehhehehe
                     Imgproc.rectangle(displayMat,a,new Scalar (0,255,0),2);
@@ -170,34 +184,19 @@ public class  PropPipeline extends PipelineWrapper {
                     }
                 }
             }
-            double minWidth = 999;
-            for(Rect rect : filterOutput){
-                Imgproc.rectangle(displayMat,rect,new Scalar (0,255,0),2);
-                boundingRect = rect.width < minWidth ? rect : boundingRect;
-                minWidth = Math.min(rect.width,minWidth);
-            }
-            pipelineImg[7] = displayMat;
 
-            if(dashboardEnabled){
-                Mat ret =  pipelineImg[dashboardImg];
-                TelemetryPacket packet = new TelemetryPacket();
-                packet.put("Location",locationTSE);
-                dashboard.sendTelemetryPacket(packet);
-                if(ret.width() != 0) {
-                    Bitmap displayBitmap = Bitmap.createBitmap(ret.width(), ret.height(), Bitmap.Config.RGB_565);
-                    Utils.matToBitmap(ret, displayBitmap);
-                    dashboard.sendImage(displayBitmap);
-                }
-            }
-
+            showContours.release();
+            //telemetry.addData("loationTSE: ", locationTSE);
             Imgproc.line(displayMat,new Point(0,cutoffLine),new Point(source0.width()-1,cutoffLine),new Scalar(255,0,0),2);
 
             return displayMat;
         }
 
-
+        //telemetry.update();
         return source0;
     }
+
+
     private List<Rect> filterContours(List<MatOfPoint> inputContours) {
         List<Rect> outputContours = new ArrayList<>();
         for (MatOfPoint contour : inputContours) {
@@ -209,7 +208,7 @@ public class  PropPipeline extends PipelineWrapper {
             final double area = Imgproc.contourArea(contour);
             if (area < filterContoursMinArea) continue;
             if (Imgproc.arcLength(new MatOfPoint2f(contour.toArray()), true) < filterContoursMinPerimeter) continue;
-            outputContours.add(Imgproc.boundingRect(contour));
+            outputContours.add(bb);
         }
         return outputContours;
     }

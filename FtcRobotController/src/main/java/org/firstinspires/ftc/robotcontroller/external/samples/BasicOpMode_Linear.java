@@ -81,7 +81,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        while (!isStarted() && !isStopRequested()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
