@@ -19,12 +19,17 @@ public class TutorialPipeline extends OpenCvPipeline {
     private Mat maskedInputMat = new Mat();
     private Mat hierarchy = new Mat();
 
-    public Scalar lower = new Scalar(168.1, 107.7, 52.5);
-    public Scalar upper = new Scalar(188, 255, 140.3);
-    private Telemetry telemetry;
+    private boolean blue = false;
 
-    public TutorialPipeline (Telemetry telemetry){
+    public Scalar lowerRed = new Scalar(168.1, 107.7, 52.5);
+    public Scalar upperRed = new Scalar(188, 255, 140.3);
+
+    public Scalar lowerBlue = new Scalar(0,0,0);
+    public Scalar upperBlue = new Scalar(0,0,0);
+    private Telemetry telemetry;
+    public TutorialPipeline (Telemetry telemetry, boolean blue){
         this.telemetry = telemetry;
+        this.blue = blue;
     }
     @Override
     public void init(Mat mat) {
@@ -38,7 +43,11 @@ public class TutorialPipeline extends OpenCvPipeline {
         //Converts RGB to HSV
         Imgproc.cvtColor(source, HSVMat, Imgproc.COLOR_RGB2HSV);
         //Filter colors
-        Core.inRange(HSVMat, lower, upper, binaryMat);
+        if (blue) {
+            Core.inRange(HSVMat, lowerBlue, upperBlue, binaryMat);
+        } else {
+            Core.inRange(HSVMat, lowerRed, upperRed, binaryMat);
+        }
         //Finds Contours
         Imgproc.findContours(binaryMat, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         maskedInputMat.release();
