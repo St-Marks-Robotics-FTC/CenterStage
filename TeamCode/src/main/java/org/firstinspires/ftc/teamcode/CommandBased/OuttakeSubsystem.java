@@ -10,10 +10,34 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class OuttakeSubsystem extends SubsystemBase{
     private final Servo outtakeServoOne;
     private final Servo outtakeServoTwo;
+    private final Servo rotateServo;
 
-    public OuttakeSubsystem(final HardwareMap hMap, final String OName, final String TName) {
+    private final double r1 = 0.0;
+    private final double r2 = 0.0;
+    private final double r3 = 0.0;
+
+    public OuttakeSubsystem(final HardwareMap hMap, final String OName, final String TName, final String RName) {
         outtakeServoOne = hMap.get(Servo.class, OName);
         outtakeServoTwo = hMap.get(Servo.class, TName);
+        rotateServo = hMap.get(Servo.class, RName);
+    }
+
+    public void rotate(double pos) {
+        rotateServo.setPosition(pos);
+    }
+
+    public void switchRotate(int pos) {
+        switch (pos) {
+            case 0:
+                rotate(r1);
+                break;
+            case 1:
+                rotate(r2);
+                break;
+            case 2:
+                rotate(r3);
+                break;
+        }
     }
 
     public void outtake(){
