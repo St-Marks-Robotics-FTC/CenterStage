@@ -27,18 +27,20 @@ public class MecanumSubsystem extends SubsystemBase{
 
     }
 
-    public void drive(double y, double x, double rx, boolean slow){
+    public void drive(double y, double x, double rx, boolean slow) {
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = (y + x + rx) / denominator;
-        double backLeftPower = (y - x + rx) / denominator;
-        double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
+
+        double powerMultiplier = slow ? 0.3 : 1.0;
+
+        double frontLeftPower = (y + x + rx) / denominator * powerMultiplier;
+        double backLeftPower = (y - x + rx) / denominator * powerMultiplier;
+        double frontRightPower = (y - x - rx) / denominator * powerMultiplier;
+        double backRightPower = (y + x - rx) / denominator * powerMultiplier;
 
         frontLeftMotor.setPower(frontLeftPower);
         backLeftMotor.setPower(backLeftPower);
         frontRightMotor.setPower(frontRightPower);
         backRightMotor.setPower(backRightPower);
-
     }
 
 }
