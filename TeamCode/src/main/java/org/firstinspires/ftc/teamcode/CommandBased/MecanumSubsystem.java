@@ -12,16 +12,22 @@ public class MecanumSubsystem extends SubsystemBase{
     private final DcMotor frontRightMotor;
     private final DcMotor backRightMotor;
 
-    public MecanumSubsystem(final HardwareMap hMap, final String FLName, final String BLName, final String FRName, final String BRName) {
-        frontLeftMotor = hMap.dcMotor.get(FLName);
-        backLeftMotor = hMap.dcMotor.get(BLName);
-        frontRightMotor = hMap.dcMotor.get(FRName);
-        backRightMotor = hMap.dcMotor.get(BRName);
+    public MecanumSubsystem(final HardwareMap hMap) {
+        frontLeftMotor = hMap.dcMotor.get("frontLeft");
+        backLeftMotor = hMap.dcMotor.get("backLeft");
+        frontRightMotor = hMap.dcMotor.get("frontRight");
+        backRightMotor = hMap.dcMotor.get("backRight");
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 
-    public void drive(double y, double x, double rx){
+    public void drive(double y, double x, double rx, boolean slow){
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
@@ -33,12 +39,6 @@ public class MecanumSubsystem extends SubsystemBase{
         frontRightMotor.setPower(frontRightPower);
         backRightMotor.setPower(backRightPower);
 
-    }
-    public void brake(){
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 }
