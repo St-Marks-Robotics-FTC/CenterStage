@@ -150,7 +150,7 @@ public final class TuningOpModes {
         manager.register(metaForClass(ManualFeedforwardTuner.class), new ManualFeedforwardTuner(dvf));
         manager.register(metaForClass(MecanumMotorDirectionDebugger.class), new MecanumMotorDirectionDebugger(dvf));
 
-        manager.register(metaForClass(org.firstinspires.ftc.teamcode.tuning.ManualFeedbackTuner.class), org.firstinspires.ftc.teamcode.tuning.ManualFeedbackTuner.class);
+        manager.register(metaForClass(org.firstinspires.ftc.teamcode.drive.mecanum.tuning.ManualFeedbackTuner.class), org.firstinspires.ftc.teamcode.drive.mecanum.tuning.ManualFeedbackTuner.class);
         manager.register(metaForClass(SplineTest.class), SplineTest.class);
         manager.register(metaForClass(LocalizationTest.class), LocalizationTest.class);
     }
