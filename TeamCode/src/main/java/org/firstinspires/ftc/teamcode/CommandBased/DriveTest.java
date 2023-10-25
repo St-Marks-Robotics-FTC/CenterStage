@@ -11,16 +11,16 @@ public class DriveTest extends OpMode {
     MecanumCommandBase mec;
     MecanumSubsystem chassis;
 
-    String FL = "frontLeft";
-    String BL = "backLeft";
-    String FR = "frontRight";
-    String BR = "backRight";
+    String FL = "leftFront";
+    String BL = "leftBack";
+    String FR = "rightFront";
+    String BR = "rightBack";
 
 
     @Override
     public void init() {
         chassis = new MecanumSubsystem(hardwareMap, FL, BL, FR, BR);
-        chassis.brake();
+        //chassis.brake();
     }
 
     @Override
