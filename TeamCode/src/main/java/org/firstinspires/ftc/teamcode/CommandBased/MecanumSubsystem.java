@@ -31,7 +31,15 @@ public class MecanumSubsystem extends SubsystemBase{
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
         double powerMultiplier = slow ? 0.3 : 1.0;
-
+        if(Math.abs(y)<=0.15){
+            y=0;
+        }
+        if(Math.abs(x)<=0.15){
+            x=0;
+        }
+        if(Math.abs(rx)<=0.15){
+            rx=0;
+        }
         double frontLeftPower = (y + x + rx) / denominator * powerMultiplier;
         double backLeftPower = (y - x + rx) / denominator * powerMultiplier;
         double frontRightPower = (y - x - rx) / denominator * powerMultiplier;

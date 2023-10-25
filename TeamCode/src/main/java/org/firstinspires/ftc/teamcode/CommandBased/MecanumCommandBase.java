@@ -23,6 +23,6 @@ public class MecanumCommandBase extends CommandBase{
     }
     @Override
     public void execute(){
-        m_mecanumSubsystem.drive(m_y.getAsDouble(), m_x.getAsDouble(), m_rx.getAsDouble());
+        m_mecanumSubsystem.drive(m_y.getAsDouble(), m_x.getAsDouble(), m_rx.getAsDouble(), false);
     }
 }
