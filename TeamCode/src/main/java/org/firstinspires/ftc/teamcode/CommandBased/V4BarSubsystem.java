@@ -37,7 +37,7 @@ public class V4BarSubsystem extends SubsystemBase{
     }
 
     public boolean done() {
-        if (Math.abs(target-getPos())<=5) {
+        if (Math.abs(target-getPos())<=0.01) {
             return true;
         } else {
             return false;

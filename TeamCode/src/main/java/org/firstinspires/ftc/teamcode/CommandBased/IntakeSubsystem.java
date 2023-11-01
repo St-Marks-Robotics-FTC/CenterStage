@@ -9,12 +9,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class IntakeSubsystem extends SubsystemBase{
     private final DcMotor intakeMotor;
 
+    private final double intakePower = 0.8;
+    private final double outtakePower = -0.4;
+
     public IntakeSubsystem(final HardwareMap hMap, final String IName) {
         intakeMotor = hMap.dcMotor.get(IName);
     }
 
     public void intake(){
-        intakeMotor.setPower(0.8);
+        intakeMotor.setPower(intakePower);
+    }
+
+    public void outtake() {
+        intakeMotor.setPower(outtakePower);
     }
 
     public void stopIntake(){
