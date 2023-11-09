@@ -1,29 +1,16 @@
 package org.firstinspires.ftc.teamcode.CommandBased;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
+
 public class MecanumSubsystem extends SubsystemBase{
-    private final DcMotor frontLeftMotor;
-    private final DcMotor backLeftMotor;
-    private final DcMotor frontRightMotor;
-    private final DcMotor backRightMotor;
+
+    MecanumDrive mecanumDrive;
 
     public MecanumSubsystem(final HardwareMap hMap) {
-        frontLeftMotor = hMap.dcMotor.get("frontLeft");
-        backLeftMotor = hMap.dcMotor.get("backLeft");
-        frontRightMotor = hMap.dcMotor.get("frontRight");
-        backRightMotor = hMap.dcMotor.get("backRight");
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mecanumDrive = new MecanumDrive(hMap);
 
     }
 
@@ -45,10 +32,7 @@ public class MecanumSubsystem extends SubsystemBase{
         double frontRightPower = (y - x - rx) / denominator * powerMultiplier;
         double backRightPower = (y + x - rx) / denominator * powerMultiplier;
 
-        frontLeftMotor.setPower(frontLeftPower);
-        backLeftMotor.setPower(backLeftPower);
-        frontRightMotor.setPower(frontRightPower);
-        backRightMotor.setPower(backRightPower);
+        mecanumDrive.setMotorPowers(frontLeftPower, backLeftPower, backRightPower, frontRightPower);
     }
 
 }
