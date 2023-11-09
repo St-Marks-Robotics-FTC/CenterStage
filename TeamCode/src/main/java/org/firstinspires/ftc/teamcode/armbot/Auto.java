@@ -57,6 +57,10 @@ public class Auto extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
+        TrajectorySequence park = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .strafeLeft(12)
+                .build();
+
         while (!opModeIsActive() && !isStopRequested()) {
             propLocalizer.initLoop();
             loc = propLocalizer.getLoc();
@@ -101,6 +105,8 @@ public class Auto extends LinearOpMode {
         }
 
         robot.openClaw();
+
+        drive.followTrajectorySequence(park);
 
     }
 }
