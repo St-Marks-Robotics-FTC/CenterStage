@@ -96,6 +96,9 @@ public class BasicRobot extends LinearOpMode {
                 clawServo.setPosition(clawOpen);
             }
 
+            telemetry.addData("arm position", armMotor.getCurrentPosition());
+            telemetry.update();
+
         }
     }
 }
