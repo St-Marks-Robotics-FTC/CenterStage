@@ -22,5 +22,6 @@ public class armbotpitcrew extends OpMode {
             robot.arm.setPower(-0.3);
         }
         telemetry.addData("arm pos: ", robot.arm.getCurrentPosition());
+        telemetry.update();
     }
 }
