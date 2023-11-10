@@ -21,7 +21,14 @@ public class armbotpitcrew extends OpMode {
         if (gamepad1.dpad_down) {
             robot.arm.setPower(-0.3);
         }
+        if (gamepad1.a) {
+            robot.closeClaw();
+        }
+        if (gamepad1.b) {
+            robot.openClaw();
+        }
         telemetry.addData("arm pos: ", robot.arm.getCurrentPosition());
+        telemetry.addData("claw closed: ", robot.claw.getPosition());
         telemetry.update();
     }
 }

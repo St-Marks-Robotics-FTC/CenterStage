@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.concurrent.TimeUnit;
 
 @Config
 @TeleOp
@@ -16,8 +19,12 @@ public class BasicRobot extends LinearOpMode {
     public static double clawOpen = 0.35; // 0.3
     public static double clawClosed = 0.45;
 
-    public static int armUp = 1221;
+    public static int armUp = 453;
+
+    public static int armSlightUp = 100;
     public static int armDown = 0;
+
+    public static boolean closed = false;
 
 
     @Override
@@ -38,7 +45,7 @@ public class BasicRobot extends LinearOpMode {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         DcMotor armMotor = hardwareMap.dcMotor.get("arm");
-
+        ElapsedTime time = new ElapsedTime();
         // claw servo
         Servo clawServo = hardwareMap.servo.get("claw");
 
@@ -61,7 +68,7 @@ public class BasicRobot extends LinearOpMode {
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = gamepad1.right_stick_x + 0.15 * gamepad1.right_trigger - 0.15 * gamepad1.left_trigger;
+            double rx = gamepad1.right_stick_x;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
@@ -90,7 +97,7 @@ public class BasicRobot extends LinearOpMode {
                 armMotor.setTargetPosition(armUp);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.5);
-            } else if (gamepad1.a) {
+            } else if (gamepad1.a && !closed) {
                 armMotor.setTargetPosition(armDown);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.5);
@@ -102,8 +109,16 @@ public class BasicRobot extends LinearOpMode {
 
             if (gamepad1.x) {
                 clawServo.setPosition(clawClosed);
+                closed = true;
             } else if (gamepad1.b) {
                 clawServo.setPosition(clawOpen);
+                closed = false;
+            }
+
+            if (time.milliseconds()>250 && time.milliseconds()<450) {
+                armMotor.setTargetPosition(armSlightUp);
+                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armMotor.setPower(0.5);
             }
 
             telemetry.addData("arm position", armMotor.getCurrentPosition());
