@@ -54,43 +54,43 @@ public class BlueAutoToolbox extends LinearOpMode {
         Pose2d startPose = new Pose2d(15, -60, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // right side
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(12, -44, Math.toRadians(-90)), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(6, -30, Math.toRadians(-20)), Math.toRadians(120))
+                .splineToSplineHeading(new Pose2d(12, 44, Math.toRadians(90)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(6, 30, Math.toRadians(20)), Math.toRadians(-120))
                 .setReversed(false)
                 .build();
-        TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(15, -29, Math.toRadians(-90)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(15, 29, Math.toRadians(90)), Math.toRadians(-90))
                 .setReversed(false)
                 .build();
-        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // left
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(23, -30, Math.toRadians(-90)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(23, 30, Math.toRadians(90)), Math.toRadians(-90))
                 .setReversed(false)
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
-                .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(50, -27, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(20))
+                .splineToSplineHeading(new Pose2d(50, 27, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
-                .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(50, -34, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(50, 34, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
-                .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
-                .strafeLeft(18)
+                .strafeRight(18)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
-                .strafeLeft(22)
+                .strafeRight(22)
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
-                .strafeLeft(28)
+                .strafeRight(28)
                 .build();
 
         robot.closeClaw();
@@ -104,13 +104,13 @@ public class BlueAutoToolbox extends LinearOpMode {
         robot.setArm(-700);
         sleep(1000);
         switch (loc) {
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(traj11);
                 break;
             case "center":
                 drive.followTrajectorySequence(traj12);
                 break;
-            case "right":
+            case "left":
                 drive.followTrajectorySequence(traj13);
                 break;
         }
@@ -121,13 +121,13 @@ public class BlueAutoToolbox extends LinearOpMode {
 
         //outtake
         switch (loc) {
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(traj21);
                 break;
             case "center":
                 drive.followTrajectorySequence(traj22);
                 break;
-            case "right":
+            case "left":
                 drive.followTrajectorySequence(traj23);
                 break;
         }
@@ -138,13 +138,13 @@ public class BlueAutoToolbox extends LinearOpMode {
         robot.setArm(-800); // 700
 
         switch (loc) {
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(park1);
                 break;
             case "center":
                 drive.followTrajectorySequence(park2);
                 break;
-            case "right":
+            case "left":
                 drive.followTrajectorySequence(park3);
                 break;
         }
