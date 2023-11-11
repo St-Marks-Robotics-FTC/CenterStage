@@ -67,7 +67,7 @@ public class RedAutoToolbox extends LinearOpMode {
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(23, -30, Math.toRadians(-90)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(21.5, -30, Math.toRadians(-90)), Math.toRadians(90))
                 .setReversed(false)
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
@@ -97,6 +97,8 @@ public class RedAutoToolbox extends LinearOpMode {
         while (opModeInInit()) {
             loc = redPropThreshold.getPropPosition();
             telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Value", redPropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Value", redPropThreshold.getAvergageRight());
             telemetry.update();
         }
 

@@ -19,14 +19,16 @@ public class RedPropThreshold implements VisionProcessor {
     double redThreshold = 0.5;
 
     String outStr = "left"; //Set a default value in case vision does not work
+    double avgLeft = 0;
+    double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(100, 0),
-            new Point(270, 100)
+            new Point(170, 50),
+            new Point(270, 150)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(450, 150),
+            new Point(550, 150),
             new Point(640, 250)
     );
 
@@ -74,6 +76,9 @@ public class RedPropThreshold implements VisionProcessor {
         }else{
             outStr = "left";
         }
+        avgLeft = averagedLeftBox;
+        avgRight = averagedRightBox;
+
 
         finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as
@@ -93,5 +98,13 @@ public class RedPropThreshold implements VisionProcessor {
 
     public String getPropPosition(){  //Returns postion of the prop in a String
         return outStr;
+    }
+
+    public Double getAvergageLeft(){  //Returns postion of the prop in a String
+        return avgLeft;
+    }
+
+    public Double getAvergageRight(){  //Returns postion of the prop in a String
+        return avgRight;
     }
 }

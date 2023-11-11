@@ -19,15 +19,17 @@ public class BluePropThreshold implements VisionProcessor {
     double blueThreshold = 0.5;
 
     String outStr = "left"; //Set a default value in case vision does not work
+    double avgLeft = 0;
+    double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(0, 0),
-            new Point(150, 250)
+            new Point(50, 150),
+            new Point(150, 200)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(200, 100),
-            new Point(640, 250)
+            new Point(440, 50),
+            new Point(540, 125)
     );
 
     @Override
@@ -63,8 +65,8 @@ public class BluePropThreshold implements VisionProcessor {
         double averagedRightBox = rightBox / RIGHT_RECTANGLE.area() / 255; //Makes value [0,1]
 
 
-        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(0,0,255));
-        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(0,0,255));
+        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,255,255));
+        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,255,255));
 
 
         if(averagedRightBox > blueThreshold){        //Must Tune Red Threshold
@@ -74,6 +76,10 @@ public class BluePropThreshold implements VisionProcessor {
         }else{
             outStr = "right";
         }
+
+
+        avgLeft = averagedLeftBox;
+        avgRight = averagedRightBox;
 
         finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as
@@ -93,5 +99,13 @@ public class BluePropThreshold implements VisionProcessor {
 
     public String getPropPosition(){  //Returns postion of the prop in a String
         return outStr;
+    }
+
+    public Double getAvergageLeft(){  //Returns postion of the prop in a String
+        return avgLeft;
+    }
+
+    public Double getAvergageRight(){  //Returns postion of the prop in a String
+        return avgRight;
     }
 }

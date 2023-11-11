@@ -51,7 +51,7 @@ public class BlueAutoToolbox extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Arm(hardwareMap);
 
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(15, 60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // right side
@@ -67,7 +67,7 @@ public class BlueAutoToolbox extends LinearOpMode {
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // left
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(23, 30, Math.toRadians(90)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(21, 30, Math.toRadians(90)), Math.toRadians(-90))
                 .setReversed(false)
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
@@ -76,7 +76,7 @@ public class BlueAutoToolbox extends LinearOpMode {
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .setTangent(Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(50, 34, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(50, 32, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .setTangent(Math.toRadians(90))
@@ -97,6 +97,8 @@ public class BlueAutoToolbox extends LinearOpMode {
         while (opModeInInit()) {
             loc = bluePropThreshold.getPropPosition();
             telemetry.addData("Prop Position", bluePropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Value", bluePropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Value", bluePropThreshold.getAvergageRight());
             telemetry.update();
         }
 

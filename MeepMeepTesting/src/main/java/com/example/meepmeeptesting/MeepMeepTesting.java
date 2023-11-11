@@ -16,9 +16,9 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(-90))) // Red
+                        drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(-90))) // Red
 //                        drive.trajectorySequenceBuilder(new Pose2d(15, 60, Math.toRadians(90))) // Blue
-                                drive.trajectorySequenceBuilder(new Pose2d(-38, -60, Math.toRadians(-90))) // Red Far
+//                                drive.trajectorySequenceBuilder(new Pose2d(-38, -60, Math.toRadians(-90))) // Red Far
 
                   // BLUE SIDE
 //                                // right
@@ -78,11 +78,11 @@ public class MeepMeepTesting {
 
                   // RED SIDE
 //                                // right
-//                                .setReversed(true)
-//                                .splineToSplineHeading(new Pose2d(23, -30, Math.toRadians(-90)), Math.toRadians(90))
-//                                .setReversed(false)
-//                                .setTangent(Math.toRadians(-90))
-//                                .splineToSplineHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0))
+                                .setReversed(true)
+                                .splineToSplineHeading(new Pose2d(23, -30, Math.toRadians(-90)), Math.toRadians(90))
+                                .setReversed(false)
+                                .setTangent(Math.toRadians(-90))
+                                .splineToSplineHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0))
 
 //                                // middle
 //                                .setReversed(true)
