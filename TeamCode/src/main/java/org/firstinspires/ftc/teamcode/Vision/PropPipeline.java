@@ -41,11 +41,11 @@ public class  PropPipeline extends PipelineWrapper {
     public static double filterContoursMinY = 0.0;
     public static double filterContoursMinYBlue = 0.0;
     public static double filterContoursMaxY = 9000.0;
-    public static int leftSep = 109;
+    public static int leftSep = 50;
     public static int rightSep = 218;
     public static double cvThresholdThresh = 150;
     public static double cvThresholdThreshBlue = 120;
-    public static int cutoffLine =50;
+    public static int cutoffLine =0;
 
     public static double cvThresholdMaxval = 255.0;
     public static double cvDilateIterations = 1.0;
@@ -172,6 +172,7 @@ public class  PropPipeline extends PipelineWrapper {
             ArrayList<Rect> filterOutput = (ArrayList<Rect>) filterContours(findContoursOutput);
             //telemetry.addData("rect list size: ", filterOutput.size());
             double highest = 320;
+            if (filterOutput.size() == 0) locationTSE = 0;
             for (Rect a : filterOutput) {
                 Point found = analyzeRect(source0, a);
                 //telemetry.addData("found: ", found);]  jlljk

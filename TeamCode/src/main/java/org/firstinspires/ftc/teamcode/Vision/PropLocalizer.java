@@ -26,7 +26,7 @@ public class PropLocalizer{
     int minExp;
     boolean blue = true;
     FtcDashboard dashboard;
-    public static int curExp = 512;
+    public static int curExp = 1250;
     int maxGain;
     int minGain;
     public static int curGain = 255;
