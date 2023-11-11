@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class motorTest extends OpMode {
 
     DcMotor motor;
-    public static String motorName = "frontRight";
+    public static String motorName = "arm";
 
     @Override
     public void init() {
