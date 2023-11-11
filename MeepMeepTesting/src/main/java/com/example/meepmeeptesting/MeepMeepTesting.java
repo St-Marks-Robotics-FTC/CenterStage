@@ -17,7 +17,8 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
 //                        drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(-90))) // Red
-                        drive.trajectorySequenceBuilder(new Pose2d(15, 60, Math.toRadians(90))) // Blue
+//                        drive.trajectorySequenceBuilder(new Pose2d(15, 60, Math.toRadians(90))) // Blue
+                                drive.trajectorySequenceBuilder(new Pose2d(-38, -60, Math.toRadians(-90))) // Red Far
 
                   // BLUE SIDE
 //                                // right
@@ -42,6 +43,34 @@ public class MeepMeepTesting {
 //                                .setTangent(Math.toRadians(90))
 //                                .splineToSplineHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0))
 
+
+
+                    // RED FAR SIDE
+                                // right
+//                                        .setReversed(true)
+//                                        .splineTo(new Vector2d(-31, -34), Math.toRadians(0))
+//                                        .setReversed(false)
+//                                        .splineTo(new Vector2d(-31, -11), Math.toRadians(0))
+//                                        .splineTo(new Vector2d(11, -11), Math.toRadians(0))
+//                                        .splineToSplineHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0))
+                                        // middle
+//                                        .setReversed(true)
+//                                        .splineTo(new Vector2d(-36, -26), Math.toRadians(20))
+//                                        .setReversed(false)
+//                                        .splineTo(new Vector2d(-46, -24), Math.toRadians(130))
+//                                        .splineTo(new Vector2d(-40, -10), Math.toRadians(0))
+//                                        .splineTo(new Vector2d(11, -10), Math.toRadians(0))
+//                                        .splineToSplineHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0))
+
+                                        // left
+//                                        .setReversed(true)
+//                                        .splineTo(new Vector2d(-41, -32), Math.toRadians(150))
+//                                        .setReversed(false)
+//                                        .lineToLinearHeading(new Pose2d(-34, -32, Math.toRadians(0)))
+//                                        .lineTo(new Vector2d(-34, -11))
+//                                        .setTangent(0)
+//                                        .splineTo(new Vector2d(11, -11), Math.toRadians(0))
+//                                        .splineToSplineHeading(new Pose2d(50, -27, Math.toRadians(0)), Math.toRadians(0))
 
 
 
