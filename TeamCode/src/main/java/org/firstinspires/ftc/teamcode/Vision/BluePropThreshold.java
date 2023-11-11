@@ -63,8 +63,8 @@ public class BluePropThreshold implements VisionProcessor {
         double averagedRightBox = rightBox / RIGHT_RECTANGLE.area() / 255; //Makes value [0,1]
 
 
-        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,0,0));
-        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,0,0));
+        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(0,0,255));
+        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(0,0,255));
 
 
         if(averagedRightBox > blueThreshold){        //Must Tune Red Threshold
