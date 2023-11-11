@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Vision.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.RedPropThreshold;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
@@ -27,7 +28,7 @@ public class BlueAutoToolbox extends LinearOpMode {
     Arm robot;
 
     private VisionPortal portal;
-    private RedPropThreshold redPropThreshold;
+    private BluePropThreshold bluePropThreshold;
 
 
     @Override
@@ -36,12 +37,12 @@ public class BlueAutoToolbox extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        redPropThreshold = new RedPropThreshold();
+        bluePropThreshold = new BluePropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(redPropThreshold)
+                .addProcessor(bluePropThreshold)
                 .build();
 
 
@@ -94,8 +95,8 @@ public class BlueAutoToolbox extends LinearOpMode {
 
         robot.closeClaw();
         while (opModeInInit()) {
-            loc = redPropThreshold.getPropPosition();
-            telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
+            loc = bluePropThreshold.getPropPosition();
+            telemetry.addData("Prop Position", bluePropThreshold.getPropPosition());
             telemetry.update();
         }
 
