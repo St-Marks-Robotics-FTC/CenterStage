@@ -104,7 +104,7 @@ public class BasicRobot extends LinearOpMode {
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.5);
             } else if (gamepad1.right_bumper) {
-                armMotor.setTargetPosition(armUp + 200);
+                armMotor.setTargetPosition(armUp + 125);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.5);
             }
