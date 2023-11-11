@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class motorTest extends OpMode {
 
     DcMotor motor;
-    public static String motorName = "arm";
+    public static String motorName = "frontRight";
 
     @Override
     public void init() {
@@ -22,9 +22,10 @@ public class motorTest extends OpMode {
     public void loop() {
         if (gamepad1.dpad_up) {
             motor.setPower(0.3);
-        }
-        if (gamepad1.dpad_down) {
+        } else if (gamepad1.dpad_down) {
             motor.setPower(-0.3);
+        } else {
+            motor.setPower(0);
         }
         telemetry.addData("Motor pos: ", motor.getCurrentPosition());
         telemetry.update();
