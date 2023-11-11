@@ -16,15 +16,36 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(-90)))
-                                .setReversed(true)
-                                .splineToSplineHeading(new Pose2d(12, -44, Math.toRadians(-90)), Math.toRadians(90))
-                                .splineToSplineHeading(new Pose2d(8, -30, Math.toRadians(-20)), Math.toRadians(120))
-                                .setReversed(false)
-                                //.splineToSplineHeading(new Pose2d(12, -30, Math.toRadians(-90)), Math.toRadians(90))
-                                //.splineToSplineHeading(new Pose2d(18, -30, Math.toRadians(-120)), Math.toRadians(90))
-                                .setTangent(Math.toRadians(-20))
-                                .splineToSplineHeading(new Pose2d(48, -36, Math.toRadians(0)), Math.toRadians(0))
+                        drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(-90)))
+
+
+
+
+
+//                                // right
+//                                .setReversed(true)
+//                                .splineToSplineHeading(new Pose2d(23, -30, Math.toRadians(-90)), Math.toRadians(90))
+//                                .setReversed(false)
+//                                .setTangent(Math.toRadians(-90))
+//                                .splineToSplineHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0))
+
+//                                // middle
+//                                .setReversed(true)
+//                                .splineToSplineHeading(new Pose2d(15, -29, Math.toRadians(-90)), Math.toRadians(90))
+//                                .setReversed(false)
+//                                .setTangent(Math.toRadians(-90))
+//                                .splineToSplineHeading(new Pose2d(50, -34, Math.toRadians(0)), Math.toRadians(0))
+
+//                                // left
+//                                .setReversed(true)
+//                                .splineToSplineHeading(new Pose2d(12, -44, Math.toRadians(-90)), Math.toRadians(90))
+//                                .splineToSplineHeading(new Pose2d(6, -30, Math.toRadians(-20)), Math.toRadians(120))
+//                                .setReversed(false)
+//                                .setTangent(Math.toRadians(-20))
+//                                .splineToSplineHeading(new Pose2d(50, -27, Math.toRadians(0)), Math.toRadians(0))
+
+
+
                                 .build()
                 );
 
