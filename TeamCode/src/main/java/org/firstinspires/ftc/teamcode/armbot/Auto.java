@@ -75,6 +75,7 @@ public class Auto extends LinearOpMode {
         }
 
         waitForStart();
+        sleep(1000);
         switch (loc) {
             case 0:
                 drive.followTrajectorySequence(traj11);

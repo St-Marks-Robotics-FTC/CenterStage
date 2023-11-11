@@ -61,7 +61,9 @@ public class BasicRobot extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        armMotor.setPower(-0.15);
         waitForStart();
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if (isStopRequested()) return;
 
