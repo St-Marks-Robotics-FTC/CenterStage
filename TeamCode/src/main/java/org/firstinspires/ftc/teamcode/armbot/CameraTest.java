@@ -23,6 +23,7 @@ public class CameraTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        redPropThreshold = new RedPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
@@ -30,6 +31,11 @@ public class CameraTest extends LinearOpMode {
                 .addProcessor(redPropThreshold)
                 .build();
 
+
+        while (opModeInInit()) {
+            telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
+            telemetry.update();
+        }
 
         waitForStart();
         telemetry.addData("Prop Position", redPropThreshold.getPropPosition());

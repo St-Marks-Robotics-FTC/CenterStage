@@ -21,13 +21,13 @@ public class RedPropThreshold implements VisionProcessor {
     String outStr = "left"; //Set a default value in case vision does not work
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(0, 0),
-            new Point(0, 0)
+            new Point(100, 0),
+            new Point(270, 100)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(0, 0),
-            new Point(0, 0)
+            new Point(450, 150),
+            new Point(640, 250)
     );
 
     @Override
@@ -63,14 +63,16 @@ public class RedPropThreshold implements VisionProcessor {
         double averagedRightBox = rightBox / RIGHT_RECTANGLE.area() / 255; //Makes value [0,1]
 
 
+        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,0,0));
+        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,0,0));
 
 
         if(averagedLeftBox > redThreshold){        //Must Tune Red Threshold
-            outStr = "left";
-        }else if(averagedRightBox> redThreshold){
             outStr = "center";
-        }else{
+        }else if(averagedRightBox> redThreshold){
             outStr = "right";
+        }else{
+            outStr = "left";
         }
 
         finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
