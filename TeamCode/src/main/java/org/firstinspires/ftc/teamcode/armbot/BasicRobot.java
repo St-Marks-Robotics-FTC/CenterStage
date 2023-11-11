@@ -98,7 +98,7 @@ public class BasicRobot extends LinearOpMode {
             if (gamepad1.y) {
                 armMotor.setTargetPosition(armUp);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
+                armMotor.setPower(0.75);
             } else if (gamepad1.a && !closed) {
                 armMotor.setTargetPosition(armDown);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
