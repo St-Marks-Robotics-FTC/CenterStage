@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Vision.RedFarPropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.RedPropThreshold;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
@@ -28,7 +29,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
     Arm robot;
 
     private VisionPortal portal;
-    private RedPropThreshold redPropThreshold;
+    private RedFarPropThreshold redFarPropThreshold;
 
 
     @Override
@@ -37,12 +38,12 @@ public class RedFarAutoToolbox extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        redPropThreshold = new RedPropThreshold();
+        redFarPropThreshold = new RedFarPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(redPropThreshold)
+                .addProcessor(redFarPropThreshold)
                 .build();
 
 
@@ -100,8 +101,10 @@ public class RedFarAutoToolbox extends LinearOpMode {
 
         robot.closeClaw();
         while (opModeInInit()) {
-            loc = redPropThreshold.getPropPosition();
-            telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
+            loc = redFarPropThreshold.getPropPosition();
+            telemetry.addData("Prop Position", redFarPropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Value", redFarPropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Value", redFarPropThreshold.getAvergageRight());
             telemetry.update();
         }
 

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class BasicRobot extends LinearOpMode {
 
     public static double clawOpen = 0.35; // 0.3
-    public static double clawClosed = 0.45;
+    public static double clawClosed = 0.41;
 
     public static int armUp = 453;
 
@@ -61,7 +61,7 @@ public class BasicRobot extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        armMotor.setPower(-0.15);
+//        armMotor.setPower(-0.05);
         waitForStart();
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -104,7 +104,7 @@ public class BasicRobot extends LinearOpMode {
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.5);
             } else if (gamepad1.right_bumper) {
-                armMotor.setTargetPosition(armUp + 125);
+                armMotor.setTargetPosition(armUp + 115);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.5);
             }

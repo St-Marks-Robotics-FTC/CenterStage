@@ -28,7 +28,7 @@ public class Arm {
         return target==0.3 ? true : false;
     }
     public void closeClaw() {
-        claw.setPosition(0.45);
+        claw.setPosition(0.41);
         target = 0.3;
     }
 
