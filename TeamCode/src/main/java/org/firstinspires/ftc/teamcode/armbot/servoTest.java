@@ -12,7 +12,7 @@ public class servoTest extends OpMode {
 
     Servo servo;
     public static String servoName = "claw";
-    public static double position = 1;
+    public static double position = 0.5;
 
     @Override
     public void init() {
@@ -22,10 +22,10 @@ public class servoTest extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.dpad_up && position <= 1) {
-            position += .005;
+            position += .05;
 
         } else if (gamepad1.dpad_down && position >= 0) {
-            position -= .005;
+            position -= .05;
 
         }
 
