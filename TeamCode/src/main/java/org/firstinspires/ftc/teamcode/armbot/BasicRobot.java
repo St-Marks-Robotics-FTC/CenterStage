@@ -47,7 +47,7 @@ public class BasicRobot extends LinearOpMode {
         DcMotor armMotor = hardwareMap.dcMotor.get("arm");
         ElapsedTime time = new ElapsedTime();
         // claw servo
-        Servo clawServo = hardwareMap.servo.get("claw");
+        Servo clawServo = hardwareMap.servo.get("clawLeft");
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
