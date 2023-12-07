@@ -19,13 +19,14 @@ public class BasicRobot extends LinearOpMode {
     public static double clawOpen = 0.35; // 0.3
     public static double clawClosed = 0.41;
 
-    public static int armUp = 453;
-
+    public static int row1 = 453;
+    public static int row2 = 553;
+    public static int row3 = 663;
     public static int armSlightUp = 100;
     public static int armDown = 0;
-
+    public static int[] rows = {armDown,row1,row2,row3};
     public static boolean closed = false;
-
+    public static int level = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -96,18 +97,21 @@ public class BasicRobot extends LinearOpMode {
 
 
             if (gamepad1.y) {
-                armMotor.setTargetPosition(armUp);
+                level = Math.min(3, level+1);
+                armMotor.setTargetPosition(rows[level]);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.75);
             } else if (gamepad1.a && !closed) {
-                armMotor.setTargetPosition(armDown);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
-            } else if (gamepad1.right_bumper) {
-                armMotor.setTargetPosition(armUp + 115);
+                level = Math.max(0, level-1);
+                armMotor.setTargetPosition(rows[level]);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.5);
             }
+//            else if (gamepad1.right_bumper) {
+//                armMotor.setTargetPosition(armUp + 115);
+//                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                armMotor.setPower(0.5);
+//            }
 
             if (gamepad1.x) {
                 clawServo.setPosition(clawClosed);
@@ -117,13 +121,6 @@ public class BasicRobot extends LinearOpMode {
                 closed = false;
             }
 
-            if(gamepad2.dpad_up){
-                armUp+=15;
-            }
-
-            if(gamepad2.dpad_down){
-                armUp-=15;
-            }
             if (time.milliseconds()>250 && time.milliseconds()<450) {
                 armMotor.setTargetPosition(armSlightUp);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
