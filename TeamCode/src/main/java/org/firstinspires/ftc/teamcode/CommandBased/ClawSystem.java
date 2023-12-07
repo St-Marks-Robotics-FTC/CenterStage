@@ -18,7 +18,7 @@ public class ClawSystem extends SubsystemBase{
     }
 
     public void drive(double y, double x, double rx, boolean slow) {
-        clawMotor.setTargetPosition();
+        clawMotor.setTargetPosition(0);
     }
 
 }
