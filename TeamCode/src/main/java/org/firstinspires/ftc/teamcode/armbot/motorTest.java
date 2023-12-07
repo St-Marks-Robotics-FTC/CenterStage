@@ -22,6 +22,8 @@ public class motorTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        waitForStart();
+
         DcMotorEx motor = hardwareMap.get(DcMotorEx.class, motorName);
 
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -31,7 +33,7 @@ public class motorTest extends LinearOpMode {
 
 
 
-        waitForStart();
+
 
         if (isStopRequested()) return;
 
