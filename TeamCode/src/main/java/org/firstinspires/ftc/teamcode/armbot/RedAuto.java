@@ -101,7 +101,7 @@ public class RedAuto extends LinearOpMode {
                 break;
         }
 
-        robot.openAutoClaw();
+        //robot.openAutoClaw();
         sleep(3000);
         robot.setArm(-1650); // 390
 

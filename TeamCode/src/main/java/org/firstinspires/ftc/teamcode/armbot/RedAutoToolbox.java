@@ -51,36 +51,29 @@ public class RedAutoToolbox extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Arm(hardwareMap);
 
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose)
-                .setReversed(true)
-                .splineToSplineHeading(new Pose2d(12, -44, Math.toRadians(-90)), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(6, -30, Math.toRadians(-20)), Math.toRadians(120))
-                .setReversed(false)
+        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) //left
+                .splineToSplineHeading(new Pose2d(10, -33, Math.toRadians(160)), Math.toRadians(130))
                 .build();
-        TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose)
-                .setReversed(true)
-                .splineToSplineHeading(new Pose2d(15, -29, Math.toRadians(-90)), Math.toRadians(90))
-                .setReversed(false)
+        TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) //mid
+                .splineToSplineHeading(new Pose2d(15, -33, Math.toRadians(90)), Math.toRadians(90))
                 .build();
-        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose)
-                .setReversed(true)
-                .splineToSplineHeading(new Pose2d(21.5, -30, Math.toRadians(-90)), Math.toRadians(90))
-                .setReversed(false)
+        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) //right
+                .splineToSplineHeading(new Pose2d(15, -35, Math.toRadians(45)), Math.toRadians(90))
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
                 .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(50, -27, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(42, -42, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
-                .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(50, -34, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(-20))
+                .splineToSplineHeading(new Pose2d(44, -34, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
-                .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(-20))
+                .splineToSplineHeading(new Pose2d(42, -42, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
@@ -103,8 +96,8 @@ public class RedAutoToolbox extends LinearOpMode {
         }
 
         waitForStart();
-        robot.setArm(-700);
-        sleep(1000);
+        //robot.setArm(-700);
+        //sleep(1000);
         switch (loc) {
             case "left":
                 drive.followTrajectorySequence(traj11);
@@ -117,7 +110,7 @@ public class RedAutoToolbox extends LinearOpMode {
                 break;
         }
 
-        robot.openAutoClaw();
+        //robot.openAutoClaw();
         sleep(3000);
         robot.setArm(-1650); // 390
 

@@ -19,14 +19,16 @@ public class BasicRobot extends LinearOpMode {
     public static double clawOpen = 0.35; // 0.3
     public static double clawClosed = 0.41;
 
-    public static int row1 = 453;
-    public static int row2 = 553;
-    public static int row3 = 663;
+    public static int armUp = 453;
+
     public static int armSlightUp = 100;
     public static int armDown = 0;
-    public static int[] rows = {armDown,row1,row2,row3};
+
     public static boolean closed = false;
-    public static int level = 0;
+    public static boolean leftClosed = false;
+    public static boolean rightClosed = false;
+    public static Arm robot;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,10 +47,11 @@ public class BasicRobot extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        DcMotor armMotor = hardwareMap.dcMotor.get("arm");
+        //DcMotor armMotor = hardwareMap.dcMotor.get("arm");
         ElapsedTime time = new ElapsedTime();
         // claw servo
-        Servo clawServo = hardwareMap.servo.get("clawLeft");
+        //Servo clawServo = hardwareMap.servo.get("claw");
+        robot = new Arm(hardwareMap);
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
@@ -58,13 +61,14 @@ public class BasicRobot extends LinearOpMode {
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // reset arm
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 //        armMotor.setPower(-0.05);
         waitForStart();
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if (isStopRequested()) return;
 
@@ -97,37 +101,36 @@ public class BasicRobot extends LinearOpMode {
 
 
             if (gamepad1.y) {
-                level = Math.min(3, level+1);
-                armMotor.setTargetPosition(rows[level]);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.75);
+                robot.setArm(armUp);
             } else if (gamepad1.a && !closed) {
-                level = Math.max(0, level-1);
-                armMotor.setTargetPosition(rows[level]);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
+                robot.setArm(armDown);
+            } else if (gamepad1.right_bumper) {
+                robot.setArm(armUp+115);
             }
-//            else if (gamepad1.right_bumper) {
-//                armMotor.setTargetPosition(armUp + 115);
-//                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                armMotor.setPower(0.5);
-//            }
 
             if (gamepad1.x) {
-                clawServo.setPosition(clawClosed);
+                robot.closeClaw();
                 closed = true;
             } else if (gamepad1.b) {
-                clawServo.setPosition(clawOpen);
+                robot.openClaw();
                 closed = false;
+            }
+            if (gamepad1.dpad_left) {
+                if (leftClosed) robot.closeLeft();
+                else robot.openLeft();
+            }
+            if (gamepad1.dpad_right) {
+                if (rightClosed) robot.closeRight();
+                else robot.closeRight();
             }
 
             if (time.milliseconds()>250 && time.milliseconds()<450) {
-                armMotor.setTargetPosition(armSlightUp);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
+                robot.setArm(armSlightUp);
             }
 
-            telemetry.addData("arm position", armMotor.getCurrentPosition());
+            telemetry.addData("arm position", robot.arm.getCurrentPosition());
+            telemetry.addData("left claw closed or not", leftClosed);
+            telemetry.addData("right claw closed or not", rightClosed);
             telemetry.update();
 
         }

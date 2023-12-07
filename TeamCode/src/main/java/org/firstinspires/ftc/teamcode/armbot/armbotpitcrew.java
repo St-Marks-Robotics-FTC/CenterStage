@@ -28,7 +28,8 @@ public class armbotpitcrew extends OpMode {
             robot.openClaw();
         }
         telemetry.addData("arm pos: ", robot.arm.getCurrentPosition());
-        telemetry.addData("claw closed: ", robot.claw.getPosition());
+        telemetry.addData("claw left pos: ", robot.clawLeft.getPosition());
+        telemetry.addData("claw right pos: ", robot.clawRight.getPosition());
         telemetry.update();
     }
 }

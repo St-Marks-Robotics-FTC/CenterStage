@@ -60,7 +60,7 @@ public class Auto extends LinearOpMode {
 //        TrajectorySequence park = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
 //                .strafeLeft(12)
 //                .build();
-
+        //vision bug?
         while (!opModeIsActive() && !isStopRequested()) {
             propLocalizer.initLoop();
             loc = propLocalizer.getLoc();
@@ -74,6 +74,7 @@ public class Auto extends LinearOpMode {
             propLocalizer.terminator();
         }
 
+        //preload 1
         waitForStart();
         sleep(1000);
         switch (loc) {
@@ -88,7 +89,7 @@ public class Auto extends LinearOpMode {
                 break;
         }
 
-        robot.openAutoClaw();
+        //robot.openAutoClaw();
         sleep(3000);
         robot.setArm(1000);
 

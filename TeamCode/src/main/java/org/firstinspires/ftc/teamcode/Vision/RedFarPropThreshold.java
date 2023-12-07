@@ -23,13 +23,13 @@ public class RedFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(50, 150),
-            new Point(150, 200)
+            new Point(200, 150),
+            new Point(300, 250)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(440, 50),
-            new Point(540, 125)
+            new Point(540, 250),
+            new Point(640, 355)
     );
 
     @Override
@@ -70,11 +70,11 @@ public class RedFarPropThreshold implements VisionProcessor {
 
 
         if(averagedRightBox > redThreshold){        //Must Tune Red Threshold
-            outStr = "center";
-        }else if(averagedLeftBox> redThreshold){
-            outStr = "left";
-        }else{
             outStr = "right";
+        }else if(averagedLeftBox> redThreshold){
+            outStr = "center";
+        }else{
+            outStr = "left";
         }
 
 

@@ -45,7 +45,7 @@ public class  PropPipeline extends PipelineWrapper {
     public static int rightSep = 218;
     public static double cvThresholdThresh = 150;
     public static double cvThresholdThreshBlue = 120;
-    public static int cutoffLine =0;
+    public static int cutoffLine =30;
 
     public static double cvThresholdMaxval = 255.0;
     public static double cvDilateIterations = 1.0;
@@ -108,7 +108,8 @@ public class  PropPipeline extends PipelineWrapper {
         if (rect.width < 5 || rect.height < 5|| rect.y<cutoffLine) {
             return new Point(-69, -69);
         }
-        Point retPoint = new Point(rect.x + (double) rect.width / 2, rect.y + (double) rect.height / 2);
+        // get highest point from rectangle(don't compare centers it's a bad idea)
+        Point retPoint = new Point(rect.x + (double) rect.width / 2, rect.y);
         return retPoint;
     }
 
@@ -185,6 +186,7 @@ public class  PropPipeline extends PipelineWrapper {
                     }
                 }
             }
+            if (highest >40) locationTSE = 0;
 
             showContours.release();
             //telemetry.addData("loationTSE: ", locationTSE);
@@ -215,7 +217,7 @@ public class  PropPipeline extends PipelineWrapper {
     }
 
     public int location (Point a) {
-        int loc = 0;
+        int loc = blue ? 2:0;
         if (a.x>leftSep && a.x<rightSep) {
             loc = 1;
 
@@ -226,7 +228,6 @@ public class  PropPipeline extends PipelineWrapper {
             loc = 2;
 
         }
-
         return loc;
     }
 
