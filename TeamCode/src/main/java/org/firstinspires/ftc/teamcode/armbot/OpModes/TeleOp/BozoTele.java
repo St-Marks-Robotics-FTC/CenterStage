@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.armbot.OpModes.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -22,7 +24,7 @@ public class BozoTele extends LinearOpMode {
     public static int armUp2 = 450; //CHANGE
     public static int armUp3 = 460; //CHANGE
     public static int armDown = 0;
-    public static int[] armPos = {armDown,armUp,armUp2,armUp3};
+    public static int[] armPos = {armDown,armUp2,armUp3};
     public static int level = 0;
     public static boolean closed = false;
     public static boolean leftClosed = false;
@@ -30,6 +32,7 @@ public class BozoTele extends LinearOpMode {
     public static int[] hangPos = {750,900}; //CHANGE
     public static boolean dpadupPressed = false;
     public static BozoClass robot;
+    public static GamepadEx pad1;
 
 
     @Override
@@ -66,7 +69,7 @@ public class BozoTele extends LinearOpMode {
         //armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        pad1 = new GamepadEx(gamepad1);
 //        armMotor.setPower(-0.05);
         //robot.zeroArm();
 
@@ -104,20 +107,20 @@ public class BozoTele extends LinearOpMode {
             }
 
 
-            if(gamepad1.dpad_up){
+            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
                 if(!dpadupPressed){
                     robot.setArm(hangPos[0]);
                     dpadupPressed = true;
                 }
                 else{
-
+                    dpadupPressed=false;
                     robot.setArm(hangPos[1]);
                 }
             }
-            if (gamepad1.y) {
-                level = Math.min(3, level+1);
+            if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
+                level = Math.min(2, level+1);
                 robot.setArm(armPos[level]);
-            } else if (gamepad1.a && !closed) {
+            } else if (pad1.wasJustPressed(GamepadKeys.Button.A) && !closed) {
                 level = Math.max(0, level-1);
                 robot.setArm(armPos[level]);
             }
@@ -130,14 +133,14 @@ public class BozoTele extends LinearOpMode {
 //                robot.setArm(level);
 //            }
 
-            if (gamepad1.x) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
                 robot.closeClaw();
                 closed = true;
-            } else if (gamepad1.b) {
+            } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
                 robot.openClaw();
                 closed = false;
             }
-            if (gamepad1.dpad_left) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
                 if (!leftClosed){
                     robot.closeLeft();
                     leftClosed = true;
@@ -147,7 +150,7 @@ public class BozoTele extends LinearOpMode {
                     rightClosed = false;
                 }
             }
-            if (gamepad1.dpad_right) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
                 if (!rightClosed){
                     robot.closeRight();
                     rightClosed = true;
@@ -157,6 +160,7 @@ public class BozoTele extends LinearOpMode {
                     rightClosed = false;
                 }
             }
+            if (!rightClosed && !leftClosed) closed = false;
 
             telemetry.addData("arm position", robot.arm.getCurrentPosition());
             telemetry.addData("left claw closed", leftClosed);
