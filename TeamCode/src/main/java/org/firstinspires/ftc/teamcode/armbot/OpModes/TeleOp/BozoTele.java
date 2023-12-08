@@ -68,6 +68,7 @@ public class BozoTele extends LinearOpMode {
         //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 //        armMotor.setPower(-0.05);
+        robot.zeroArm();
         waitForStart();
         //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,7 +89,7 @@ public class BozoTele extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            if (gamepad1.left_trigger>=0.3) {
+            if (gamepad1.left_bumper) {
                 frontLeftMotor.setPower(0.3 * frontLeftPower);
                 backLeftMotor.setPower(0.3 * backLeftPower);
                 frontRightMotor.setPower(0.3 * frontRightPower);
@@ -154,8 +155,8 @@ public class BozoTele extends LinearOpMode {
             }
 
             telemetry.addData("arm position", robot.arm.getCurrentPosition());
-            telemetry.addData("left claw closed or not", leftClosed);
-            telemetry.addData("right claw closed or not", rightClosed);
+            telemetry.addData("left claw closed", leftClosed);
+            telemetry.addData("right claw closed", rightClosed);
             telemetry.update();
 
         }

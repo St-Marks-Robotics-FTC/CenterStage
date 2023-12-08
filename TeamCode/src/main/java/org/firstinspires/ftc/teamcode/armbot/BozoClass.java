@@ -61,4 +61,8 @@ public class BozoClass {
         prev = pos;
     }
 
+    public void zeroArm() {
+        arm.setPower(-0.1);
+    }
+
 }
