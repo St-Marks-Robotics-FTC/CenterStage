@@ -55,7 +55,7 @@ public class BlueAutoToolbox extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // right side
-                .splineToSplineHeading(new Pose2d(9, 30, Math.toRadians(-160)), Math.toRadians(-130))
+                .splineToSplineHeading(new Pose2d(11, 29, Math.toRadians(-160)), Math.toRadians(-130))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
                 .splineToSplineHeading(new Pose2d(15, 31, Math.toRadians(-90)), Math.toRadians(-90))
