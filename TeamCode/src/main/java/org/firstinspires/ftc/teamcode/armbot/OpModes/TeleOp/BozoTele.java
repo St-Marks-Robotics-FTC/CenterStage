@@ -18,16 +18,16 @@ public class BozoTele extends LinearOpMode {
     public static double clawOpen = 0.35; // 0.3
     public static double clawClosed = 0.41;
 
-    public static int armUp = 453;
-    public static int armUp2 = 553; //CHANGE
-    public static int armUp3 = 663; //CHANGE
+    public static int armUp = 350;
+    public static int armUp2 = 450; //CHANGE
+    public static int armUp3 = 460; //CHANGE
     public static int armDown = 0;
     public static int[] armPos = {armDown,armUp,armUp2,armUp3};
     public static int level = 0;
     public static boolean closed = false;
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
-    public static int[] hangPos = {750,800}; //CHANGE
+    public static int[] hangPos = {750,900}; //CHANGE
     public static boolean dpadupPressed = false;
     public static BozoClass robot;
 
@@ -68,7 +68,9 @@ public class BozoTele extends LinearOpMode {
         //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 //        armMotor.setPower(-0.05);
-        robot.zeroArm();
+        //robot.zeroArm();
+
+        robot.openClaw();
         waitForStart();
         //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -108,6 +110,7 @@ public class BozoTele extends LinearOpMode {
                     dpadupPressed = true;
                 }
                 else{
+
                     robot.setArm(hangPos[1]);
                 }
             }
@@ -117,14 +120,15 @@ public class BozoTele extends LinearOpMode {
             } else if (gamepad1.a && !closed) {
                 level = Math.max(0, level-1);
                 robot.setArm(armPos[level]);
-            } else if (gamepad1.right_bumper) {
-                robot.setArm(robot.arm.getCurrentPosition()+30);
-            } else if(gamepad1.left_bumper){
-                robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
-            } else if(gamepad1.right_trigger>=0.3){
-                level = 0;
-                robot.setArm(level);
             }
+//            else if (gamepad1.right_bumper) {
+//                robot.setArm(robot.arm.getCurrentPosition()+30);
+//            } else if(gamepad1.left_bumper){
+//                robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
+//            } else if(gamepad1.right_trigger>=0.3){
+//                level = 0;
+//                robot.setArm(level);
+//            }
 
             if (gamepad1.x) {
                 robot.closeClaw();
