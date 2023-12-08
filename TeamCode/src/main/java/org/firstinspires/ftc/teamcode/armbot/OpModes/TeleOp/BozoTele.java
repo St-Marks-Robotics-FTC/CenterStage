@@ -52,30 +52,19 @@ public class BozoTele extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //DcMotor armMotor = hardwareMap.dcMotor.get("arm");
-        ElapsedTime time = new ElapsedTime();
-        // claw servo
-        //Servo clawServo = hardwareMap.servo.get("claw");
-        robot = new BozoClass(hardwareMap);
-
-        // Reverse the right side motors. This may be wrong for your setup.
-        // If your robot moves backwards when commanded to go forwards,
-        // reverse the left side instead.
-        // See the note about this earlier on this page.
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // reset arm
-        //armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot = new BozoClass(hardwareMap);
+
         pad1 = new GamepadEx(gamepad1);
-//        armMotor.setPower(-0.05);
-        //robot.zeroArm();
+
+        ElapsedTime time = new ElapsedTime();
 
         robot.openClaw();
+
         waitForStart();
-        //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if (isStopRequested()) return;
@@ -111,10 +100,9 @@ public class BozoTele extends LinearOpMode {
                 if(!dpadupPressed){
                     robot.setArm(hangPos[0]);
                     dpadupPressed = true;
-                }
-                else{
-                    dpadupPressed=false;
+                } else {
                     robot.setArm(hangPos[1]);
+                    dpadupPressed=false;
                 }
             }
             if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
