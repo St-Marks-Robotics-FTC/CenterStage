@@ -18,7 +18,7 @@ public class BozoTele extends LinearOpMode {
 
     public static int armDown = 0;
     public static int armUp = 350;
-    public static int armUp2 = 380; //CHANGE
+    public static int armUp2 = 395; //CHANGE
     public static int armUp3 = 460; //CHANGE
     public static int[] armPos = {armDown,armUp2,armUp3};
     public static int level = 0;
@@ -104,7 +104,7 @@ public class BozoTele extends LinearOpMode {
             if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
                 level = Math.min(2, level+1);
                 robot.setArm(armPos[level]);
-            } else if (pad1.wasJustPressed(GamepadKeys.Button.A) && !closed) {
+            } else if (pad1.wasJustPressed(GamepadKeys.Button.A)/* && !closed*/) {
                 level = Math.max(0, level-1);
                 robot.setArm(armPos[level]);
             }
@@ -112,10 +112,10 @@ public class BozoTele extends LinearOpMode {
 //                robot.setArm(robot.arm.getCurrentPosition()+30);
 //            } else if(gamepad1.left_bumper){
 //                robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
-//            } else if(gamepad1.right_trigger>=0.3){
-//                level = 0;
-//                robot.setArm(level);
-//            }
+            /*}*/ else if(gamepad1.right_trigger>=0.3){
+                level = 0;
+                robot.setArm(armPos[level]);
+            }
 
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
                 robot.closeClaw();
