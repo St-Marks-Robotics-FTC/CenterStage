@@ -149,7 +149,7 @@ public class BozoTele extends LinearOpMode {
                 }
             }
             if (!rightClosed && !leftClosed) closed = false;
-
+            pad1.readButtons();
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
             telemetry.addData("Left Claw closed", leftClosed);
