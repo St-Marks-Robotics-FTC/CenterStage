@@ -28,12 +28,12 @@ public class motorTest extends LinearOpMode {
 
         waitForStart();
 
-        DcMotorEx motor = hardwareMap.get(DcMotorEx.class, motorName);
+        DcMotor motor = hardwareMap.dcMotor.get(motorName);
 
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
