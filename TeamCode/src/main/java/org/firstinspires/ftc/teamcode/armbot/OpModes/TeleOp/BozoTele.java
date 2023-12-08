@@ -24,7 +24,7 @@ public class BozoTele extends LinearOpMode {
     public static int level = 0;
 
     public static boolean dpadupPressed = false;
-    public static int[] hangPos = {750,900}; //CHANGE
+    public static int[] hangPos = {900,1400}; //CHANGE
 
     public static boolean closed = false;
     public static boolean leftClosed = false;
@@ -105,7 +105,11 @@ public class BozoTele extends LinearOpMode {
                 level = Math.min(2, level+1);
                 robot.setArm(armPos[level]);
             } else if (pad1.wasJustPressed(GamepadKeys.Button.A)/* && !closed*/) {
-                level = Math.max(0, level-1);
+                if (!closed) {
+                    level = 0;
+                } else {
+                    level = Math.max(0, level-1);
+                }
                 robot.setArm(armPos[level]);
             }
 //            else if (gamepad1.right_bumper) {
