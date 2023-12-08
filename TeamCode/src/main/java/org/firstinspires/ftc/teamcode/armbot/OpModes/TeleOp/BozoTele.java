@@ -16,20 +16,20 @@ import org.firstinspires.ftc.teamcode.armbot.BozoClass;
 @TeleOp
 public class BozoTele extends LinearOpMode {
 
-    public static double clawOpen = 0.35; // 0.3
-    public static double clawClosed = 0.41;
-
+    public static int armDown = 0;
     public static int armUp = 350;
     public static int armUp2 = 380; //CHANGE
     public static int armUp3 = 460; //CHANGE
-    public static int armDown = 0;
     public static int[] armPos = {armDown,armUp2,armUp3};
     public static int level = 0;
+
+    public static boolean dpadupPressed = false;
+    public static int[] hangPos = {750,900}; //CHANGE
+
     public static boolean closed = false;
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
-    public static int[] hangPos = {750,900}; //CHANGE
-    public static boolean dpadupPressed = false;
+
     public static BozoClass robot;
     public static GamepadEx pad1;
 
@@ -56,13 +56,10 @@ public class BozoTele extends LinearOpMode {
 
 
         robot = new BozoClass(hardwareMap);
-
         pad1 = new GamepadEx(gamepad1);
-
         ElapsedTime time = new ElapsedTime();
 
         robot.openClaw();
-
         waitForStart();
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -137,8 +134,7 @@ public class BozoTele extends LinearOpMode {
                 if (!leftClosed){
                     robot.closeLeft();
                     leftClosed = true;
-                }
-                else{
+                } else {
                     robot.openLeft();
                     rightClosed = false;
                 }
@@ -147,8 +143,7 @@ public class BozoTele extends LinearOpMode {
                 if (!rightClosed){
                     robot.closeRight();
                     rightClosed = true;
-                }
-                else{
+                } else {
                     robot.openRight();
                     rightClosed = false;
                 }
