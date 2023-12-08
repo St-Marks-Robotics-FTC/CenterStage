@@ -20,13 +20,17 @@ public class BasicRobot extends LinearOpMode {
     public static double clawClosed = 0.41;
 
     public static int armUp = 453;
-
+    public static int armUp2 = 553; //CHANGE
+    public static int armUp3 = 663; //CHANGE
     public static int armSlightUp = 100;
     public static int armDown = 0;
-
+    public static int[] armPos = {armDown,armUp,armUp2,armUp3};
+    public static int level = 0;
     public static boolean closed = false;
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
+    public static int[] hangPos = {123,123}; //CHANGE
+    public static boolean dpadupPressed = false;
     public static Arm robot;
 
 
@@ -86,7 +90,7 @@ public class BasicRobot extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            if (gamepad1.left_bumper) {
+            if (gamepad1.left_trigger>=0.3) {
                 frontLeftMotor.setPower(0.3 * frontLeftPower);
                 backLeftMotor.setPower(0.3 * backLeftPower);
                 frontRightMotor.setPower(0.3 * frontRightPower);
@@ -99,13 +103,25 @@ public class BasicRobot extends LinearOpMode {
             }
 
 
-
+            if(gamepad1.dpad_up){
+                if(!dpadupPressed){
+                    robot.setArm(hangPos[0]);
+                    dpadupPressed = true;
+                }
+                else{
+                    robot.setArm(hangPos[1]);
+                }
+            }
             if (gamepad1.y) {
-                robot.setArm(armUp);
+                level = Math.min(3, level+1);
+                robot.setArm(armPos[level]);
             } else if (gamepad1.a && !closed) {
-                robot.setArm(armDown);
+                level = Math.max(0, level-1);
+                robot.setArm(armPos[level]);
             } else if (gamepad1.right_bumper) {
-                robot.setArm(armUp+115);
+                robot.setArm(robot.arm.getCurrentPosition()+30);
+            } else if(gamepad1.left_bumper){
+                robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
             }
 
             if (gamepad1.x) {
@@ -116,12 +132,24 @@ public class BasicRobot extends LinearOpMode {
                 closed = false;
             }
             if (gamepad1.dpad_left) {
-                if (leftClosed) robot.closeLeft();
-                else robot.openLeft();
+                if (!leftClosed){
+                    robot.closeLeft();
+                    leftClosed = true;
+                }
+                else{
+                    robot.openLeft();
+                    rightClosed = false;
+                }
             }
             if (gamepad1.dpad_right) {
-                if (rightClosed) robot.closeRight();
-                else robot.closeRight();
+                if (!rightClosed){
+                    robot.closeRight();
+                    rightClosed = true;
+                }
+                else{
+                    robot.openRight();
+                    rightClosed = false;
+                }
             }
 
             if (time.milliseconds()>250 && time.milliseconds()<450) {
