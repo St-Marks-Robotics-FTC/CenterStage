@@ -36,16 +36,16 @@ public class BozoClass {
         //target = 0.3;
     }
     public void closeLeft() {
-        clawLeft.setPosition(0.3);
+        clawLeft.setPosition(0.65);
     }
     public void closeRight() {
-        clawRight.setPosition(0.7);
+        clawRight.setPosition(0.34);
     }
     public void openLeft() {
-        clawLeft.setPosition(0.7);
+        clawLeft.setPosition(0.8);
     }
     public void openRight() {
-        clawRight.setPosition(0.3);
+        clawRight.setPosition(0.25);
     }
 
     public void openClaw() {
