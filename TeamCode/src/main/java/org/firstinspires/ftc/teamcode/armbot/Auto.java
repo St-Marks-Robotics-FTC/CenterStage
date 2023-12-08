@@ -2,12 +2,9 @@ package org.firstinspires.ftc.teamcode.armbot;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.Vision.PropLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
@@ -19,7 +16,7 @@ public class Auto extends LinearOpMode {
     PropLocalizer propLocalizer;
     private static int loc = 0;
     MecanumDrive drive;
-    Arm robot;
+    BozoClass robot;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,7 +26,7 @@ public class Auto extends LinearOpMode {
         propLocalizer.initLocalizer();
         drive = new MecanumDrive(hardwareMap);
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
-        robot = new Arm(hardwareMap);
+        robot = new BozoClass(hardwareMap);
 
         TrajectorySequence traj11 = drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(-90)))
                 .setTangent(Math.toRadians(90))

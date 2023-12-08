@@ -25,7 +25,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
 
     public static String loc = "left";
     MecanumDrive drive;
-    Arm robot;
+    BozoClass robot;
 
     private VisionPortal portal;
     private RedFarPropThreshold redFarPropThreshold;
@@ -49,7 +49,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
 
         drive = new MecanumDrive(hardwareMap);
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
-        robot = new Arm(hardwareMap);
+        robot = new BozoClass(hardwareMap);
 
         Pose2d startPose = new Pose2d(-38, 60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);

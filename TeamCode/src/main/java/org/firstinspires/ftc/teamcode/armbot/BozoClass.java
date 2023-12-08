@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Arm {
+public class BozoClass {
 
     public DcMotorEx arm;
     public Servo clawLeft;
@@ -16,7 +16,7 @@ public class Arm {
     private double target = 0.0;
     private int prev;
 
-    public Arm(HardwareMap hardwareMap) {
+    public BozoClass(HardwareMap hardwareMap) {
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");

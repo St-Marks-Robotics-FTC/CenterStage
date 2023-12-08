@@ -18,7 +18,7 @@ public class RedAuto extends LinearOpMode {
     PropLocalizer propLocalizer;
     public static int loc = 0;
     MecanumDrive drive;
-    Arm robot;
+    BozoClass robot;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,7 +28,7 @@ public class RedAuto extends LinearOpMode {
         propLocalizer.initLocalizer();
         drive = new MecanumDrive(hardwareMap);
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
-        robot = new Arm(hardwareMap);
+        robot = new BozoClass(hardwareMap);
 
         Pose2d startPose = new Pose2d(15, -60, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);

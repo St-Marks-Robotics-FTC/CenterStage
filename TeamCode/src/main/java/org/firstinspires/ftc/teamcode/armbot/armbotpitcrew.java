@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp
 public class armbotpitcrew extends OpMode {
 
-    Arm robot;
+    BozoClass robot;
 
     @Override
     public void init() {
-        robot = new Arm(hardwareMap);
+        robot = new BozoClass(hardwareMap);
     }
 
     @Override

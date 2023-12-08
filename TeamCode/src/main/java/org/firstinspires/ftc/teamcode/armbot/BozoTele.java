@@ -7,14 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import java.util.concurrent.TimeUnit;
 
 @Config
 @TeleOp
-public class BasicRobot extends LinearOpMode {
+public class BozoTele extends LinearOpMode {
 
     public static double clawOpen = 0.35; // 0.3
     public static double clawClosed = 0.41;
@@ -30,7 +27,7 @@ public class BasicRobot extends LinearOpMode {
     public static boolean rightClosed = false;
     public static int[] hangPos = {750,800}; //CHANGE
     public static boolean dpadupPressed = false;
-    public static Arm robot;
+    public static BozoClass robot;
 
 
     @Override
@@ -54,7 +51,7 @@ public class BasicRobot extends LinearOpMode {
         ElapsedTime time = new ElapsedTime();
         // claw servo
         //Servo clawServo = hardwareMap.servo.get("claw");
-        robot = new Arm(hardwareMap);
+        robot = new BozoClass(hardwareMap);
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
