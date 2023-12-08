@@ -22,14 +22,13 @@ public class BasicRobot extends LinearOpMode {
     public static int armUp = 453;
     public static int armUp2 = 553; //CHANGE
     public static int armUp3 = 663; //CHANGE
-    public static int armSlightUp = 100;
     public static int armDown = 0;
     public static int[] armPos = {armDown,armUp,armUp2,armUp3};
     public static int level = 0;
     public static boolean closed = false;
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
-    public static int[] hangPos = {123,123}; //CHANGE
+    public static int[] hangPos = {750,800}; //CHANGE
     public static boolean dpadupPressed = false;
     public static Arm robot;
 
@@ -150,10 +149,6 @@ public class BasicRobot extends LinearOpMode {
                     robot.openRight();
                     rightClosed = false;
                 }
-            }
-
-            if (time.milliseconds()>250 && time.milliseconds()<450) {
-                robot.setArm(armSlightUp);
             }
 
             telemetry.addData("arm position", robot.arm.getCurrentPosition());

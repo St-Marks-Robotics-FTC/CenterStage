@@ -36,16 +36,16 @@ public class Arm {
         //target = 0.3;
     }
     public void closeLeft() {
-        clawLeft.setPosition(0.41);
+        clawLeft.setPosition(0.3);
     }
     public void closeRight() {
-        clawRight.setPosition(0.41);
+        clawRight.setPosition(0.7);
     }
     public void openLeft() {
-        clawLeft.setPosition(0.35);
+        clawLeft.setPosition(0.7);
     }
     public void openRight() {
-        clawRight.setPosition(0.35);
+        clawRight.setPosition(0.3);
     }
 
     public void openClaw() {
