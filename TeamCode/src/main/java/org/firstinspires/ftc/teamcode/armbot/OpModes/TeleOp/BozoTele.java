@@ -120,6 +120,9 @@ public class BozoTele extends LinearOpMode {
                 robot.setArm(robot.arm.getCurrentPosition()+30);
             } else if(gamepad1.left_bumper){
                 robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
+            } else if(gamepad1.right_trigger>=0.3){
+                level = 0;
+                robot.setArm(level);
             }
 
             if (gamepad1.x) {
