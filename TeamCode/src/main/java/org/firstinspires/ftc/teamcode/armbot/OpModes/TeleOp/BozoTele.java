@@ -21,7 +21,7 @@ public class BozoTele extends LinearOpMode {
     public static double clawClosed = 0.41;
 
     public static int armUp = 350;
-    public static int armUp2 = 450; //CHANGE
+    public static int armUp2 = 380; //CHANGE
     public static int armUp3 = 460; //CHANGE
     public static int armDown = 0;
     public static int[] armPos = {armDown,armUp2,armUp3};
