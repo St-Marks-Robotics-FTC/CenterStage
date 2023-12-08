@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.armbot;
+package org.firstinspires.ftc.teamcode.Testing;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -9,32 +9,28 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Config
 @TeleOp
-public class motorTest extends LinearOpMode {
+public class servoTest extends LinearOpMode {
 
 //    public static int motorPos = 0;
 //    public static double motorSpeed = 0.7;
 
-    public static String motorName = "arm";
+    public static String servoName = "claw1";
+
+    public static Double pos = 0.5;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-
         waitForStart();
 
-        DcMotorEx motor = hardwareMap.get(DcMotorEx.class, motorName);
-
-        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        Servo servo = hardwareMap.get(Servo.class, servoName);
 
 
 
@@ -44,15 +40,13 @@ public class motorTest extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            motor.setPower(-gamepad1.left_stick_y);
+            servo.setPosition(pos);
 
 
 
 
-
-            telemetry.addData("Name: ", motorName);
-            telemetry.addData("Motor Position: ", motor.getCurrentPosition());
-            telemetry.addData("Power: ", motor.getPower());
+            telemetry.addData("Name: ", servoName);
+            telemetry.addData("Position: ", pos);
 
             telemetry.update();
         }

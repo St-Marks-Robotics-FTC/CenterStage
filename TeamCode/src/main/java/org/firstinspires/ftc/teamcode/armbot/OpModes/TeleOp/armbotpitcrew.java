@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode.armbot;
+package org.firstinspires.ftc.teamcode.armbot.OpModes.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.armbot.BozoClass;
 
 @TeleOp
 public class armbotpitcrew extends OpMode {
