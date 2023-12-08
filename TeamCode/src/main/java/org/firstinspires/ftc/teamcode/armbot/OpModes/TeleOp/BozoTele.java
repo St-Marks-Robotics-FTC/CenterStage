@@ -123,9 +123,15 @@ public class BozoTele extends LinearOpMode {
 
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
                 robot.closeClaw();
+                leftClosed = true;
+                rightClosed = true;
+
                 closed = true;
             } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
                 robot.openClaw();
+                leftClosed = false;
+                rightClosed = false;
+
                 closed = false;
             }
             if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
@@ -150,9 +156,10 @@ public class BozoTele extends LinearOpMode {
             }
             if (!rightClosed && !leftClosed) closed = false;
 
-            telemetry.addData("arm position", robot.arm.getCurrentPosition());
-            telemetry.addData("left claw closed", leftClosed);
-            telemetry.addData("right claw closed", rightClosed);
+            telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
+            telemetry.addData("Arm Power", robot.arm.getPower());
+            telemetry.addData("Left Claw closed", leftClosed);
+            telemetry.addData("Right Claw closed", rightClosed);
             telemetry.update();
 
         }
