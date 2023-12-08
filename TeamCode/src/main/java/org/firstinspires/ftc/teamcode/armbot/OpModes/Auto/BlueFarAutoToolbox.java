@@ -51,6 +51,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap);
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new BozoClass(hardwareMap);
+        robot.closeClaw();
 
         Pose2d startPose = new Pose2d(-38, 60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
@@ -121,7 +122,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
                 break;
         }
 
-        //robot.openAutoClaw();
+        robot.openLeft();
         sleep(3000);
         robot.setArm(-1650); // 390
 

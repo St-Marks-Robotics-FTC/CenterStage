@@ -69,34 +69,35 @@ public class RedFarAutoToolbox extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-34, -32, Math.toRadians(120)))
                 .lineToLinearHeading(new Pose2d(-34, -11, Math.toRadians(90)))
                 .setTangent(0)
-                .splineTo(new Vector2d(11, -11), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(50, -27, Math.toRadians(0)), Math.toRadians(0))
+                .splineTo(new Vector2d(22, -11), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(58, -24, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .splineToConstantHeading(new Vector2d(-45, -26), Math.toRadians(180))
                 .setTangent(Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-31, -9), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(11, -9, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(50, -36, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(22, -9, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(58, -32, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(-31, -11), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(11, -11, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(22, -11, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(58, -39, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
-                .strafeLeft(18)
+                .back(8)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
-                .strafeLeft(22)
+                .back(8)
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
-                .strafeLeft(28)
+                .back(8)
                 .build();
 
         //robot.closeClaw();
+        robot.closeClaw();
         while (opModeInInit()) {
             loc = redFarPropThreshold.getPropPosition();
             telemetry.addData("Prop Position", redFarPropThreshold.getPropPosition());
@@ -106,7 +107,6 @@ public class RedFarAutoToolbox extends LinearOpMode {
         }
 
         waitForStart();
-        robot.setArm(-700);
         sleep(1000);
         switch (loc) {
             case "left":
@@ -120,9 +120,9 @@ public class RedFarAutoToolbox extends LinearOpMode {
                 break;
         }
 
-        //robot.openAutoClaw();
+        robot.openLeft();
         sleep(3000);
-        robot.setArm(-1650); // 390
+        robot.setArm(350); // 390
 
         //outtake
         switch (loc) {
@@ -138,9 +138,8 @@ public class RedFarAutoToolbox extends LinearOpMode {
         }
 
         //robot.openClaw();
-
+        robot.openRight();
         sleep(1000);
-        robot.setArm(-800); // 700
 
         switch (loc) {
             case "left":
@@ -153,8 +152,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
                 drive.followTrajectorySequence(park3);
                 break;
         }
-        robot.setArm(-1600); // 700
-        sleep(1000);
+        robot.setArm(0); // 700
 
     }
 }

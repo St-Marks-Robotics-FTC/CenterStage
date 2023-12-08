@@ -23,13 +23,13 @@ public class BluePropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(50, 150),
-            new Point(150, 200)
+            new Point(250, 150),
+            new Point(350, 200)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(440, 50),
-            new Point(540, 125)
+            new Point(500, 200),
+            new Point(600, 300)
     );
 
     @Override
@@ -70,11 +70,11 @@ public class BluePropThreshold implements VisionProcessor {
 
 
         if(averagedRightBox > blueThreshold){        //Must Tune Red Threshold
-            outStr = "center";
-        }else if(averagedLeftBox> blueThreshold){
-            outStr = "left";
-        }else{
             outStr = "right";
+        }else if(averagedLeftBox> blueThreshold){
+            outStr = "center";
+        }else{
+            outStr = "left";
         }
 
 
