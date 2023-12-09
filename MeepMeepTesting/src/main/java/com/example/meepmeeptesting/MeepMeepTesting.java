@@ -48,12 +48,12 @@ public class MeepMeepTesting {
                     // RED FAR SIDE
                                 // right
                                         //.setReversed(true)
-                                        .splineToSplineHeading(new Pose2d(-31, -34, Math.toRadians(30)), Math.toRadians(0))
-                                        //.setReversed(false)
-                                        .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(180))
-                                        .splineToConstantHeading(new Vector2d(-31, -11), Math.toRadians(0))
-                                        .splineToSplineHeading(new Pose2d(11, -11, Math.toRadians(0)), Math.toRadians(0))
-                                        .splineToSplineHeading(new Pose2d(52, -39, Math.toRadians(0)), Math.toRadians(0))
+//                                        .splineToSplineHeading(new Pose2d(-31, -34, Math.toRadians(30)), Math.toRadians(0))
+//                                        //.setReversed(false)
+//                                        .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(180))
+//                                        .splineToConstantHeading(new Vector2d(-31, -11), Math.toRadians(0))
+//                                        .splineToSplineHeading(new Pose2d(11, -11, Math.toRadians(0)), Math.toRadians(0))
+//                                        .splineToSplineHeading(new Pose2d(52, -39, Math.toRadians(0)), Math.toRadians(0))
                                         // middle
                                         //.setReversed(true)
 //                                        .splineToSplineHeading(new Pose2d(-40, -26, Math.toRadians(10)), Math.toRadians(10))
@@ -102,6 +102,28 @@ public class MeepMeepTesting {
 //                                .splineToSplineHeading(new Pose2d(50, -27, Math.toRadians(0)), Math.toRadians(0))
 
 
+
+                                .splineToSplineHeading(new Pose2d(11, -33, Math.toRadians(160)), Math.toRadians(130))
+
+                                .waitSeconds(2)
+                                .setTangent(Math.toRadians(-20))
+                                .splineToSplineHeading(new Pose2d(52, -39, Math.toRadians(0)), Math.toRadians(0))
+
+                                .waitSeconds(2) // score
+
+                                .setTangent(Math.toRadians(140))
+                                .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
+                                .splineToSplineHeading(new Pose2d(-58, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
+
+                                .waitSeconds(2) // intake
+
+                                .setTangent(Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                                .splineToConstantHeading(new Vector2d(51.5, -24), Math.toRadians(0))
+                                //.splineToSplineHeading(new Pose2d(51.5, -24, Math.toRadians(0)), Math.toRadians(0))
+//                                .back(4)
+//                                .strafeRight(28)
 
                                 .build()
                 );
