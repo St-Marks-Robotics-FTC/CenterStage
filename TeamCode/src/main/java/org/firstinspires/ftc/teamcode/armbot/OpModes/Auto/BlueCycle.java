@@ -97,14 +97,26 @@ public class BlueCycle extends LinearOpMode {
         TrajectorySequence cycle1 = drive.trajectorySequenceBuilder(traj21.end())
                 .setTangent(Math.toRadians(-180))
                 .splineToSplineHeading(new Pose2d(11.5, 9.5, Math.toRadians(-180)), Math.toRadians(-180))
+
+                .addTemporalMarker(0.5, () -> {
+                    robot.setArm(0);
+                })
                 .build();
         TrajectorySequence cycle2 = drive.trajectorySequenceBuilder(traj22.end())
                 .setTangent(Math.toRadians(-160))
                 .splineToSplineHeading(new Pose2d(11.5, 9.5, Math.toRadians(-180)), Math.toRadians(-180))
+
+                .addTemporalMarker(0.5, () -> {
+                    robot.setArm(0);
+                })
                 .build();
         TrajectorySequence cycle3 = drive.trajectorySequenceBuilder(traj23.end())
                 .setTangent(Math.toRadians(-140))
                 .splineToSplineHeading(new Pose2d(11.5, 9.5, Math.toRadians(-180)), Math.toRadians(-180))
+
+                .addTemporalMarker(0.5, () -> {
+                    robot.setArm(0);
+                })
                 .build();
 
         TrajectorySequence stack = drive.trajectorySequenceBuilder(cycle1.end())
@@ -181,7 +193,6 @@ public class BlueCycle extends LinearOpMode {
                 drive.followTrajectorySequence(cycle3);
                 break;
         }
-        robot.setArm(0);
 
         drive.followTrajectorySequence(stack);
         robot.closeClaw();
