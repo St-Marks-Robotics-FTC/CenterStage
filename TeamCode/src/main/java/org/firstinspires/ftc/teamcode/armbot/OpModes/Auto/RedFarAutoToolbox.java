@@ -67,13 +67,13 @@ public class RedFarAutoToolbox extends LinearOpMode {
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
                 //.splineTo(new Vector2d(-41, -32), Math.toRadians(150))
                 .lineToLinearHeading(new Pose2d(-34, -32, Math.toRadians(120)))
-                .lineToLinearHeading(new Pose2d(-34, -11, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-34, -9, Math.toRadians(90)))
                 .setTangent(0)
-                .splineTo(new Vector2d(22, -11), Math.toRadians(0))
+                .splineTo(new Vector2d(22, -9), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(58, -23, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
-                .splineToConstantHeading(new Vector2d(-45, -26), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-48, -22), Math.toRadians(180))
                 .setTangent(Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-31, -9), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, -9, Math.toRadians(0)), Math.toRadians(0))
@@ -81,8 +81,8 @@ public class RedFarAutoToolbox extends LinearOpMode {
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(-31, -11), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(22, -11, Math.toRadians(0)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-31, -9), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(22, -9, Math.toRadians(0)), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(58, -37, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
@@ -107,7 +107,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
         }
 
         waitForStart();
-        sleep(1000);
+        sleep(12000);
         switch (loc) {
             case "left":
                 drive.followTrajectorySequence(traj11);
@@ -122,7 +122,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
 
         robot.openLeft();
         sleep(3000);
-        robot.setArm(350); // 390
+        robot.setArm(380); // 390
 
         //outtake
         switch (loc) {
