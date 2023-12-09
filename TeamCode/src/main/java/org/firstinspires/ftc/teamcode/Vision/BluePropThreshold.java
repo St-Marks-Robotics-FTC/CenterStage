@@ -43,10 +43,10 @@ public class BluePropThreshold implements VisionProcessor {
 
 
         Scalar lowHSVRedLower = new Scalar(0, 100, 20);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(10, 255, 255);
+        Scalar lowHSVRedUpper = new Scalar(40, 255, 255);
 
-        Scalar redHSVRedLower = new Scalar(160, 100, 20); //Wraps around Color Wheel
-        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
+        Scalar redHSVRedLower = new Scalar(150, 90, 20); //Wraps around Color Wheel
+        Scalar highHSVRedUpper = new Scalar(190, 255, 255);
 
         Core.inRange(testMat, lowHSVRedLower, lowHSVRedUpper, lowMat);
         Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);

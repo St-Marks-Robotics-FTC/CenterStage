@@ -58,7 +58,7 @@ public class BlueCycle extends LinearOpMode {
         TrajectorySequence right = drive.trajectorySequenceBuilder(startPose)
                 .splineToSplineHeading(new Pose2d(11, 29, Math.toRadians(-160)), Math.toRadians(-130))
 
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openLeft();}) // score purple Preload
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openRight();}) // score purple Preload
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
 
@@ -94,7 +94,7 @@ public class BlueCycle extends LinearOpMode {
         TrajectorySequence middle = drive.trajectorySequenceBuilder(startPose)
                 .splineToSplineHeading(new Pose2d(15, 31, Math.toRadians(-90)), Math.toRadians(-90))
 
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openLeft();}) // score purple Preload
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openRight();}) // score purple Preload
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
 
@@ -130,7 +130,7 @@ public class BlueCycle extends LinearOpMode {
         TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
                 .splineToSplineHeading(new Pose2d(15, 35, Math.toRadians(-45)), Math.toRadians(-90))
 
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openLeft();}) // score purple Preload
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openRight();}) // score purple Preload
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
 
@@ -144,8 +144,8 @@ public class BlueCycle extends LinearOpMode {
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(0);})
                 .setTangent(Math.toRadians(-140))
-                .splineToSplineHeading(new Pose2d(11.5, 9.5, Math.toRadians(-180)), Math.toRadians(-180))
-
+                .splineToSplineHeading(new Pose2d(11.5, 9, Math.toRadians(-180)), Math.toRadians(-180))
+                .splineToSplineHeading(new Pose2d(-30, 9, Math.toRadians(-180)), Math.toRadians(-180))
                 .splineToSplineHeading(new Pose2d(-58, 13.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(1.5)
@@ -153,8 +153,8 @@ public class BlueCycle extends LinearOpMode {
 
                 // stack to board
                 .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-20, 9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(11.5, 9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-20, 9, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(11.5, 9, Math.toRadians(0)), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(51.5, 24), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
