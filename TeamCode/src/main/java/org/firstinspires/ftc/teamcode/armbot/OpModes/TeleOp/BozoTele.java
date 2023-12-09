@@ -101,6 +101,10 @@ public class BozoTele extends LinearOpMode {
                     dpadupPressed=false;
                 }
             }
+            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
+                robot.safeRelease(hangPos[1]);
+                //dpadupPressed = true;
+            }
             if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
                 level = Math.min(2, level+1);
                 robot.setArm(armPos[level]);
@@ -164,7 +168,7 @@ public class BozoTele extends LinearOpMode {
         }
         while(robot.arm.getCurrentPosition()>=900){
             robot.openClaw();
-            robot.releaseHang();
+            robot.safeRelease(hangPos[1]);
         }
     }
 }

@@ -60,10 +60,10 @@ public class BozoClass {
         arm.setPower(1);
     }
 
-    public void releaseHang() {
-        arm.setTargetPosition(900);
+    public void safeRelease(int pos) {
+        arm.setTargetPosition(pos);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(1.0);
+        arm.setPower(0.7);
     }
 
     public void setArm(int pos) {
