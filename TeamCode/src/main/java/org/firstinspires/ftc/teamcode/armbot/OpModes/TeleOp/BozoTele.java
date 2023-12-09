@@ -163,7 +163,8 @@ public class BozoTele extends LinearOpMode {
 
         }
         while(robot.arm.getCurrentPosition()>=900){
-            robot.setArm(900);
+            robot.openClaw();
+            robot.releaseHang();
         }
     }
 }

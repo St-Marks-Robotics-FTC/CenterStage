@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.armbot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -58,6 +59,13 @@ public class BozoClass {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(1);
     }
+
+    public void releaseHang() {
+        arm.setTargetPosition(900);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(1.0);
+    }
+
     public void setArm(int pos) {
         arm.setTargetPosition(pos);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
