@@ -24,7 +24,7 @@ public class BozoTele extends LinearOpMode {
     public static int level = 0;
 
     public static boolean dpadupPressed = false;
-    public static int[] hangPos = {900,1400}; //CHANGE
+    public static int[] hangPos = {970,1850}; //CHANGE
 
     public static boolean closed = false;
     public static boolean leftClosed = false;
@@ -97,7 +97,7 @@ public class BozoTele extends LinearOpMode {
                     robot.setArm(hangPos[0]);
                     dpadupPressed = true;
                 } else {
-                    robot.setArm(hangPos[1]);
+                    robot.hang(hangPos[1]);
                     dpadupPressed=false;
                 }
             }
@@ -158,8 +158,12 @@ public class BozoTele extends LinearOpMode {
             telemetry.addData("Arm Power", robot.arm.getPower());
             telemetry.addData("Left Claw closed", leftClosed);
             telemetry.addData("Right Claw closed", rightClosed);
+            //telemetry.addData("Current", robot.arm.getCurrent());
             telemetry.update();
 
+        }
+        while(robot.arm.getCurrentPosition()>=900){
+            robot.setArm(900);
         }
     }
 }

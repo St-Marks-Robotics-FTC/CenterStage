@@ -53,7 +53,11 @@ public class BozoClass {
         openRight();
         //target = 0.7;
     }
-
+    public void hang(int pos){
+        arm.setTargetPosition(pos);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(1);
+    }
     public void setArm(int pos) {
         arm.setTargetPosition(pos);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
