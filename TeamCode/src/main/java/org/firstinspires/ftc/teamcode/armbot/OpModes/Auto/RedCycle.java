@@ -55,82 +55,114 @@ public class RedCycle extends LinearOpMode {
         Pose2d startPose = new Pose2d(15, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) //left
+        TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
                 .splineToSplineHeading(new Pose2d(11, -33, Math.toRadians(160)), Math.toRadians(130))
-                .build();
-        TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) //mid
-                .splineToSplineHeading(new Pose2d(15, -31, Math.toRadians(90)), Math.toRadians(90))
-                .build();
-        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) //right
-                .splineToSplineHeading(new Pose2d(15, -35, Math.toRadians(45)), Math.toRadians(90))
-                .build();
-        TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
+
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openLeft();}) // score purple Preload
+                .waitSeconds(1.5)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
+
+
                 .setTangent(Math.toRadians(-20))
                 .splineToSplineHeading(new Pose2d(51.5, -24, Math.toRadians(0)), Math.toRadians(0))
-                .build();
-        TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
-                .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(52, -32, Math.toRadians(0)), Math.toRadians(0))
-                .build();
-        TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
-                .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(52, -39, Math.toRadians(0)), Math.toRadians(0))
-                .build();
 
-//        TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
-//                .back(4)
-//                .strafeRight(28)
-//                .build();
-//        TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
-//                .back(4)
-//                .strafeRight(22)
-//                .build();
-//        TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
-//                .back(4)
-//                .strafeRight(18)
-//                .build();
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
+                .waitSeconds(1.5)
 
-
-        TrajectorySequence cycle1 = drive.trajectorySequenceBuilder(traj21.end())
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(0);})
                 .setTangent(Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
 
-                .addTemporalMarker(0.5, () -> {
-                    robot.setArm(0);
-                })
-                .build();
-        TrajectorySequence cycle2 = drive.trajectorySequenceBuilder(traj22.end())
-                .setTangent(Math.toRadians(160))
-                .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
+                .splineToSplineHeading(new Pose2d(-58, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(1.5)
 
-                .addTemporalMarker(0.5, () -> {
-                    robot.setArm(0);
-                })
-                .build();
-        TrajectorySequence cycle3 = drive.trajectorySequenceBuilder(traj23.end())
-                .setTangent(Math.toRadians(140))
-                .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
 
-                .addTemporalMarker(0.5, () -> {
-                    robot.setArm(0);
-                })
-                .build();
-
-        TrajectorySequence stack = drive.trajectorySequenceBuilder(cycle1.end())
-                .splineToSplineHeading(new Pose2d(-58, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
-                .build();
-
-        TrajectorySequence score = drive.trajectorySequenceBuilder(stack.end())
+                // stack to board
                 .setTangent(Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0)), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0)), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
-                .build();
 
-        TrajectorySequence back = drive.trajectorySequenceBuilder(score.end())
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
+                .waitSeconds(1.5)
+
                 .back(4)
+
                 .build();
 
+        TrajectorySequence middle = drive.trajectorySequenceBuilder(startPose)
+                .splineToSplineHeading(new Pose2d(15, -31, Math.toRadians(90)), Math.toRadians(90))
+
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openLeft();}) // score purple Preload
+                .waitSeconds(1.5)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
+
+
+                .setTangent(Math.toRadians(-20))
+                .splineToSplineHeading(new Pose2d(52, -32, Math.toRadians(0)), Math.toRadians(0))
+
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
+                .waitSeconds(1.5)
+
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(0);})
+                .setTangent(Math.toRadians(160))
+                .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
+
+                .splineToSplineHeading(new Pose2d(-58, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(1.5)
+
+
+                // stack to board
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
+
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
+                .waitSeconds(1.5)
+
+                .back(4)
+
+                .build();
+
+        TrajectorySequence right = drive.trajectorySequenceBuilder(startPose)
+                .splineToSplineHeading(new Pose2d(15, -35, Math.toRadians(45)), Math.toRadians(90))
+
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openLeft();}) // score purple Preload
+                .waitSeconds(1.5)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
+
+
+                .setTangent(Math.toRadians(-20))
+                .splineToSplineHeading(new Pose2d(52, -39, Math.toRadians(0)), Math.toRadians(0))
+
+
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
+                .waitSeconds(1.5)
+
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(0);})
+                .setTangent(Math.toRadians(140))
+                .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
+
+                .splineToSplineHeading(new Pose2d(-58, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(1.5)
+
+
+                // stack to board
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
+
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
+                .waitSeconds(1.5)
+
+                .back(4)
+
+                .build();
 
 
 
@@ -144,62 +176,17 @@ public class RedCycle extends LinearOpMode {
         }
 
         waitForStart();
-        //robot.setArm(-700);
-        //sleep(1000);
+        
         switch (loc) {
             case "left":
-                drive.followTrajectorySequence(traj11);
+                drive.followTrajectorySequence(left);
                 break;
             case "center":
-                drive.followTrajectorySequence(traj12);
+                drive.followTrajectorySequence(middle);
                 break;
             case "right":
-                drive.followTrajectorySequence(traj13);
+                drive.followTrajectorySequence(right);
                 break;
         }
-
-        //robot.openAutoClaw();
-        robot.openLeft();
-        sleep(3000);
-        robot.setArm(350); // 390
-
-        //outtake
-        switch (loc) {
-            case "left":
-                drive.followTrajectorySequence(traj21);
-                break;
-            case "center":
-                drive.followTrajectorySequence(traj22);
-                break;
-            case "right":
-                drive.followTrajectorySequence(traj23);
-                break;
-        }
-
-        robot.openClaw(); // Score Yellow Preload
-
-        sleep(1000);
-        // 700
-
-        switch (loc) {
-            case "left":
-                drive.followTrajectorySequence(cycle1);
-                break;
-            case "center":
-                drive.followTrajectorySequence(cycle2);
-                break;
-            case "right":
-                drive.followTrajectorySequence(cycle3);
-                break;
-        }
-
-        drive.followTrajectorySequence(stack);
-        robot.closeClaw();
-        sleep(1000);
-        drive.followTrajectorySequence(score);
-        robot.openClaw();
-        sleep(1000);
-        drive.followTrajectorySequence(back);
-
     }
 }
