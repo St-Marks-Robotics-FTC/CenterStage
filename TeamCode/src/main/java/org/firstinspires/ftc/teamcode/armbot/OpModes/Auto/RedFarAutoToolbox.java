@@ -77,13 +77,14 @@ public class RedFarAutoToolbox extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-31, -9), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, -9, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(58, -32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(58, -30, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(-31, -9), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, -9, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(58, -37, Math.toRadians(0)), Math.toRadians(0))
+                //.splineToSplineHeading(new Pose2d(58, -37, Math.toRadians(0)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(58,-37), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
@@ -107,7 +108,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
         }
 
         waitForStart();
-        sleep(12000);
+        sleep(16000);
         switch (loc) {
             case "left":
                 drive.followTrajectorySequence(traj11);

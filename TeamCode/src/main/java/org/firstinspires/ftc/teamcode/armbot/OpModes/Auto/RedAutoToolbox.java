@@ -65,7 +65,7 @@ public class RedAutoToolbox extends LinearOpMode {
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
                 .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(51.5, -24, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(51.5, -23, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .setTangent(Math.toRadians(-20))
