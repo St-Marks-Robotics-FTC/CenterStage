@@ -74,22 +74,29 @@ public class NewControls extends LinearOpMode {
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
 
+
+            double frontLeftPower;
+            double backLeftPower;
+            double frontRightPower;
+            double backRightPower;
             if (gamepad1.left_bumper) {
-                frontLeftMotor.setPower(0.3 * frontLeftPower);
-                backLeftMotor.setPower(0.3 * backLeftPower);
-                frontRightMotor.setPower(0.3 * frontRightPower);
-                backRightMotor.setPower(0.3 * backRightPower);
+                frontLeftPower = (0.3 * y + 0.3 * x + 0.2 * rx) / denominator;
+                backLeftPower = (0.3 * y - 0.3 * x + 0.2 * rx) / denominator;
+                frontRightPower = (0.3 * y - 0.3 * x - 0.2 * rx) / denominator;
+                backRightPower = (0.3 * y + 0.3 * x - 0.2 * rx) / denominator;
+
             } else {
-                frontLeftMotor.setPower(frontLeftPower);
-                backLeftMotor.setPower(backLeftPower);
-                frontRightMotor.setPower(frontRightPower);
-                backRightMotor.setPower(backRightPower);
+                frontLeftPower = (y + x + rx) / denominator;
+                backLeftPower = (y - x + rx) / denominator;
+                frontRightPower = (y - x - rx) / denominator;
+                backRightPower = (y + x - rx) / denominator;
+
             }
+            frontLeftMotor.setPower(frontLeftPower);
+            backLeftMotor.setPower(backLeftPower);
+            frontRightMotor.setPower(frontRightPower);
+            backRightMotor.setPower(backRightPower);
 
             if (pad1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
                 robot.setArm(robot.arm.getCurrentPosition()+10);
