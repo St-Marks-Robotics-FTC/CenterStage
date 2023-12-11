@@ -124,13 +124,7 @@ public class NewControls extends LinearOpMode {
                 }
                 robot.setArm(armPos[level]);
             }
-//            else if (gamepad1.right_bumper) {
-//                robot.setArm(robot.arm.getCurrentPosition()+30);
-//            } else if(gamepad1.left_bumper){
-//                robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
-            /*}*/ else if(gamepad1.right_trigger>=0.3){
-                robot.setArm(robot.arm.getCurrentPosition()-20);
-            }
+
 
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
                 robot.closeClaw();
