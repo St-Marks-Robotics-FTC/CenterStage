@@ -156,9 +156,16 @@ public class NewControls extends LinearOpMode {
 
 
             pad1.readButtons();
+            leftTrigger.readValue();
+            rightTrigger.readValue();
+
+
             telemetry.addData("Arm Level", level);
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
+
+//            telemetry.addData("Left Trigger", leftTrigger.wasJustPressed());
+//            telemetry.addData("Left Trigger value", pad1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
             telemetry.addData("Left Claw closed", leftClosed);
             telemetry.addData("Right Claw closed", rightClosed);
