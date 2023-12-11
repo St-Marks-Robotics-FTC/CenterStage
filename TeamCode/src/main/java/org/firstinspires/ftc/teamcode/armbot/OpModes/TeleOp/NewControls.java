@@ -98,9 +98,10 @@ public class NewControls extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
 
-            if (pad1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-                robot.setArm(robot.arm.getCurrentPosition()+10);
-            }
+
+
+
+
 
             if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
                 if(!dpadupPressed){
@@ -111,10 +112,7 @@ public class NewControls extends LinearOpMode {
                     dpadupPressed=false;
                 }
             }
-            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
-                robot.safeRelease(hangPos[1]);
-                //dpadupPressed = true;
-            }
+
             if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
                 level = Math.min(2, level+1);
                 robot.setArm(armPos[level]);
@@ -174,10 +172,6 @@ public class NewControls extends LinearOpMode {
             //telemetry.addData("Current", robot.arm.getCurrent());
             telemetry.update();
 
-        }
-        while(robot.arm.getCurrentPosition()>=900){
-            robot.openClaw();
-            robot.safeRelease(hangPos[1]);
         }
     }
 }
