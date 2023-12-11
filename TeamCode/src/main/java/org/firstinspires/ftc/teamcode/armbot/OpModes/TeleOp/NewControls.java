@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -57,6 +58,13 @@ public class NewControls extends LinearOpMode {
 
         robot = new BozoClass(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
+        TriggerReader leftTrigger = new TriggerReader(
+                pad1, GamepadKeys.Trigger.LEFT_TRIGGER
+        );
+        TriggerReader rightTrigger = new TriggerReader(
+                pad1, GamepadKeys.Trigger.RIGHT_TRIGGER
+        );
+
         ElapsedTime time = new ElapsedTime();
 
         robot.openClaw();
@@ -74,36 +82,68 @@ public class NewControls extends LinearOpMode {
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+            double frontLeftPower = (y + x + rx) / denominator;
+            double backLeftPower = (y - x + rx) / denominator;
+            double frontRightPower = (y - x - rx) / denominator;
+            double backRightPower = (y + x - rx) / denominator;
 
-
-            double frontLeftPower;
-            double backLeftPower;
-            double frontRightPower;
-            double backRightPower;
             if (gamepad1.left_bumper) {
-                frontLeftPower = (0.3 * y + 0.3 * x + 0.2 * rx) / denominator;
-                backLeftPower = (0.3 * y - 0.3 * x + 0.2 * rx) / denominator;
-                frontRightPower = (0.3 * y - 0.3 * x - 0.2 * rx) / denominator;
-                backRightPower = (0.3 * y + 0.3 * x - 0.2 * rx) / denominator;
+                frontLeftMotor.setPower(0.3 * frontLeftPower);
+                backLeftMotor.setPower(0.3 * backLeftPower);
+                frontRightMotor.setPower(0.3 * frontRightPower);
+                backRightMotor.setPower(0.3 * backRightPower);
+            } else {
+                frontLeftMotor.setPower(frontLeftPower);
+                backLeftMotor.setPower(backLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                backRightMotor.setPower(backRightPower);
+            }
+
+
+
+
+            if (level == 0) { // arm currently down
+                if (leftTrigger.wasJustPressed()) { // CLAW OPEN
+                    robot.openClaw();
+                    closed = false;
+                } else if (rightTrigger.wasJustPressed()) {  // CLAW CLOSE
+                    robot.closeClaw();
+                    closed = true;
+                    leftClosed = true;
+                    rightClosed = true;
+                }
+
+                if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && closed) { // ARM UP
+                    level = 1;
+                    robot.setArm(armPos[level]);
+                }
 
             } else {
-                frontLeftPower = (y + x + rx) / denominator;
-                backLeftPower = (y - x + rx) / denominator;
-                frontRightPower = (y - x - rx) / denominator;
-                backRightPower = (y + x - rx) / denominator;
+
+                if (leftTrigger.wasJustPressed()) { // LEFT OPEN
+                    robot.openLeft();
+                    leftClosed = false;
+                } else if (rightTrigger.wasJustPressed()) {  // RIGHT CLOSE
+                    robot.openRight();
+                    rightClosed = false;
+                }
+
+                if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) { // ARM Toggle
+                    if (!leftClosed && !rightClosed) {
+                        closed = false;
+                        level = 0;
+                    } else if (level == 1) {
+                        level = 2;
+                    } else if (level == 2){
+                        level = 1;
+                    }
+                    robot.setArm(armPos[level]);
+                }
 
             }
-            frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
 
 
-
-
-
-
-            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+            if(pad1.wasJustPressed(GamepadKeys.Button.Y)){ // HANG
                 if(!dpadupPressed){
                     robot.setArm(hangPos[0]);
                     dpadupPressed = true;
@@ -113,54 +153,13 @@ public class NewControls extends LinearOpMode {
                 }
             }
 
-            if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
-                level = Math.min(2, level+1);
-                robot.setArm(armPos[level]);
-            } else if (pad1.wasJustPressed(GamepadKeys.Button.A)/* && !closed*/) {
-                if (!closed) {
-                    level = 0;
-                } else {
-                    level = Math.max(0, level-1);
-                }
-                robot.setArm(armPos[level]);
-            }
 
 
-            if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
-                robot.closeClaw();
-                leftClosed = true;
-                rightClosed = true;
-
-                closed = true;
-            } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
-                robot.openClaw();
-                leftClosed = false;
-                rightClosed = false;
-
-                closed = false;
-            }
-            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                if (!leftClosed){
-                    robot.closeLeft();
-                    leftClosed = true;
-                } else {
-                    robot.openLeft();
-                    rightClosed = false;
-                }
-            }
-            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-                if (!rightClosed){
-                    robot.closeRight();
-                    rightClosed = true;
-                } else {
-                    robot.openRight();
-                    rightClosed = false;
-                }
-            }
-            if (!rightClosed && !leftClosed) closed = false;
             pad1.readButtons();
+            telemetry.addData("Arm Level", level);
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
+
             telemetry.addData("Left Claw closed", leftClosed);
             telemetry.addData("Right Claw closed", rightClosed);
             //telemetry.addData("Current", robot.arm.getCurrent());
