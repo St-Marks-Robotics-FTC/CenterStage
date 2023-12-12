@@ -6,12 +6,13 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Vision.BluePropThreshold;
+import org.firstinspires.ftc.teamcode.Vision.BlueFarPropThreshold;
 import org.firstinspires.ftc.teamcode.armbot.BozoClass;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Autonomous
-public class BlueAutoToolbox extends LinearOpMode {
+public class FarBlue extends LinearOpMode {
 
     FtcDashboard dashboard;
 
@@ -28,7 +29,7 @@ public class BlueAutoToolbox extends LinearOpMode {
     BozoClass robot;
 
     private VisionPortal portal;
-    private BluePropThreshold bluePropThreshold;
+    private BlueFarPropThreshold blueFarPropThreshold;
 
 
     @Override
@@ -37,12 +38,12 @@ public class BlueAutoToolbox extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        bluePropThreshold = new BluePropThreshold();
+        blueFarPropThreshold = new BlueFarPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(bluePropThreshold)
+                .addProcessor(blueFarPropThreshold)
                 .build();
 
 
@@ -51,105 +52,109 @@ public class BlueAutoToolbox extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new BozoClass(hardwareMap);
 
-        Pose2d startPose = new Pose2d(15, 60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-38, 60, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // right side
-                .splineToSplineHeading(new Pose2d(11, 29, Math.toRadians(-160)), Math.toRadians(-130))
+        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // left
+                .splineToSplineHeading(new Pose2d(-31, 34, Math.toRadians(-30)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(15, 31, Math.toRadians(-90)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-40, 25, Math.toRadians(-10)), Math.toRadians(-10))
                 .build();
-        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // left
-                .splineToSplineHeading(new Pose2d(16, 34, Math.toRadians(-45)), Math.toRadians(-90))
+        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // right
+                .splineTo(new Vector2d(-36, 32), Math.toRadians(-150))
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
-                .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(52, 24, Math.toRadians(0)), Math.toRadians(0))
+                //.splineTo(new Vector2d(-41, -32), Math.toRadians(150))
+                .setTangent(Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-38, 34, Math.toRadians(0)), Math.toRadians(-180))
+                .setTangent(Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-31, 11), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(22, 11, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, 37, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
-                .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-48, 22), Math.toRadians(-180))
+                .setTangent(Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-31, 9), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(22, 9, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, 29, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
-                .setTangent(Math.toRadians(45))
-                .splineToSplineHeading(new Pose2d(52, 39, Math.toRadians(0)), Math.toRadians(0))
+                .lineToLinearHeading(new Pose2d(-34, 32, Math.toRadians(-120)))
+                .lineToLinearHeading(new Pose2d(-34, 11, Math.toRadians(-90)))
+                .setTangent(0)
+                .splineTo(new Vector2d(22, 11), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, 25, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
-//                .strafeRight(18)
-                .back(4)
-                .strafeLeft(28)
+                .back(8)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
-//                .strafeRight(22)
-                .back(4)
-                .strafeLeft(22)
-
+                .back(8)
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
-//                .strafeRight(28)
-                .back(4)
-                .strafeLeft(18)
+                .back(8)
                 .build();
 
+        //robot.closeClaw();
         robot.closeClaw();
         while (opModeInInit()) {
-            loc = bluePropThreshold.getPropPosition();
-            telemetry.addData("Prop Position", bluePropThreshold.getPropPosition());
-            telemetry.addData("Avg Left Value", bluePropThreshold.getAvergageLeft());
-            telemetry.addData("Avg Right Value", bluePropThreshold.getAvergageRight());
+            loc = blueFarPropThreshold.getPropPosition();
+            telemetry.addData("Prop Position", blueFarPropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Value", blueFarPropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Value", blueFarPropThreshold.getAvergageRight());
             telemetry.update();
         }
 
         waitForStart();
-        //robot.setArm(-700);
-        sleep(1000);
+        sleep(12000);
         switch (loc) {
-            case "right":
+            case "left":
                 drive.followTrajectorySequence(traj11);
                 break;
             case "center":
                 drive.followTrajectorySequence(traj12);
                 break;
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(traj13);
                 break;
         }
 
         robot.openRight();
         sleep(3000);
-        robot.setArm(350); // 390
+        robot.setArm(380); // 390
 
         //outtake
         switch (loc) {
-            case "right":
+            case "left":
                 drive.followTrajectorySequence(traj21);
                 break;
             case "center":
                 drive.followTrajectorySequence(traj22);
                 break;
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(traj23);
                 break;
         }
 
+        //robot.openClaw();
         robot.openLeft();
-
         sleep(1000);
 
         switch (loc) {
-            case "right":
+            case "left":
                 drive.followTrajectorySequence(park1);
                 break;
             case "center":
                 drive.followTrajectorySequence(park2);
                 break;
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(park3);
                 break;
         }
-        robot.setArm(0);
+        robot.setArm(0); // 700
 
     }
 }

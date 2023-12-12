@@ -20,7 +20,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Autonomous
-public class RedFarAutoToolbox extends LinearOpMode {
+public class FarRed extends LinearOpMode {
 
     FtcDashboard dashboard;
 
