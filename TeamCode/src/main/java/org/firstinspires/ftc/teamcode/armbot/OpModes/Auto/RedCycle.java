@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.Trajec
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
-@Autonomous (group = "Red")
+@Autonomous (group = "Red", preselectTeleOp = "BozoTele")
 public class RedCycle extends LinearOpMode {
 
     FtcDashboard dashboard;
