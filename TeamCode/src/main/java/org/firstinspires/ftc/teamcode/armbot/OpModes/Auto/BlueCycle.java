@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.Trajec
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
-@Autonomous
+@Autonomous (group = "Blue")
 public class BlueCycle extends LinearOpMode {
 
     FtcDashboard dashboard;

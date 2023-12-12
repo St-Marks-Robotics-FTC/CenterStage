@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.Trajec
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
-@Autonomous
+@Autonomous (group = "Red")
 public class CloseRed extends LinearOpMode {
 
     FtcDashboard dashboard;
