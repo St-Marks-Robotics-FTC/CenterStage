@@ -31,6 +31,9 @@ public class NewControls extends LinearOpMode {
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
 
+    double loopTime = 0;
+    double prevTime = 0;
+
     public static BozoClass robot;
     public static GamepadEx pad1;
 
@@ -159,6 +162,9 @@ public class NewControls extends LinearOpMode {
             leftTrigger.readValue();
             rightTrigger.readValue();
 
+            loopTime = time.milliseconds();
+            telemetry.addData("Hz", 1000 / (loopTime - prevTime) );
+            prevTime = loopTime;
 
             telemetry.addData("Arm Level", level);
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());

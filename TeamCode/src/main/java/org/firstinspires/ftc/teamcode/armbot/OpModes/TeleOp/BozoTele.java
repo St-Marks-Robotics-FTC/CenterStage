@@ -30,6 +30,9 @@ public class BozoTele extends LinearOpMode {
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
 
+    double loopTime = 0;
+    double prevTime = 0;
+
     public static BozoClass robot;
     public static GamepadEx pad1;
 
@@ -61,6 +64,7 @@ public class BozoTele extends LinearOpMode {
 
         robot.openClaw();
         waitForStart();
+        time.reset();
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if (isStopRequested()) return;
@@ -160,6 +164,12 @@ public class BozoTele extends LinearOpMode {
             }
             if (!rightClosed && !leftClosed) closed = false;
             pad1.readButtons();
+
+
+            loopTime = time.milliseconds();
+            telemetry.addData("Hz", 1000 / (loopTime - prevTime) );
+            prevTime = loopTime;
+
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
             telemetry.addData("Left Claw closed", leftClosed);
