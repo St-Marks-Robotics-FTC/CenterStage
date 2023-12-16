@@ -85,7 +85,7 @@ public class Outtake {
     }
 
     public boolean isDone() {
-        return Math.abs(getSlidePos())<TOLERANCE;
+        return Math.abs(getSlidePos() - targetPosition)<TOLERANCE;
     }
 
     public int getSlidePos() {
