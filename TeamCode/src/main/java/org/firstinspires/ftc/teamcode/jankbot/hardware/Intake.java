@@ -17,7 +17,10 @@ public class Intake {
     private double clawRightClosed = 0.34;
     private double clawRightOpen = 0.25;
 
-
+    private double transferDown=0.2;
+    private double transferPos = 0.3;
+    private double transferClose = 0.4;
+    private double transferRelease = 0.5;
 
     public enum intakeState {
         INTAKE,
@@ -34,6 +37,7 @@ public class Intake {
         transferClaw = hardwareMap.get(Servo.class, "transferClaw");
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        transfer.setPosition(transferDown);
     }
 
     public void update() {
@@ -42,5 +46,14 @@ public class Intake {
 
     public void setIntake(double power) {
         intake.setPower(power);
+    }
+
+    public void transfer() {
+        transfer.setPosition(transferPos);
+        transferRelease();
+    }
+
+    public void transferRelease() {
+        transferClaw.setPosition(transferRelease);
     }
 }
