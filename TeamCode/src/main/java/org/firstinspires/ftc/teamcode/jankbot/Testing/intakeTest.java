@@ -26,7 +26,7 @@ public class intakeTest extends OpMode {
         } else if (pad1.isDown(GamepadKeys.Button.B)) {
             power-=0.01;
         }
-        robot.setIntake(power);
+        robot.intake.setIntake(power);
         telemetry.addData("intake power: ", power);
         telemetry.update();
     }
