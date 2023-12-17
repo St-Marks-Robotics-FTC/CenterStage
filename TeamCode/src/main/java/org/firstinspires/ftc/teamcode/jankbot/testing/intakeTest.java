@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.jankbot.Testing;
+package org.firstinspires.ftc.teamcode.jankbot.testing;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;

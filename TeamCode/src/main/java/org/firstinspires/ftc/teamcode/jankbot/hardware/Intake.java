@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.jankbot.util.ActionQueue;
+
 public class Intake {
 
     public DcMotorEx intake;
@@ -28,6 +30,13 @@ public class Intake {
         TRANSFER
     }
 
+    public intakeState status;
+    private double targetPower;
+
+    private ActionQueue queue;
+
+    private int transferDelay = 1000;
+
     public Intake(HardwareMap hardwareMap) {
         //intake
         intake = hardwareMap.get(DcMotorEx.class, "intake");
@@ -36,21 +45,45 @@ public class Intake {
         transfer = hardwareMap.get(Servo.class, "transfer");
         transferClaw = hardwareMap.get(Servo.class, "transferClaw");
 
+        queue = new ActionQueue();
+
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         transfer.setPosition(transferDown);
+
+        status = intakeState.IDLE;
+        targetPower=0.0;
     }
 
     public void update() {
+        if (status!=intakeState.TRANSFER) {
+            if (targetPower>0) {
+                status=intakeState.INTAKE;
+            } else {
+                status=intakeState.IDLE;
+            }
+        }
 
+        queue.update();
+    }
+
+    public void resetQueue() {
+        queue.clearQueue();
     }
 
     public void setIntake(double power) {
         intake.setPower(power);
+        status = intakeState.INTAKE;
+        targetPower=power;
+    }
+
+    public double getPower() {
+        return targetPower;
     }
 
     public void transfer() {
         transfer.setPosition(transferPos);
-        transferRelease();
+        queue.addDelayedAction(() -> transferRelease(), transferDelay);
+        status = intakeState.TRANSFER;
     }
 
     public void transferRelease() {

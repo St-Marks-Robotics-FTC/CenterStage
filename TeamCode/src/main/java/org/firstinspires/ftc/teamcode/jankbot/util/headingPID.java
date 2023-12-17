@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.jankbot.Util;
+package org.firstinspires.ftc.teamcode.jankbot.util;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
