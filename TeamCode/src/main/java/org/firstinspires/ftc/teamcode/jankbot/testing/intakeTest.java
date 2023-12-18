@@ -5,17 +5,17 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.jankbot.jankbot;
+import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 
 @TeleOp
 public class intakeTest extends OpMode {
 
-    jankbot robot;
+    Jankbot robot;
     GamepadEx pad1;
     double power=0.0;
     @Override
     public void init() {
-        robot = new jankbot(hardwareMap);
+        robot = new Jankbot(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
     }
 
