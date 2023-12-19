@@ -47,12 +47,45 @@ public class JankTele extends LinearOpMode {
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
             if (gamepad1.left_bumper) {
-                robot.drive.setWeightedDrivePower(new Pose2d(x, y, rx));
+                robot.drive.setWeightedDrivePower(
+                        new Pose2d(
+                                0.4 * y,
+                                0.4 * x,
+                                0.3 * rx
+                        )
+                );
             } else {
-                robot.drive.setWeightedDrivePower(new Pose2d(0.4 * x, 0.4 * y, 0.3 * rx));
+                robot.drive.setWeightedDrivePower(
+                        new Pose2d(
+                                y,
+                                x,
+                                rx
+                        )
+                );
             }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+
+            robot.drive.update();
+
+            Pose2d poseEstimate = robot.drive.getPoseEstimate();
+            telemetry.addData("x", poseEstimate.getX());
+            telemetry.addData("y", poseEstimate.getY());
+            telemetry.addData("heading", poseEstimate.getHeading());
 
 
             loopTime = time.milliseconds();
