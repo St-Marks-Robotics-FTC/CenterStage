@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode.jankbot.testing;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 
-// @Autonomous or @TeleOp
+@TeleOp
 public class SFTest extends LinearOpMode {
 
     Jankbot robot;
