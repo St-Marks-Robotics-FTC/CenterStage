@@ -42,6 +42,7 @@ public class SFTest extends LinearOpMode {
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
+                    robot.intake.setIntake(0); // Stop Intake
 //                    robot.intake.; // Intake lock
 //                    robot.intake.; // Intake tilt
                     robot.outtake.setV4Bar(0); // V4Bar down
