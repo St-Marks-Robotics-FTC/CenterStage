@@ -40,7 +40,8 @@ public class SFTest extends LinearOpMode {
 //                    robot.intake.dropdown(); // Drop Intake
                     robot.intake.setIntake(0.8); // Spin Intake
                 })
-                .transition( () -> gamepad1.right_trigger < 0.5) // if check2 is false transition
+                .transition( () -> gamepad1.right_trigger < 0.5) // if let go or intake sensor
+
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
@@ -50,12 +51,17 @@ public class SFTest extends LinearOpMode {
                     robot.outtake.setV4Bar(0); // V4Bar down
                 })
                 .transitionTimed(0.75)
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again
+
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
 //                    robot.outtake.(); // Claw Grab
                 })
                 .transitionTimed(0.5)
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again
+
+
 
 
 
