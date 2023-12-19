@@ -17,8 +17,10 @@ public class SFTest extends LinearOpMode {
         INTAKE,
         TILT,
         TRANSFER,
+
         IDLE2,
         EXTEND,
+
         IDLE3,
         SCORE,
         RETRACT
@@ -55,6 +57,10 @@ public class SFTest extends LinearOpMode {
                 })
                 .transitionTimed(0.5)
 
+
+
+
+
                 .state(LinearStates.IDLE2)
                 .onEnter( () -> {
                     robot.outtake.setV4Bar(0.3); // V4b Stow Position
@@ -68,6 +74,11 @@ public class SFTest extends LinearOpMode {
 //                    robot.outtake.rotate(); // Spin Turret to horizontal
                 })
                 .transition( () ->  Math.abs(robot.outtake.getSlidePos() - 800) < 15) // Checks if slides are in position
+
+
+
+
+
 
                 .state(LinearStates.IDLE3)
                 .transition( () ->  gamepad1.b) // Score Button

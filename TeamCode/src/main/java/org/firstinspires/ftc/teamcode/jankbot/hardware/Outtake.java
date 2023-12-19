@@ -7,7 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.checkerframework.checker.units.qual.A;
-import org.firstinspires.ftc.teamcode.jankbot.util.ActionQueue;
+//import org.firstinspires.ftc.teamcode.jankbot.util.ActionQueue;
+//import org.firstinspires.ftc.teamcode.jankbot.util.ActionQueue;
 
 public class Outtake {
 
@@ -46,7 +47,7 @@ public class Outtake {
 
     public outtakeState status;
 
-    private ActionQueue queue;
+//    private ActionQueue queue;
 
     private int transferDelay = 1000;
 
@@ -62,7 +63,7 @@ public class Outtake {
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
-        queue = new ActionQueue();
+//        queue = new ActionQueue();
 
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -85,12 +86,12 @@ public class Outtake {
             status=outtakeState.MOVING;
         }
 
-        queue.update();
+//        queue.update();
     }
 
-    public void resetQueue() {
-        queue.clearQueue();
-    }
+//    public void resetQueue() {
+//        queue.clearQueue();
+//    }
 
     public void setSlide(int pos) {
         rightSlide.setTargetPosition(pos);
@@ -136,7 +137,7 @@ public class Outtake {
     public void transfer() {
         openClaw();
         setV4Bar(v4barOffset);
-        queue.addDelayedAction(() -> closeClaw(), transferDelay);
+//        queue.addDelayedAction(() -> closeClaw(), transferDelay);
         status = outtakeState.TRANSFER;
     }
 
