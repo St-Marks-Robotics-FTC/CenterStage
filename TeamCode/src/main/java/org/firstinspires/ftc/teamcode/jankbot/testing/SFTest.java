@@ -33,6 +33,11 @@ public class SFTest extends LinearOpMode {
 
         StateMachine machine = new StateMachineBuilder()
                 .state(LinearStates.IDLE1)
+                .onEnter( () -> {
+                    robot.outtake.setV4Bar(0.3); // V4b Stow Position
+//                    robot.outtake.rotate(0); // Turret Vertical
+                    robot.outtake.setSlide(0); // Retract Slide
+                })
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button
 
                 .state(LinearStates.INTAKE)
@@ -59,6 +64,9 @@ public class SFTest extends LinearOpMode {
 //                    robot.outtake.(); // Claw Grab
                 })
                 .transitionTimed(0.5)
+                .onExit( () -> {
+                    robot.outtake.setV4Bar(0.3); // V4b Stow Position
+                })
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again
 
 
@@ -68,9 +76,6 @@ public class SFTest extends LinearOpMode {
 
 
                 .state(LinearStates.IDLE2)
-                .onEnter( () -> {
-                    robot.outtake.setV4Bar(0.3); // V4b Stow Position
-                })
                 .transition( () ->  gamepad1.y) // Outtake Button
 
                 .state(LinearStates.EXTEND)
@@ -101,6 +106,7 @@ public class SFTest extends LinearOpMode {
 //                    robot.outtake.rotate(0); // Turret Vertical
                     robot.outtake.setSlide(0); // Retract Slide
                 })
+                .transition( () ->  robot.outtake.getSlidePos() < 15) // Checks if slides are down
 
 
 
