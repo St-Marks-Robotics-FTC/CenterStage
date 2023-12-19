@@ -48,19 +48,11 @@ public class JankTele extends LinearOpMode {
             double rx = -gamepad1.right_stick_x;
             if (gamepad1.left_bumper) {
                 robot.drive.setWeightedDrivePower(
-                        new Pose2d(
-                                0.4 * y,
-                                0.4 * x,
-                                0.3 * rx
-                        )
+                        new Pose2d(0.4 * y, 0.4 * x, 0.3 * rx)
                 );
             } else {
                 robot.drive.setWeightedDrivePower(
-                        new Pose2d(
-                                y,
-                                x,
-                                rx
-                        )
+                        new Pose2d(y, x, rx)
                 );
             }
 
@@ -78,7 +70,7 @@ public class JankTele extends LinearOpMode {
 
 
 
-            
+
 
             robot.drive.update();
 
