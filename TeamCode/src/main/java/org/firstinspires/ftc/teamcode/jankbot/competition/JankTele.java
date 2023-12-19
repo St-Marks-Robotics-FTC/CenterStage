@@ -43,18 +43,16 @@ public class JankTele extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double y = -gamepad1.left_stick_y;
+            double x = -gamepad1.left_stick_x * 1.1;
             double rx = -gamepad1.right_stick_x;
-            if (gamepad1.left_bumper) {
-                robot.drive.setWeightedDrivePower(
-                        new Pose2d(0.4 * y, 0.4 * x, 0.3 * rx)
-                );
-            } else {
-                robot.drive.setWeightedDrivePower(
-                        new Pose2d(y, x, rx)
-                );
-            }
+
+            double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
+            double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
+            robot.drive.setWeightedDrivePower(
+                    new Pose2d(tranScaleFactor * y, tranScaleFactor * x, rotScaleFactor * 0.3 * rx)
+            );
+
 
 
 
