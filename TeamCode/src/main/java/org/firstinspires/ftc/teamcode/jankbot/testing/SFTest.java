@@ -110,7 +110,7 @@ public class SFTest extends LinearOpMode {
 
         machine.start();
 
-        while(opModeIsActive()) { // autonomous loop
+        while(opModeIsActive()) { //  loop
             machine.update();
         }
     }
