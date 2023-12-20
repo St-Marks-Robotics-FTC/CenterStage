@@ -1,20 +1,9 @@
-package org.firstinspires.ftc.teamcode.Vision;
-
-import static org.firstinspires.ftc.teamcode.Vision.VisionUtil.cvCvtcolor;
-import static org.firstinspires.ftc.teamcode.Vision.VisionUtil.cvDilate;
-import static org.firstinspires.ftc.teamcode.Vision.VisionUtil.cvErode;
-import static org.firstinspires.ftc.teamcode.Vision.VisionUtil.cvExtractchannel;
-import static org.firstinspires.ftc.teamcode.Vision.VisionUtil.cvThreshold;
-import static org.firstinspires.ftc.teamcode.Vision.VisionUtil.findContours;
-
-import android.graphics.Bitmap;
+package org.firstinspires.ftc.teamcode.Vision.Prop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;

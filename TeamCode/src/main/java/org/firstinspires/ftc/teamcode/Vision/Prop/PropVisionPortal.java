@@ -21,7 +21,7 @@
  *
  */
 
-package org.firstinspires.ftc.teamcode.Vision;
+package org.firstinspires.ftc.teamcode.Vision.Prop;
 
 import android.graphics.Canvas;
 

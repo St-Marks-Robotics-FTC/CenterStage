@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Vision;
+package org.firstinspires.ftc.teamcode.Vision.Prop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.Gamepad;

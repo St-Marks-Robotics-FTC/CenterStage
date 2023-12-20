@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Vision;
+package org.firstinspires.ftc.teamcode.Vision.Prop;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Vision;
+package org.firstinspires.ftc.teamcode.Vision.Prop;
 
 import android.graphics.Canvas;
 
@@ -11,7 +11,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-public class RedFarPropThreshold implements VisionProcessor {
+public class RedPropThreshold implements VisionProcessor {
     Mat testMat = new Mat();
     Mat highMat = new Mat();
     Mat lowMat = new Mat();
@@ -23,13 +23,13 @@ public class RedFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(200, 150),
-            new Point(300, 250)
+            new Point(0, 160),
+            new Point(100, 250)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(540, 250),
-            new Point(640, 355)
+            new Point(310, 200),
+            new Point(400, 300)
     );
 
     @Override
@@ -65,21 +65,20 @@ public class RedFarPropThreshold implements VisionProcessor {
         double averagedRightBox = rightBox / RIGHT_RECTANGLE.area() / 255; //Makes value [0,1]
 
 
-        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,255,255));
-        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,255,255));
+        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,0,0));
+        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,0,0));
 
 
-        if(averagedRightBox > redThreshold){        //Must Tune Red Threshold
-            outStr = "right";
-        }else if(averagedLeftBox> redThreshold){
+        if(averagedLeftBox > redThreshold){        //Must Tune Red Threshold
             outStr = "center";
+        }else if(averagedRightBox> redThreshold){
+            outStr = "right";
         }else{
             outStr = "left";
         }
-
-
         avgLeft = averagedLeftBox;
         avgRight = averagedRightBox;
+
 
         finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as
