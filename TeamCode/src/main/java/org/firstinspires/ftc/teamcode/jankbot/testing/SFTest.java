@@ -28,6 +28,8 @@ public class SFTest extends LinearOpMode {
         RETRACT
     }
 
+    int level = 1;
+
     @Override
     public void runOpMode() throws InterruptedException {
         Jankbot robot = new Jankbot(hardwareMap);
@@ -85,11 +87,20 @@ public class SFTest extends LinearOpMode {
 
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
-                    robot.outtake.slidesTo(3); // Extend Slide
+                    robot.outtake.slidesTo(level); // Extend Slide
                     robot.outtake.v4barScore(); // V4b Score Position
                     robot.outtake.turretRight(); // Spin Turret to horizontal
                 })
-                .transition( () ->  Math.abs(robot.outtake.getSlidePos() - 800) < 15) // Checks if slides are in position
+                .loop( () -> {
+                    if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                        robot.outtake.turretLeft(); // Spin Turret Left
+                    } else if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                        robot.outtake.turretRight(); // Spin Turret Right
+                    }
+
+                    robot.outtake.slidesTo(level); // Extend Slide
+                })
+                .transition( () ->  robot.outtake.getSlidePos() > 100) // Checks if slides are out
 
 
 
@@ -103,6 +114,8 @@ public class SFTest extends LinearOpMode {
                     } else if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                         robot.outtake.turretRight(); // Spin Turret Right
                     }
+
+                    robot.outtake.slidesTo(level); // Extend Slide
                 })
 
 
@@ -141,6 +154,15 @@ public class SFTest extends LinearOpMode {
 
         while(opModeIsActive()) { //  loop
             machine.update();
+
+
+            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                level = Math.min(9, level+1);
+            } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                level = Math.max(0, level-1);
+            }
+
+
             pad1.readButtons();
             pad2.readButtons();
 
