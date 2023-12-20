@@ -26,6 +26,8 @@ public class AprilTagRelocalize {
     VisionPortal  visionPortal;
 
     private int cameraOffsetY = 2;
+    //5 inches away from the apriltag
+    private double D = 5;
 
     public AprilTagRelocalize(HardwareMap hardwareMap) {
         aprilTagLibraryBuilder = new AprilTagLibrary.Builder();
@@ -60,8 +62,8 @@ public class AprilTagRelocalize {
             return new Pose2d(999, 0, 0);
         } else {
             //double angle = Math.toRadians(90)-target.ftcPose.bearing;
-            return new Pose2d(-target.ftcPose.range*Math.sin(target.ftcPose.yaw),
-                    cameraOffsetY-target.ftcPose.range*Math.cos(target.ftcPose.yaw),
+            return new Pose2d(target.ftcPose.x-D*Math.sin(target.ftcPose.yaw),
+                    target.ftcPose.y+cameraOffsetY-D*Math.cos(target.ftcPose.yaw),
                     Math.toRadians(90)+target.ftcPose.yaw);
         }
     }
