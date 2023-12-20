@@ -1,129 +1,132 @@
 package org.firstinspires.ftc.teamcode.jankbot.hardware;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.checkerframework.checker.units.qual.A;
-//import org.firstinspires.ftc.teamcode.jankbot.util.ActionQueue;
-//import org.firstinspires.ftc.teamcode.jankbot.util.ActionQueue;
-
+@Config
 public class Outtake {
 
     public DcMotorEx leftSlide;
     public DcMotorEx rightSlide;
+
     public Servo v4barLeft;
     public Servo v4barRight;
-    public Servo turret;
-    public Servo pivot;
+
     public Servo clawLeft;
     public Servo clawRight;
 
-    private int slideDown = 0;
-    private int slideUp = 900;
-    private int slideSlightUp=800;
+    public Servo turret;
+    public Servo pivot;
 
-    private double clawLeftClosed = 0.0;
-    private double clawRightClosed = 0.0;
-    private double clawLeftOpen = 0.0;
-    private double clawRightOpen = 0.0;
 
-    private int targetPosition = 0;
-    private double slideDownPower=0.2;
-    private double slideUpPower=0.5;
 
-    private double v4barOffset = 0.1;
-    private double v4barTransfer = 0.2;
+    public static int slidesDown = 0;
+    public static int level1 = 300;
+    public static int levelIncrement = 60;
+    public static double slideDownPower=0.2;
+    public static double slideUpPower=0.5;
 
-    private int TOLERANCE =10;
+    public static double v4barTransfer = 0.2;
+    public static double v4barStow = 0.4;
+    public static double v4barScore = 0.7;
 
-    public enum outtakeState {
-        DEPOSIT,
-        MOVING,
-        TRANSFER
-    }
+    public static double clawLeftClosed = 0.0;
+    public static double clawRightClosed = 0.0;
+    public static double clawLeftOpen = 0.3;
+    public static double clawRightOpen = 0.3;
 
-    public outtakeState status;
+    public static double turretTransfer = 0.5;
 
-//    private ActionQueue queue;
 
-    private int transferDelay = 1000;
+
+
+
+    public static int TOLERANCE =10;
+
+
 
     public Outtake (HardwareMap hardwareMap) {
         //outtake
-        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
-        clawRight = hardwareMap.get(Servo.class, "clawRight");
-
-        pivot = hardwareMap.get(Servo.class, "pivot");
-        turret = hardwareMap.get(Servo.class, "turret");
-        v4barLeft = hardwareMap.get(Servo.class, "v4barLeft");
-        v4barRight = hardwareMap.get(Servo.class, "v4barRight");
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
-//        queue = new ActionQueue();
+        v4barLeft = hardwareMap.get(Servo.class, "v4barLeft");
+        v4barRight = hardwareMap.get(Servo.class, "v4barRight");
 
-        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
+
+        turret = hardwareMap.get(Servo.class, "turret");
+        pivot = hardwareMap.get(Servo.class, "pivot");
+
+
+
+
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        leftSlide.setTargetPositionTolerance(TOLERANCE);
-        rightSlide.setTargetPositionTolerance(TOLERANCE);
 
         v4barRight.setDirection(Servo.Direction.REVERSE);
 
-        status = outtakeState.TRANSFER;
+        clawLeft.setDirection(Servo.Direction.REVERSE);
+
     }
 
-    public void update() {
-        if (getSlidePos()<10) {
-            status=outtakeState.TRANSFER;
-        } else if (isDone()) {
-            status=outtakeState.DEPOSIT;
-        } else {
-            status=outtakeState.MOVING;
-        }
-
-//        queue.update();
+    // Slides
+    public void slidesDown() {
+        setSlides(slidesDown);
     }
 
-//    public void resetQueue() {
-//        queue.clearQueue();
-//    }
-
-    public void setSlide(int pos) {
-        rightSlide.setTargetPosition(pos);
-        leftSlide.setTargetPosition(pos);
-        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setPower(targetPosition>pos ? slideUpPower : slideDownPower);
-        rightSlide.setPower(targetPosition>pos ? slideUpPower : slideDownPower);
-        targetPosition=pos;
+    public void slidesTo(int level) {
+        setSlides(level1 +  (level - 1) * levelIncrement);
     }
 
     public boolean isDone() {
-        return Math.abs(getSlidePos() - targetPosition)<TOLERANCE;
+        return (!leftSlide.isBusy() && !rightSlide.isBusy());
     }
 
     public int getSlidePos() {
         return (leftSlide.getCurrentPosition()+ rightSlide.getCurrentPosition())/2;
     }
 
-    public void setPivot(double pos) {
-        pivot.setPosition(pos);
+    public void setSlides(int pos) {
+        rightSlide.setTargetPosition(pos);
+        leftSlide.setTargetPosition(pos);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
+        rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
     }
 
-    public void setTurret(double pos) {
-        turret.setPosition(pos);
+
+
+
+
+    // V4Bar
+    public void v4barTransfer() {
+        setV4Bar(v4barTransfer);
     }
+    public void v4barStow() {
+        setV4Bar(v4barStow);
+    }
+    public void v4barScore() {
+        setV4Bar(v4barScore);
+    }
+
 
     public void setV4Bar(double pos) {
         v4barRight.setPosition(pos);
-        v4barLeft.setPosition(pos+v4barOffset);
+        v4barLeft.setPosition(pos);
     }
 
+
+    // Claw
     public void closeClaw() {
         closeLeft();
         closeRight();
@@ -131,14 +134,6 @@ public class Outtake {
     public void openClaw() {
         openLeft();
         openRight();
-        //target = 0.7;
-    }
-
-    public void transfer() {
-        openClaw();
-        setV4Bar(v4barOffset);
-//        queue.addDelayedAction(() -> closeClaw(), transferDelay);
-        status = outtakeState.TRANSFER;
     }
 
     public void closeLeft() {
@@ -153,5 +148,49 @@ public class Outtake {
     public void openRight() {
         clawRight.setPosition(clawRightOpen);
     }
+
+
+
+
+    // Turret
+    public void turretTransfer() {
+        setTurret(turretTransfer);
+    }
+    public void turretLeft() {
+        if (getTurret() == turretTransfer) {
+            setTurret(getTurret() - 0.1);
+        } else {
+            setTurret(getTurret() - 0.2);
+        }
+    }
+    public void turretRight() {
+        if (getTurret() == turretTransfer) {
+            setTurret(getTurret() + 0.1);
+        } else {
+            setTurret(getTurret() + 0.2);
+        }
+    }
+
+    public void setTurret(double pos) {
+        turret.setPosition(pos);
+    }
+    public double getTurret() {
+        return turret.getPosition();
+    }
+
+
+    // Pivot
+    public void sideAdjust(double degrees) {
+        // TODO
+    }
+
+    public void setPivot(double pos) {
+        pivot.setPosition(pos);
+    }
+
+
+
+
+
 
 }
