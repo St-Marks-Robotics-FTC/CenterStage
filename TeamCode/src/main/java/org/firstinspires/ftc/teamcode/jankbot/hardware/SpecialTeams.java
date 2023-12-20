@@ -14,7 +14,7 @@ public class SpecialTeams {
 
     // Hang
     public static int hangPrepare = 700;
-    public static int hangHold = 1200;
+    public static int hangClimb = 1200;
     public static double hangPower = 1.0;
 
     // Drone
@@ -31,19 +31,21 @@ public class SpecialTeams {
 
     // Hang
     public void hangReady() {
-        hang.setTargetPosition(hangPrepare);
-        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hang.setPower(hangPower);
+        setHang(hangPrepare);
     }
 
-    public void hangHold() {
-        hang.setTargetPosition(hangHold);
-        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hang.setPower(hangPower);
+    public void hangClimb() {
+        setHang(hangClimb);
     }
 
     public int getHangPos() {
         return hang.getCurrentPosition();
+    }
+
+    public void setHang(int pos) {
+        hang.setTargetPosition(pos);
+        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hang.setPower(hangPower);
     }
 
 
