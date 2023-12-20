@@ -36,7 +36,7 @@ public class SFTest extends LinearOpMode {
                 .onEnter( () -> {
                     robot.outtake.setV4Bar(0.3); // V4b Stow Position
 //                    robot.outtake.rotate(0); // Turret Vertical
-                    robot.outtake.setSlide(0); // Retract Slide
+                    robot.outtake.setSlides(0); // Retract Slide
                 })
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button
 
@@ -80,7 +80,7 @@ public class SFTest extends LinearOpMode {
 
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
-                    robot.outtake.setSlide(800); // Extend Slide
+                    robot.outtake.setSlides(800); // Extend Slide
                     robot.outtake.setV4Bar(0.5); // V4b Score Position
 //                    robot.outtake.rotate(); // Spin Turret to horizontal
                 })
@@ -104,7 +104,7 @@ public class SFTest extends LinearOpMode {
                 .onEnter( () -> {
                     robot.outtake.setV4Bar(0.3); // V4b Stow Position
 //                    robot.outtake.rotate(0); // Turret Vertical
-                    robot.outtake.setSlide(0); // Retract Slide
+                    robot.outtake.setSlides(0); // Retract Slide
                 })
                 .transition( () ->  robot.outtake.getSlidePos() < 15) // Checks if slides are down
 
