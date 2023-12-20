@@ -40,6 +40,7 @@ public class Outtake {
     public static double clawRightOpen = 0.3;
 
     public static double turretTransfer = 0.5;
+    public static double turret60 = 0.2;
 
 
 
@@ -158,16 +159,16 @@ public class Outtake {
     }
     public void turretLeft() {
         if (getTurret() == turretTransfer) {
-            setTurret(getTurret() - 0.1);
+            setTurret(getTurret() - turret60/2);
         } else {
-            setTurret(getTurret() - 0.2);
+            setTurret(getTurret() - turret60);
         }
     }
     public void turretRight() {
         if (getTurret() == turretTransfer) {
-            setTurret(getTurret() + 0.1);
+            setTurret(getTurret() + turret60/2);
         } else {
-            setTurret(getTurret() + 0.2);
+            setTurret(getTurret() + turret60);
         }
     }
 
