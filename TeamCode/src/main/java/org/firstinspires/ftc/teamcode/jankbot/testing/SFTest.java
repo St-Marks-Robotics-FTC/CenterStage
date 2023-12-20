@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.jankbot.testing;
 
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
@@ -29,20 +31,22 @@ public class SFTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Jankbot robot = new Jankbot(hardwareMap);
+        GamepadEx pad1 = new GamepadEx(gamepad1);
+        GamepadEx pad2 = new GamepadEx(gamepad2);
 
 
         StateMachine machine = new StateMachineBuilder()
                 .state(LinearStates.IDLE1)
                 .onEnter( () -> {
                     robot.outtake.setV4Bar(0.3); // V4b Stow Position
-//                    robot.outtake.rotate(0); // Turret Vertical
+                    robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.setSlides(0); // Retract Slide
                 })
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button
 
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
-//                    robot.intake.dropdown(); // Drop Intake
+                    robot.intake.drop(); // Drop Intake
                     robot.intake.setIntake(0.8); // Spin Intake
                 })
                 .transition( () -> gamepad1.right_trigger < 0.5) // if let go or intake sensor
@@ -51,9 +55,10 @@ public class SFTest extends LinearOpMode {
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
                     robot.intake.setIntake(0); // Stop Intake
-//                    robot.intake.; // Intake lock
-//                    robot.intake.; // Intake tilt
-                    robot.outtake.setV4Bar(0); // V4Bar down
+                    robot.intake.lock(); // Intake lock
+                    robot.intake.tiltUp(); // Intake tilt
+
+                    robot.outtake.v4barTransfer(); // V4Bar down
                 })
                 .transitionTimed(0.75)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again
@@ -61,11 +66,11 @@ public class SFTest extends LinearOpMode {
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
-//                    robot.outtake.(); // Claw Grab
+                    robot.outtake.closeClaw(); // Claw Grab
                 })
                 .transitionTimed(0.5)
                 .onExit( () -> {
-                    robot.outtake.setV4Bar(0.3); // V4b Stow Position
+                    robot.outtake.v4barStow(); // V4b Stow Position
                 })
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again
 
@@ -80,9 +85,9 @@ public class SFTest extends LinearOpMode {
 
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
-                    robot.outtake.setSlides(800); // Extend Slide
-                    robot.outtake.setV4Bar(0.5); // V4b Score Position
-//                    robot.outtake.rotate(); // Spin Turret to horizontal
+                    robot.outtake.slidesTo(3); // Extend Slide
+                    robot.outtake.v4barScore(); // V4b Score Position
+                    robot.outtake.turretRight(); // Spin Turret to horizontal
                 })
                 .transition( () ->  Math.abs(robot.outtake.getSlidePos() - 800) < 15) // Checks if slides are in position
 
@@ -92,19 +97,37 @@ public class SFTest extends LinearOpMode {
 
 
                 .state(LinearStates.IDLE3)
+                .loop( () -> {
+                    if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                        robot.outtake.turretLeft(); // Spin Turret Left
+                    } else if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                        robot.outtake.turretRight(); // Spin Turret Right
+                    }
+                })
+
+
+
                 .transition( () ->  gamepad1.b) // Score Button
+                .transition(() -> gamepad1.a,  // Retract Button
+                        LinearStates.IDLE2,
+                        () -> {
+                            robot.outtake.v4barStow(); // V4b Stow Position
+                            robot.outtake.turretTransfer(); // Turret Vertical
+                            robot.outtake.retractSlides(); // Retract Slide
+                        })
+
 
                 .state(LinearStates.SCORE)
                 .onEnter( () -> {
                     robot.outtake.openClaw(); // Open Claw
                 })
-                .transitionTimed(0.5)
+                .transitionTimed(0.3)
 
                 .state(LinearStates.RETRACT)
                 .onEnter( () -> {
-                    robot.outtake.setV4Bar(0.3); // V4b Stow Position
-//                    robot.outtake.rotate(0); // Turret Vertical
-                    robot.outtake.setSlides(0); // Retract Slide
+                    robot.outtake.v4barStow(); // V4b Stow Position
+                    robot.outtake.turretTransfer(); // Turret Vertical
+                    robot.outtake.retractSlides(); // Retract Slide
                 })
                 .transition( () ->  robot.outtake.getSlidePos() < 15) // Checks if slides are down
 
@@ -118,6 +141,11 @@ public class SFTest extends LinearOpMode {
 
         while(opModeIsActive()) { //  loop
             machine.update();
+            pad1.readButtons();
+            pad2.readButtons();
+
+            telemetry.addData("State", machine.getState());
+            telemetry.update();
         }
     }
 }

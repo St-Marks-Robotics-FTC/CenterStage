@@ -80,7 +80,7 @@ public class Outtake {
     }
 
     // Slides
-    public void slidesDown() {
+    public void retractSlides() {
         setSlides(slidesDown);
     }
 

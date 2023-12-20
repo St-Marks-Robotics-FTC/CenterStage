@@ -55,7 +55,7 @@ public class Intake {
     }
 
     // Intake Dropdown
-    public void dropdown() {
+    public void drop() {
         dropdown.setPosition(dropDown);
     }
     public void raise() {
