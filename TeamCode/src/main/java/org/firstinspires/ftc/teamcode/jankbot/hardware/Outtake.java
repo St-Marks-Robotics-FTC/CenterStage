@@ -105,10 +105,6 @@ public class Outtake {
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
     }
 
-
-
-
-
     // V4Bar
     public void v4barTransfer() {
         setV4Bar(v4barTransfer);

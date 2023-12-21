@@ -54,7 +54,7 @@ public class AprilTagRelocalize {
         List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
         AprilTagDetection target = null;
         for (AprilTagDetection detection : detections) {
-            if (detection.id == tag) {
+            if (detection.metadata!=null && detection.id == tag) {
                 target = detection;
             }
         }
