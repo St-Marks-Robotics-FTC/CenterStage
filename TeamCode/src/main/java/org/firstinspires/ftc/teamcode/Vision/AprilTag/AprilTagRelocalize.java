@@ -51,6 +51,7 @@ public class AprilTagRelocalize {
     }
 
     public Pose2d getTagPos(int tag) {
+        //AprilTagGameDatabase.getCenterStageTagLibrary();
         List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
         AprilTagDetection target = null;
         for (AprilTagDetection detection : detections) {

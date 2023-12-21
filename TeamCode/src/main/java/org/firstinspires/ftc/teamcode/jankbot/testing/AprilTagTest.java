@@ -17,6 +17,12 @@ public class AprilTagTest extends LinearOpMode {
     private Jankbot robot;
     private AprilTagRelocalize relocalize;
     private int tag = 1;
+    //1 = blue left
+    //2 = blue middle
+    //3 = blue right
+    //4 = red left
+    //5 = red middle
+    //6 = red right
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new Jankbot(hardwareMap);
