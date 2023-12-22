@@ -29,7 +29,7 @@ public class Pitcrew extends OpMode {
 
         //intake transfer
         if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            robot.intake.transferRelease();
+            robot.intake.tiltUp();
         }
     }
 }

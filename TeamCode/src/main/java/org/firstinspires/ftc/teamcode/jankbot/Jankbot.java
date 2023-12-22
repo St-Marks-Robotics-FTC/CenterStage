@@ -14,28 +14,18 @@ public class Jankbot {
     public Intake intake;
     public Outtake outtake;
     public SpecialTeams teams;
-//    private ActionQueue queue;
-
-    private int transferDelay = 1000;
 
     public Jankbot(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap);
         intake = new Intake(hardwareMap);
         outtake = new Outtake(hardwareMap);
         teams = new SpecialTeams(hardwareMap);
-//        queue = new ActionQueue();
     }
 
-    public void update() {
-        intake.update();
-        outtake.update();
-//        queue.update();
-    }
+//    public void update() {
+//        intake.update();
+//        outtake.update();
+//    }
 
-    public void transfer() {
-        if (intake.status == Intake.intakeState.IDLE && outtake.status == Outtake.outtakeState.TRANSFER) {
-            intake.transfer();
-//            queue.addDelayedAction(() -> intake.transfer(), transferDelay);
-        }
-    }
+
 }
