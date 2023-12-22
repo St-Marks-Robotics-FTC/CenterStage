@@ -31,13 +31,11 @@ public class MeepMeepTesting {
 
                                 .setReversed(true)
                                 .splineToSplineHeading(new Pose2d(24, -11.5, Math.toRadians(180)), Math.toRadians(0))
-//                                .splineToConstantHeading(new Vector2d(45, -43), Math.toRadians(0))
                                 .splineTo(new Vector2d(45, -43), Math.toRadians(0))
                                 .waitSeconds(1.5) // place pixels
 
 
                                 .setReversed(false)
-//                                .splineToSplineHeading(new Pose2d(24, -11.5, Math.toRadians(180)), Math.toRadians(180))
                                 .splineTo(new Vector2d(24, -11.5), Math.toRadians(180))
                                 .splineToConstantHeading(new Vector2d(-60, -11.5), Math.toRadians(180)) // go to stack
                                 .waitSeconds(0.5) // intake stack
@@ -51,7 +49,6 @@ public class MeepMeepTesting {
 
                                 .setReversed(false)
                                 .setTangent(Math.toRadians(180))
-//                                .splineToSplineHeading(new Pose2d(24, -11.5, Math.toRadians(180)), Math.toRadians(180))
                                 .splineToSplineHeading(new Pose2d(10, -11.5, Math.toRadians(180)), Math.toRadians(180)) // go to stack
                                 .splineToSplineHeading(new Pose2d(-60, -11.5, Math.toRadians(180)), Math.toRadians(180)) // go to stack
                                 .waitSeconds(0.5) // intake stack
