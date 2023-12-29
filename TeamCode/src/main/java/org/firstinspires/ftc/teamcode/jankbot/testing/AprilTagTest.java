@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.jankbot.testing;
 
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -32,8 +34,11 @@ public class AprilTagTest extends LinearOpMode {
 
         waitForStart();
         relocalizePose = relocalize.getTagPos(tag);
+        Log.d("relocalizePose: ", relocalizePose.toString());
+        Log.d("Current Pose: ", robot.drive.getPoseEstimate().toString());
+        Log.d("Traveling to : ", relocalizePose.plus(robot.drive.getPoseEstimate()).toString());
         TrajectorySequence traj1 = robot.drive.trajectorySequenceBuilder(startPose)
-                .lineToSplineHeading(relocalizePose)
+                .lineToSplineHeading(relocalizePose.plus(robot.drive.getPoseEstimate()))
                 .build();
 
         robot.drive.followTrajectorySequence(traj1);
