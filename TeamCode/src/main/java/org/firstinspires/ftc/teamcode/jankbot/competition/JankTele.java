@@ -20,7 +20,6 @@ public class JankTele extends LinearOpMode {
 
 
     double loopTime = 0;
-    double prevTime = 0;
 
     Jankbot robot;
     GamepadEx pad1;
@@ -38,7 +37,6 @@ public class JankTele extends LinearOpMode {
 
 
         waitForStart();
-        time.reset();
 
         if (isStopRequested()) return;
 
@@ -78,9 +76,10 @@ public class JankTele extends LinearOpMode {
             telemetry.addData("heading", poseEstimate.getHeading());
 
 
-            loopTime = time.milliseconds();
-            telemetry.addData("Hz", 1000 / (loopTime - prevTime) );
-            prevTime = loopTime;
+            // in da loop
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
 
             telemetry.update();
             pad1.readButtons();
