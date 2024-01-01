@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.jankbot.testing;
 
 import android.util.Log;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -17,7 +18,8 @@ import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequenceBuilder;
 
-@TeleOp
+@Config
+@TeleOp (group = "test")
 public class AprilTagTest extends OpMode {
 
     private Jankbot robot;

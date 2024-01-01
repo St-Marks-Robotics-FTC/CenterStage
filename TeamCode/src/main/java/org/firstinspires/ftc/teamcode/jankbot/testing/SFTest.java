@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.jankbot.testing;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,7 +11,8 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 
-@TeleOp
+@Config
+@TeleOp (group = "test")
 public class SFTest extends LinearOpMode {
 
     Jankbot robot;
