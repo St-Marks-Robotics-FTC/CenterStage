@@ -25,9 +25,10 @@ public class AprilTagRelocalize {
     VisionPortal.Builder visionPortalBuilder;
     VisionPortal  visionPortal;
 
-    private int cameraOffsetY = 2;
+    //how far away is the camera from the center of the robot
+    private int cameraOffsetY = 7;
     //5 inches away from the apriltag
-    private double D = 5;
+    private double D = 6;
 
     public AprilTagRelocalize(HardwareMap hardwareMap) {
         aprilTagLibraryBuilder = new AprilTagLibrary.Builder();
