@@ -13,7 +13,8 @@ public class Intake {
 
     public DcMotorEx intake;
     public Servo dropdown;
-    public Servo tilt;
+    public Servo tilt1;
+    public Servo tilt2;
     public Servo lock;
 
 
@@ -32,12 +33,14 @@ public class Intake {
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         dropdown = hardwareMap.get(Servo.class, "dropdown");
         //transfer
-        tilt = hardwareMap.get(Servo.class, "tilt");
+        tilt1 = hardwareMap.get(Servo.class, "tilt1");
+        tilt2 = hardwareMap.get(Servo.class, "tilt2");
+
         lock = hardwareMap.get(Servo.class, "lock");
 
 
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        tilt2.setDirection(Servo.Direction.REVERSE);
     }
 
 
@@ -79,11 +82,13 @@ public class Intake {
 
     // Transfer Tilt
     public void tiltUp() {
-        tilt.setPosition(transferUp);
+        tilt1.setPosition(transferUp);
+        tilt2.setPosition(transferUp);
     }
 
     public void tiltDown() {
-        tilt.setPosition(transferDown);
+        tilt1.setPosition(transferDown);
+        tilt2.setPosition(transferDown);
     }
 
 
