@@ -20,9 +20,7 @@ public class Outtake {
     public Servo clawRight;
 
     public Servo turret;
-    public Servo pivot;
-
-
+    public Servo v4bpivot;
 
     public static int slidesDown = 0;
     public static int level1 = 300;
@@ -62,7 +60,7 @@ public class Outtake {
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
         turret = hardwareMap.get(Servo.class, "turret");
-        pivot = hardwareMap.get(Servo.class, "pivot");
+        v4bpivot = hardwareMap.get(Servo.class, "pivot");
 
 
 
@@ -182,12 +180,8 @@ public class Outtake {
     }
 
     public void setPivot(double pos) {
-        pivot.setPosition(pos);
+        v4bpivot.setPosition(pos);
     }
-
-
-
-
 
 
 }
