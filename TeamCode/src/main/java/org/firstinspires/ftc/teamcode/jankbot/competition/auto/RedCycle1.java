@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Config
 @Autonomous (group = "Red", preselectTeleOp = "JankTele")
-public class RedCycle extends LinearOpMode {
+public class RedCycle1 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
