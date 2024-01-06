@@ -54,7 +54,7 @@ public class SpecialTeams {
         drone.setPosition(holdPos);
     }
 
-    public void releaseDrone() {
+    public void shootDrone() {
         drone.setPosition(releasePos);
     }
 }

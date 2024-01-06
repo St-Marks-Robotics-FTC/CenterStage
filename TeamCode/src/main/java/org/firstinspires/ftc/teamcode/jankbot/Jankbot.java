@@ -13,13 +13,13 @@ public class Jankbot {
     public MecanumDrive drive;
     public Intake intake;
     public Outtake outtake;
-    public SpecialTeams teams;
+    public SpecialTeams special;
 
     public Jankbot(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap);
         intake = new Intake(hardwareMap);
         outtake = new Outtake(hardwareMap);
-        teams = new SpecialTeams(hardwareMap);
+        special = new SpecialTeams(hardwareMap);
     }
 
 //    public void update() {

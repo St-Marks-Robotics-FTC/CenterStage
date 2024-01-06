@@ -15,14 +15,11 @@ public class Intake {
     public Servo dropdown;
     public Servo tilt1;
     public Servo tilt2;
-    public Servo lock;
 
 
     public static double dropDown = 0.5;
     public static double dropUp = 0.0;
 
-    public static double transferLock = 0.5;
-    public static double transferUnlock = 0.3;
 
     public static double transferUp = 0.4;
     public static double transferDown=0.2;
@@ -35,8 +32,6 @@ public class Intake {
         //transfer
         tilt1 = hardwareMap.get(Servo.class, "tilt1");
         tilt2 = hardwareMap.get(Servo.class, "tilt2");
-
-        lock = hardwareMap.get(Servo.class, "lock");
 
 
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -64,19 +59,6 @@ public class Intake {
     public void raise() {
         dropdown.setPosition(dropUp);
     }
-
-
-    // Transfer Lock
-    public void lock() {
-        lock.setPosition(transferLock);
-    }
-
-    public void unlock() {
-        lock.setPosition(transferUnlock);
-    }
-
-
-
 
 
 
