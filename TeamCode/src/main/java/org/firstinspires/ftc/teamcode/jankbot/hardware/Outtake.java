@@ -98,12 +98,23 @@ public class Outtake {
     }
 
     public void setSlides(int pos) {
+        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         rightSlide.setTargetPosition(pos);
         leftSlide.setTargetPosition(pos);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
+    }
+
+    public void manualSlides(double power) {
+        leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        leftSlide.setPower(power);
+        rightSlide.setPower(power);
     }
 
     // V4Bar
@@ -125,11 +136,11 @@ public class Outtake {
 
 
     // Claw
-    public void closeClaw() {
+    public void closeBothClaw() {
         closeLeft();
         closeRight();
     }
-    public void openClaw() {
+    public void openBothClaw() {
         openLeft();
         openRight();
     }

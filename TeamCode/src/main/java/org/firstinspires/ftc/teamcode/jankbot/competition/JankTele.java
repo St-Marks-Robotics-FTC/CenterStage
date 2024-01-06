@@ -65,9 +65,9 @@ public class JankTele extends LinearOpMode {
         StateMachine machine = new StateMachineBuilder()
                 .state(LinearStates.IDLE1)
                 .onEnter( () -> {
-                    robot.outtake.setV4Bar(0.3); // V4b Stow Position
+                    robot.outtake.v4barStow(); // V4b Stow Position
                     robot.outtake.turretTransfer(); // Turret Vertical
-                    robot.outtake.setSlides(0); // Retract Slide
+                    robot.outtake.retractSlides(); // Retract Slide
                 })
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button
 
@@ -92,7 +92,7 @@ public class JankTele extends LinearOpMode {
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
-                    robot.outtake.closeClaw(); // Claw Grab
+                    robot.outtake.closeBothClaw(); // Claw Grab
                 })
                 .transitionTimed(0.5)
                 .onExit( () -> {
@@ -113,15 +113,9 @@ public class JankTele extends LinearOpMode {
                 .onEnter( () -> {
                     robot.outtake.slidesTo(slideLevel); // Extend Slide
                     robot.outtake.v4barScore(); // V4b Score Position
-                    robot.outtake.turretRight(); // Spin Turret to horizontal
                 })
                 .loop( () -> {
-                    if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                        robot.outtake.turretLeft(); // Spin Turret Left
-                    } else if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        robot.outtake.turretRight(); // Spin Turret Right
-                    }
-
+                    robot.outtake.turretTo(turretLevel); // Spin Turret
                     robot.outtake.slidesTo(slideLevel); // Extend Slide
                 })
                 .transition( () ->  robot.outtake.getSlidePos() > 100) // Checks if slides are out
@@ -133,13 +127,20 @@ public class JankTele extends LinearOpMode {
 
                 .state(LinearStates.IDLE3)
                 .loop( () -> {
-                    if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                        robot.outtake.turretLeft(); // Spin Turret Left
-                    } else if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        robot.outtake.turretRight(); // Spin Turret Right
+                    if (pad2.wasJustPressed(GamepadKeys.Button.X)) {
+                        robot.outtake.openLeft(); // Open Left Claw
+                    } else if (pad2.wasJustPressed(GamepadKeys.Button.B)) {
+                        robot.outtake.openRight(); // Open Right Claw
                     }
 
-                    robot.outtake.slidesTo(slideLevel); // Extend Slide
+                    robot.outtake.turretTo(turretLevel); // Spin Turret
+                    // Manual Control
+                    if (Math.abs(pad2.getLeftY()) >= 0.1) {
+                        robot.outtake.manualSlides(gamepad2.left_stick_y);
+                    } else {
+                        robot.outtake.slidesTo(slideLevel); // Extend Slide to Level
+                    }
+
                 })
 
 
@@ -156,7 +157,7 @@ public class JankTele extends LinearOpMode {
 
                 .state(LinearStates.SCORE)
                 .onEnter( () -> {
-                    robot.outtake.openClaw(); // Open Claw
+                    robot.outtake.openBothClaw(); // Open Claw
                 })
                 .transitionTimed(0.3)
 
@@ -213,7 +214,6 @@ public class JankTele extends LinearOpMode {
 
 
             machine.update();
-
 
 
 

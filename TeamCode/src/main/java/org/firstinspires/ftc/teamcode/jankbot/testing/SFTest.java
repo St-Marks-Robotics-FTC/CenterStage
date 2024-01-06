@@ -69,7 +69,7 @@ public class SFTest extends LinearOpMode {
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
-                    robot.outtake.closeClaw(); // Claw Grab
+                    robot.outtake.closeBothClaw(); // Claw Grab
                 })
                 .transitionTimed(0.5)
                 .onExit( () -> {
@@ -90,13 +90,10 @@ public class SFTest extends LinearOpMode {
                 .onEnter( () -> {
                     robot.outtake.slidesTo(level); // Extend Slide
                     robot.outtake.v4barScore(); // V4b Score Position
-                    robot.outtake.turretRight(); // Spin Turret to horizontal
                 })
                 .loop( () -> {
                     if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                        robot.outtake.turretLeft(); // Spin Turret Left
                     } else if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        robot.outtake.turretRight(); // Spin Turret Right
                     }
 
                     robot.outtake.slidesTo(level); // Extend Slide
@@ -111,9 +108,7 @@ public class SFTest extends LinearOpMode {
                 .state(LinearStates.IDLE3)
                 .loop( () -> {
                     if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                        robot.outtake.turretLeft(); // Spin Turret Left
                     } else if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        robot.outtake.turretRight(); // Spin Turret Right
                     }
 
                     robot.outtake.slidesTo(level); // Extend Slide
@@ -133,7 +128,7 @@ public class SFTest extends LinearOpMode {
 
                 .state(LinearStates.SCORE)
                 .onEnter( () -> {
-                    robot.outtake.openClaw(); // Open Claw
+                    robot.outtake.openBothClaw(); // Open Claw
                 })
                 .transitionTimed(0.3)
 
