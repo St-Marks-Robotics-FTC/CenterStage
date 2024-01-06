@@ -154,18 +154,14 @@ public class Outtake {
     public void turretTransfer() {
         setTurret(turretTransfer);
     }
-    public void turretLeft() {
-        if (getTurret() == turretTransfer) {
-            setTurret(getTurret() - turret60/2);
+
+    public void turretTo(int position) {
+        if (position == 0) {
+            setTurret(turretTransfer);
+        } else if (position > 0) {
+            setTurret(turretTransfer + (position * turret60 + turret60/2));
         } else {
-            setTurret(getTurret() - turret60);
-        }
-    }
-    public void turretRight() {
-        if (getTurret() == turretTransfer) {
-            setTurret(getTurret() + turret60/2);
-        } else {
-            setTurret(getTurret() + turret60);
+            setTurret(turretTransfer - (position * turret60 - turret60/2));
         }
     }
 
