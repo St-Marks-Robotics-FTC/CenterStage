@@ -166,6 +166,9 @@ public class JankTele extends LinearOpMode {
                     robot.outtake.v4barStow(); // V4b Stow Position
                     robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.retractSlides(); // Retract Slide
+                    
+                    slideLevel = 1;
+                    turretLevel = 0;
                 })
                 .transition( () ->  robot.outtake.getSlidePos() < 15) // Checks if slides are down
 
