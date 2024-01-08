@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -54,25 +55,29 @@ public class BlueClose extends LinearOpMode {
         robot.drive.setPoseEstimate(startPose);
 
         TrajectorySequence traj11 = robot.drive.trajectorySequenceBuilder(startPose) // right side
-                .splineToSplineHeading(new Pose2d(11, 29, Math.toRadians(-160)), Math.toRadians(-130))
+                .setTangent(Math.toRadians(-80))
+                .splineToSplineHeading(new Pose2d(5, 36, Math.toRadians(30)), Math.toRadians(-130))
                 .build();
         TrajectorySequence traj12 = robot.drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(15, 31, Math.toRadians(-90)), Math.toRadians(-90))
+                .setTangent(Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(15, 29, Math.toRadians(90)), Math.toRadians(-90))
                 .build();
         TrajectorySequence traj13 = robot.drive.trajectorySequenceBuilder(startPose) // left
-                .splineToSplineHeading(new Pose2d(16, 34, Math.toRadians(-45)), Math.toRadians(-90))
+                .setTangent(Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(19, 37, Math.toRadians(125)), Math.toRadians(-55))
                 .build();
         TrajectorySequence traj21 = robot.drive.trajectorySequenceBuilder(traj11.end())
-                .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(52, 24, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(45))
+                .splineToSplineHeading(new Pose2d(50, 42, Math.toRadians(180)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = robot.drive.trajectorySequenceBuilder(traj12.end())
-                .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(50, 42, Math.toRadians(180)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = robot.drive.trajectorySequenceBuilder(traj13.end())
-                .setTangent(Math.toRadians(45))
-                .splineToSplineHeading(new Pose2d(52, 39, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(135))
+                .splineToConstantHeading(new Vector2d(11, 32), Math.toRadians(-80))
+                .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(180)), Math.toRadians(30))
                 .build();
 
         TrajectorySequence park1 = robot.drive.trajectorySequenceBuilder(traj21.end())
@@ -103,7 +108,8 @@ public class BlueClose extends LinearOpMode {
 
         waitForStart();
         //robot.setArm(-700);
-        sleep(1000);
+        robot.special.grabPixel();
+        sleep(500);
         switch (loc) {
             case "right":
                 robot.drive.followTrajectorySequence(traj11);
@@ -117,9 +123,10 @@ public class BlueClose extends LinearOpMode {
         }
 
         //robot.openRight();
-        sleep(3000);
+        robot.special.releasePixel();
+        sleep(1000);
         //robot.setArm(350); // 390
-
+        robot.outtake.v4barScore();
         //outtake
         switch (loc) {
             case "right":
@@ -134,7 +141,9 @@ public class BlueClose extends LinearOpMode {
         }
 
         //robot.openLeft();
-
+        robot.outtake.openBothClaw();
+        sleep(1000);
+        robot.outtake.v4barStow();
         sleep(1000);
 
         switch (loc) {

@@ -11,6 +11,7 @@ public class SpecialTeams {
 
     DcMotorEx hang;
     Servo drone;
+    Servo preload;
 
     // Hang
     public static int hangPrepare = 700;
@@ -24,9 +25,19 @@ public class SpecialTeams {
     public SpecialTeams (HardwareMap hardwareMap) {
         hang = hardwareMap.get(DcMotorEx.class, "hang");
         drone = hardwareMap.get(Servo.class, "drone");
+        preload = hardwareMap.get(Servo.class, "preload");
 
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    //Preload pixel
+    public void grabPixel() {
+        preload.setPosition(0.3);
+    }
+
+    public void releasePixel() {
+        preload.setPosition(0.6);
     }
 
     // Hang

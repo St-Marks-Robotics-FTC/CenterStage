@@ -97,6 +97,10 @@ public class Outtake {
         return (leftSlide.getCurrentPosition()+ rightSlide.getCurrentPosition())/2;
     }
 
+    public void setSlideLvl1() {
+        setSlides(level1);
+    }
+
     public void setSlides(int pos) {
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
