@@ -52,15 +52,6 @@ public class Intake {
         return intake.getVelocity();
     }
 
-    // Intake Dropdown
-    public void drop() {
-        dropdown.setPosition(dropDown);
-    }
-    public void raise() {
-        dropdown.setPosition(dropUp);
-    }
-
-
 
     // Transfer Tilt
     public void tiltUp() {

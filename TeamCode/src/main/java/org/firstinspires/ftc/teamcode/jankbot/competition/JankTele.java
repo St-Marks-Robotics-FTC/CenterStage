@@ -73,7 +73,7 @@ public class JankTele extends LinearOpMode {
 
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
-                    robot.intake.drop(); // Drop Intake
+                    robot.intake.tiltDown(); // Drop Intake
                     robot.intake.setIntake(0.8); // Spin Intake
                 })
                 .transition( () -> gamepad1.right_trigger < 0.5) // if let go or intake sensor
