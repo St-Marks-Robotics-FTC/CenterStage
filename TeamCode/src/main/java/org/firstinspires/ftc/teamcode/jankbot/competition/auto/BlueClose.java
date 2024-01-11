@@ -51,48 +51,58 @@ public class BlueClose extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Jankbot(hardwareMap);
 
-        Pose2d startPose = new Pose2d(15, 60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(17, 60, Math.toRadians(-90));
         robot.drive.setPoseEstimate(startPose);
 
-        TrajectorySequence traj11 = robot.drive.trajectorySequenceBuilder(startPose) // right side
+        TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // right side
+                .setReversed(true)
                 .setTangent(Math.toRadians(-80))
                 .splineToSplineHeading(new Pose2d(5, 36, Math.toRadians(30)), Math.toRadians(-130))
-                .build();
-        TrajectorySequence traj12 = robot.drive.trajectorySequenceBuilder(startPose) // middle
-                .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(15, 29, Math.toRadians(90)), Math.toRadians(-90))
-                .build();
-        TrajectorySequence traj13 = robot.drive.trajectorySequenceBuilder(startPose) // left
-                .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(19, 37, Math.toRadians(125)), Math.toRadians(-55))
-                .build();
-        TrajectorySequence traj21 = robot.drive.trajectorySequenceBuilder(traj11.end())
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
+                .waitSeconds(1)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
                 .setTangent(Math.toRadians(45))
                 .splineToSplineHeading(new Pose2d(50, 42, Math.toRadians(180)), Math.toRadians(0))
-                .build();
-        TrajectorySequence traj22 = robot.drive.trajectorySequenceBuilder(traj12.end())
-                .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(50, 42, Math.toRadians(180)), Math.toRadians(0))
-                .build();
-        TrajectorySequence traj23 = robot.drive.trajectorySequenceBuilder(traj13.end())
-                .setTangent(Math.toRadians(135))
-                .splineToConstantHeading(new Vector2d(11, 32), Math.toRadians(-80))
-                .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(180)), Math.toRadians(30))
-                .build();
-
-        TrajectorySequence park1 = robot.drive.trajectorySequenceBuilder(traj21.end())
-//                .strafeRight(18)
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .waitSeconds(1.5)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
+                .waitSeconds(0.5)
                 .back(4)
                 .strafeLeft(28)
                 .build();
-        TrajectorySequence park2 = robot.drive.trajectorySequenceBuilder(traj22.end())
-//                .strafeRight(22)
+        TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
+                .setReversed(true)
+                .setTangent(Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(15, 29, Math.toRadians(90)), Math.toRadians(-90))
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
+                .waitSeconds(1)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(50, 36, Math.toRadians(180)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .waitSeconds(1.5)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
+                .waitSeconds(0.5)
                 .back(4)
                 .strafeLeft(22)
-
                 .build();
-        TrajectorySequence park3 = robot.drive.trajectorySequenceBuilder(traj23.end())
-//                .strafeRight(28)
+        TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
+                .setReversed(true)
+                .setTangent(Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(19, 37, Math.toRadians(125)), Math.toRadians(-55))
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
+                .waitSeconds(1)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
+                .setTangent(Math.toRadians(135))
+                .splineToConstantHeading(new Vector2d(11, 32), Math.toRadians(-80))
+                .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(180)), Math.toRadians(30))
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .waitSeconds(1.5)
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
+                .waitSeconds(0.5)
                 .back(4)
                 .strafeLeft(18)
                 .build();
@@ -108,56 +118,19 @@ public class BlueClose extends LinearOpMode {
 
         waitForStart();
         //robot.setArm(-700);
-        robot.special.grabPixel();
+        //robot.special.grabPixel();
         sleep(500);
         switch (loc) {
             case "right":
-                robot.drive.followTrajectorySequence(traj11);
+                robot.drive.followTrajectorySequence(right);
                 break;
             case "center":
-                robot.drive.followTrajectorySequence(traj12);
+                robot.drive.followTrajectorySequence(middle);
                 break;
             case "left":
-                robot.drive.followTrajectorySequence(traj13);
+                robot.drive.followTrajectorySequence(left);
                 break;
         }
-
-        //robot.openRight();
-        robot.special.releasePixel();
-        sleep(1000);
-        //robot.setArm(350); // 390
-        robot.outtake.v4barScore();
-        //outtake
-        switch (loc) {
-            case "right":
-                robot.drive.followTrajectorySequence(traj21);
-                break;
-            case "center":
-                robot.drive.followTrajectorySequence(traj22);
-                break;
-            case "left":
-                robot.drive.followTrajectorySequence(traj23);
-                break;
-        }
-
-        //robot.openLeft();
-        robot.outtake.openBothClaw();
-        sleep(1000);
-        robot.outtake.v4barStow();
-        sleep(1000);
-
-        switch (loc) {
-            case "right":
-                robot.drive.followTrajectorySequence(park1);
-                break;
-            case "center":
-                robot.drive.followTrajectorySequence(park2);
-                break;
-            case "left":
-                robot.drive.followTrajectorySequence(park3);
-                break;
-        }
-        //robot.setArm(0);
 
     }
 }

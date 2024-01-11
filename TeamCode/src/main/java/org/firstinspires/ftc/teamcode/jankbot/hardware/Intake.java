@@ -23,6 +23,7 @@ public class Intake {
 
     public static double transferUp = 0.4;
     public static double transferDown=0.2;
+    public static double stackPos = 0.3;
 
 
     public Intake(HardwareMap hardwareMap) {
@@ -41,7 +42,8 @@ public class Intake {
 
     // Intake Motor
     public void setIntake(double power) {
-        intake.setPower(power);
+        //half power because vivek says the motors are too fast
+        intake.setPower(power/2);
     }
 
     public double getPower() {
@@ -62,6 +64,11 @@ public class Intake {
     public void tiltDown() {
         tilt1.setPosition(transferDown);
         tilt2.setPosition(transferDown);
+    }
+
+    public void tiltStack() {
+        tilt1.setPosition(stackPos);
+        tilt2.setPosition(stackPos);
     }
 
 
