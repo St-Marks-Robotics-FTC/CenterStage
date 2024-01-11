@@ -63,9 +63,10 @@ public class JankTele extends LinearOpMode {
         // State Machine
 
         StateMachine machine = new StateMachineBuilder()
-                .state(LinearStates.IDLE1)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                .state(LinearStates.IDLE1)                 // Driving to wing to pick up
                 .onEnter( () -> {
-                    robot.outtake.v4barStow(); // V4b Stow Position
+                    robot.outtake.v4barTransfer(); // V4b ready for transfer
                     robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.retractSlides(); // Retract Slide
                 })
@@ -82,12 +83,10 @@ public class JankTele extends LinearOpMode {
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
                     robot.intake.setIntake(0); // Stop Intake
-                    robot.intake.tiltUp(); // Intake tilt
-
-                    robot.outtake.v4barTransfer(); // V4Bar down
+                    robot.intake.tiltUp(); // Intake tilts up
                 })
                 .transitionTimed(0.75)
-                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
 
 
                 .state(LinearStates.TRANSFER)
@@ -98,15 +97,15 @@ public class JankTele extends LinearOpMode {
                 .onExit( () -> {
                     robot.outtake.v4barStow(); // V4b Stow Position
                 })
-                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-
-                .state(LinearStates.IDLE2)
+                .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
                 .transition( () ->  gamepad1.y) // Outtake Button
 
                 .state(LinearStates.EXTEND)
@@ -122,10 +121,10 @@ public class JankTele extends LinearOpMode {
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-                .state(LinearStates.IDLE3)
+                .state(LinearStates.IDLE3)                               // Slides out, ready to place
                 .loop( () -> {
                     if (pad2.wasJustPressed(GamepadKeys.Button.X)) {
                         robot.outtake.openLeft(); // Open Left Claw
@@ -142,11 +141,8 @@ public class JankTele extends LinearOpMode {
                     }
 
                 })
-
-
-
                 .transition( () ->  gamepad1.b) // Score Button
-                .transition(() -> gamepad1.a,  // Retract Button
+                .transition(() -> gamepad1.a,  // Retract Button Failsafe
                         LinearStates.IDLE2,
                         () -> {
                             robot.outtake.v4barStow(); // V4b Stow Position
@@ -155,11 +151,13 @@ public class JankTele extends LinearOpMode {
                         })
 
 
+
                 .state(LinearStates.SCORE)
                 .onEnter( () -> {
                     robot.outtake.openBothClaw(); // Open Claw
                 })
                 .transitionTimed(0.3)
+
 
                 .state(LinearStates.RETRACT)
                 .onEnter( () -> {
@@ -170,7 +168,7 @@ public class JankTele extends LinearOpMode {
                     slideLevel = 1;
                     turretLevel = 0;
                 })
-                .transition( () ->  robot.outtake.getSlidePos() < 15) // Checks if slides are down
+                .transition( () ->  robot.outtake.getSlidePos() < 15, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
 
 
