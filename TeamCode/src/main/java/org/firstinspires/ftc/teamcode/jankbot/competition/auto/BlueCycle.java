@@ -63,7 +63,7 @@ public class BlueCycle extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-61, 12, Math.toRadians(180)), Math.toRadians(180))
                 .waitSeconds(2)
                 .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.intake.setIntake(0);})
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.transfer();})
+                //.UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.transfer();})
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(20, 12) , Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barScore();})
