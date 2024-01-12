@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
@@ -28,7 +29,7 @@ public class BlueFar extends LinearOpMode {
     Jankbot robot;
 
     private VisionPortal portal;
-    private BluePropThreshold bluePropThreshold;
+    private BlueFarPropThreshold bluePropThreshold;
     private static int waitTime = 10000; //milliseconds
 
 
@@ -38,7 +39,7 @@ public class BlueFar extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        bluePropThreshold = new BluePropThreshold();
+        bluePropThreshold = new BlueFarPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
@@ -52,12 +53,18 @@ public class BlueFar extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Jankbot(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-41, 60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-41, 60, Math.toRadians(90));
         robot.drive.setPoseEstimate(startPose);
 
         TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // right side
                 .setReversed(true)
                 .setTangent(Math.toRadians(-110))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
+                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
                 .splineToSplineHeading(new Pose2d(-42, 40, Math.toRadians(60)), Math.toRadians(-110))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
                 //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
@@ -78,6 +85,12 @@ public class BlueFar extends LinearOpMode {
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
                 .setTangent(Math.toRadians(-110))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
+                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
                 .splineToSplineHeading(new Pose2d(-33, 28, Math.toRadians(120)), Math.toRadians(-30))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
                 //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
@@ -98,6 +111,12 @@ public class BlueFar extends LinearOpMode {
         TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
                 .setReversed(true)
                 .setTangent(Math.toRadians(-110))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
+                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
                 .splineToSplineHeading(new Pose2d(-30, 37, Math.toRadians(150)), Math.toRadians(-30))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
                 //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
