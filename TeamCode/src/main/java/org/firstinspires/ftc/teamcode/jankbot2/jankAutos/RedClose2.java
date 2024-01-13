@@ -19,7 +19,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Autonomous (group = "red", preselectTeleOp = "JankTele")
-public class RedClose extends LinearOpMode {
+public class RedClose2 extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static String loc = "left";
