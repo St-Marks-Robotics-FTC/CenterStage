@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.jankbot.competition.auto.jankAutos;
+package org.firstinspires.ftc.teamcode.jankbot2.jankAutos;
 
 import android.util.Size;
 
