@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.jankbot2.jankbot2Class;
@@ -52,8 +53,10 @@ public class jankbot2Tele extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        //frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        //backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        //frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         robot = new jankbot2Class(hardwareMap);
@@ -69,16 +72,16 @@ public class jankbot2Tele extends LinearOpMode {
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = gamepad1.right_stick_x;
+            double rx = 0.75 * gamepad1.right_stick_x;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
+            double frontLeftPower = (y + x - rx) / denominator;
+            double backLeftPower = (y - x - rx) / denominator;
+            double frontRightPower = (y - x + rx) / denominator;
+            double backRightPower = (y + x + rx) / denominator;
 
             if (gamepad1.left_bumper) {
                 frontLeftMotor.setPower(0.3 * frontLeftPower);
@@ -135,7 +138,9 @@ public class jankbot2Tele extends LinearOpMode {
                 rightClosed = true;
 
                 closed = true;
-            } if (pad1.wasJustReleased(GamepadKeys.Button.X)) {
+            }  else if (gamepad1.right_bumper) {
+                robot.closeClaw();
+            } else if (pad1.wasJustReleased(GamepadKeys.Button.X)) {
                 robot.closeClaw();
                 robot.setArm(armPos[0]);
                 leftClosed = true;
