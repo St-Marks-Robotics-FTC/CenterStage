@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.jankbot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.jankbot.hardware.Intake;
+import org.firstinspires.ftc.teamcode.jankbot.hardware.JankOuttake;
 import org.firstinspires.ftc.teamcode.jankbot.hardware.Outtake;
 import org.firstinspires.ftc.teamcode.jankbot.hardware.SpecialTeams;
 import org.firstinspires.ftc.teamcode.jankbot.util.*;
@@ -15,11 +16,13 @@ public class Jankbot {
     public Intake intake;
     public Outtake outtake;
     public SpecialTeams special;
+    public JankOuttake jankOuttake;
 
     public Jankbot(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap);
         intake = new Intake(hardwareMap);
-        outtake = new Outtake(hardwareMap);
+        //outtake = new Outtake(hardwareMap);
+        jankOuttake = new JankOuttake(hardwareMap);
         special = new SpecialTeams(hardwareMap);
         //queue = new ActionQueue();
     }

@@ -17,8 +17,8 @@ public class MeepMeepTesting {
                 .setConstraints(40, 40, Math.toRadians(120), Math.toRadians(120), 15)
                 .setDimensions(13.5, 14) // Set size of bot
                 .followTrajectorySequence(drive ->
-                        //drive.trajectorySequenceBuilder(new Pose2d(-41, 64, Math.toRadians(90))) // Blue Far
-                        drive.trajectorySequenceBuilder(new Pose2d(17, 63.5, Math.toRadians(90))) // Blue Close
+                        drive.trajectorySequenceBuilder(new Pose2d(-41, 64, Math.toRadians(-90))) // Blue Far
+                        //drive.trajectorySequenceBuilder(new Pose2d(17, 63.5, Math.toRadians(-90))) // Blue Close
                                 //close
 //                                .setReversed(true)
 //                                .setTangent(Math.toRadians(-90))
@@ -90,8 +90,16 @@ public class MeepMeepTesting {
 //                                .splineToConstantHeading(new Vector2d(46, 31), Math.toRadians(45))
 //                                .waitSeconds(1)
 
-
-
+                                .setReversed(true)
+                                .setTangent(Math.toRadians(-80))
+                                .splineToSplineHeading(new Pose2d(-32,36, Math.toRadians(160)), Math.toRadians(-30))
+                                .waitSeconds(1)
+                                .setTangent(Math.toRadians(180))
+                                .splineToSplineHeading(new Pose2d(-32, 24, Math.toRadians(180)), Math.toRadians(-90))
+                                .splineToSplineHeading(new Pose2d(-32, 12, Math.toRadians(180)), Math.toRadians(0))
+                                .waitSeconds(1)
+                                .splineToSplineHeading(new Pose2d(20, 12, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(180)), Math.toRadians(60))
 
 
 
@@ -99,34 +107,34 @@ public class MeepMeepTesting {
 
 
                                 // Blue close
-                                .setReversed(true)
-//                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-//                                    robot.intake.tiltUp();
-//                                    robot.outtake.openBothClaw();
-//                                })
-//                                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-//                                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
-//                                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{
-//                                    robot.intake.tiltDown();
-//                                    robot.outtake.v4barScore();
-//                                })
-                                .splineToSplineHeading(new Pose2d(23, 34, Math.toRadians(90)), Math.toRadians(-90))
-//                                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-                                .waitSeconds(1)
-
-
-                                .setReversed(false)
-//                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(0))
-//                                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
-                                .waitSeconds(1.5)
-
-
-//                                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                                .waitSeconds(0.5)
-                                .forward(3)
-                                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
+//                                .setReversed(true)
+////                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+////                                    robot.intake.tiltUp();
+////                                    robot.outtake.openBothClaw();
+////                                })
+////                                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
+////                                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+////                                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{
+////                                    robot.intake.tiltDown();
+////                                    robot.outtake.v4barScore();
+////                                })
+//                                .splineToSplineHeading(new Pose2d(23, 34, Math.toRadians(90)), Math.toRadians(-90))
+////                                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
+//                                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
+//                                .waitSeconds(1)
+//
+//
+//                                .setReversed(false)
+////                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
+//                                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(0))
+////                                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+//                                .waitSeconds(1.5)
+//
+//
+////                                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
+//                                .waitSeconds(0.5)
+//                                .forward(3)
+//                                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
 
 
 
