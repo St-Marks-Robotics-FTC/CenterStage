@@ -22,7 +22,7 @@ public class jankbot2Class {
         clawRight = hardwareMap.get(Servo.class, "clawRight");
         //autoClaw = hardwareMap.get(Servo.class, "autoClaw");
 
-        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+//        arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }

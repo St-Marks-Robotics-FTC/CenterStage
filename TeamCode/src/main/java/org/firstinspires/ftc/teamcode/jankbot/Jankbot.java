@@ -20,10 +20,10 @@ public class Jankbot {
 
     public Jankbot(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap);
-        intake = new Intake(hardwareMap);
+        //intake = new Intake(hardwareMap);
         //outtake = new Outtake(hardwareMap);
         jankOuttake = new JankOuttake(hardwareMap);
-        special = new SpecialTeams(hardwareMap);
+        //special = new SpecialTeams(hardwareMap);
         //queue = new ActionQueue();
     }
 

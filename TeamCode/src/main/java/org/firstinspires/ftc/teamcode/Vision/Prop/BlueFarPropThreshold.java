@@ -39,7 +39,7 @@ public class BlueFarPropThreshold implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
+        Core.rotate(frame, frame, Core.ROTATE_90_COUNTERCLOCKWISE);
         Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
 
 

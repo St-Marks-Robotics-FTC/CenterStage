@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.jankbot.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -10,20 +11,21 @@ public class JankOuttake {
     Servo clawLeft;
     Servo clawRight;
 
-    private static double leftClose=0.3;
-    private static double rightClose=0.7;
-    private static double leftOpen=0.7;
-    private static double rightOpen =0.3;
+    private static double leftClose=0.65;
+    private static double rightClose=0.34;
+    private static double leftOpen=0.8;
+    private static double rightOpen =0.25;
 
     //starts up
-    private static int armUp=-900;
-    private static int armDown=-1800;
+    private static int armUp=-615;
+    private static int armDown=-904;
 
     public JankOuttake(HardwareMap hardwareMap) {
         arm=hardwareMap.get(DcMotorEx.class, "arm");
         clawLeft=hardwareMap.get(Servo.class, "clawLeft");
         clawRight=hardwareMap.get(Servo.class, "clawRight");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        arm.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void closeBoth() {

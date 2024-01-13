@@ -17,10 +17,11 @@ import org.firstinspires.ftc.teamcode.jankbot2.jankbot2Class;
 public class jankbot2Tele extends LinearOpMode {
 
     public static int armDown = 0;
+    public static int armIdle = 50;
     public static int armUp = 350;
-    public static int armUp2 = 405; //CHANGE
-    public static int armUp3 = 480; //CHANGE
-    public static int[] armPos = {armDown,armUp2,armUp3};
+    public static int armUp2 = 250; //CHANGE
+    public static int armUp3 = 300; //CHANGE
+    public static int[] armPos = {armIdle,armUp2,armUp3};
     public static int level = 0;
 
     public static boolean dpadupPressed = false;
@@ -128,7 +129,15 @@ public class jankbot2Tele extends LinearOpMode {
             }
 
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
+                robot.openClaw();
+                robot.setArm(armDown);
+                leftClosed = true;
+                rightClosed = true;
+
+                closed = true;
+            } if (pad1.wasJustReleased(GamepadKeys.Button.X)) {
                 robot.closeClaw();
+                robot.setArm(armPos[0]);
                 leftClosed = true;
                 rightClosed = true;
 

@@ -51,7 +51,7 @@ public class BlueFar2 extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Jankbot(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-41, 60, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-41, 59, Math.toRadians(90));
         robot.drive.setPoseEstimate(startPose);
 
         TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // right side
@@ -133,7 +133,7 @@ public class BlueFar2 extends LinearOpMode {
                 .strafeLeft(18)
                 .build();
 
-        //robot.closeClaw();
+        robot.jankOuttake.closeBoth();
         while (opModeInInit()) {
             loc = bluePropThreshold.getPropPosition();
             telemetry.addData("Prop Position", bluePropThreshold.getPropPosition());
