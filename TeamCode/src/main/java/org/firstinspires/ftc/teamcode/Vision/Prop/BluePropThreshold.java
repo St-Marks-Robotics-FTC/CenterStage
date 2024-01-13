@@ -39,7 +39,50 @@ public class BluePropThreshold implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        /*This line should only be added in when you want to see your custom pipeline
+        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
+        Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
+
+
+        Scalar lowHSVRedLower = new Scalar(0, 100, 20);  //Beginning of Color Wheel
+        Scalar lowHSVRedUpper = new Scalar(10, 255, 255);
+
+        Scalar redHSVRedLower = new Scalar(160, 100, 20); //Wraps around Color Wheel
+        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
+
+        Core.inRange(testMat, lowHSVRedLower, lowHSVRedUpper, lowMat);
+        Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);
+
+        testMat.release();
+
+        Core.bitwise_or(lowMat, highMat, finalMat);
+
+        lowMat.release();
+        highMat.release();
+
+        double leftBox = Core.sumElems(finalMat.submat(LEFT_RECTANGLE)).val[0];
+        double rightBox = Core.sumElems(finalMat.submat(RIGHT_RECTANGLE)).val[0];
+
+        double averagedLeftBox = leftBox / LEFT_RECTANGLE.area() / 255;
+        double averagedRightBox = rightBox / RIGHT_RECTANGLE.area() / 255; //Makes value [0,1]
+
+
+        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,255,255));
+        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,255,255));
+
+
+        if(averagedRightBox > blueThreshold){        //Must Tune Red Threshold
+            outStr = "center";
+        }else if(averagedLeftBox> blueThreshold){
+            outStr = "left";
+        }else{
+            outStr = "right";
+        }
+
+
+        avgLeft = averagedLeftBox;
+        avgRight = averagedRightBox;
+
+        finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as
                                   you use the "frame" mat for all of your pipelines, such as April Tags*/
         return null;            //You do not return the original mat anymore, instead return null

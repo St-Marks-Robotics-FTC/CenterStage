@@ -39,6 +39,7 @@ public class RedPropThreshold implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
+        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
         Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_RGB2HSV);
 
 

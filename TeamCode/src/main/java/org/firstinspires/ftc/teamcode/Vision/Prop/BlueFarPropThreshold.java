@@ -23,13 +23,13 @@ public class BlueFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(0, 150),
-            new Point(70, 250)
+            new Point(150, 400),
+            new Point(200, 450)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(300, 225),
-            new Point(400, 275)
+            new Point(200, 50),
+            new Point(300, 100)
     );
 
     @Override
@@ -39,6 +39,7 @@ public class BlueFarPropThreshold implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
+        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
         Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
 
 
