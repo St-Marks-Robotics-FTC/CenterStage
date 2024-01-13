@@ -91,15 +91,16 @@ public class MeepMeepTesting {
 //                                .waitSeconds(1)
 
                                 .setReversed(true)
-                                .setTangent(Math.toRadians(-80))
-                                .splineToSplineHeading(new Pose2d(-32,36, Math.toRadians(160)), Math.toRadians(-30))
+                                .setTangent(Math.toRadians(-110))
+                                .splineToSplineHeading(new Pose2d(-42,24, Math.toRadians(180)), Math.toRadians(-30))
                                 .waitSeconds(1)
                                 .setTangent(Math.toRadians(180))
-                                .splineToSplineHeading(new Pose2d(-32, 24, Math.toRadians(180)), Math.toRadians(-90))
-                                .splineToSplineHeading(new Pose2d(-32, 12, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToSplineHeading(new Pose2d(-32, 24, Math.toRadians(180)), Math.toRadians(-90))
+                                .splineToConstantHeading(new Vector2d(-42, 12), Math.toRadians(0))
                                 .waitSeconds(1)
+                                .setTangent(0)
                                 .splineToSplineHeading(new Pose2d(20, 12, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(180)), Math.toRadians(60))
+                                .splineToSplineHeading(new Pose2d(48, 36, Math.toRadians(180)), Math.toRadians(60))
 
 
 
