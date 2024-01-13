@@ -23,14 +23,26 @@ public class RedPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(0, 160),
-            new Point(100, 250)
+            new Point(0, 190),
+            new Point(100, 280)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(310, 200),
-            new Point(400, 300)
+            new Point(370, 200),
+            new Point(470, 300)
     );
+
+
+// FAR SIDE
+//    static final Rect LEFT_RECTANGLE = new Rect(
+//            new Point(200, 150),
+//            new Point(300, 250)
+//    );
+//
+//    static final Rect RIGHT_RECTANGLE = new Rect(
+//            new Point(540, 250),
+//            new Point(640, 355)
+//    );
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
@@ -39,7 +51,7 @@ public class RedPropThreshold implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
+//        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
         Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_RGB2HSV);
 
 
