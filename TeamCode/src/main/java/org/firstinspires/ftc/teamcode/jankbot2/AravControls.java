@@ -12,12 +12,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.jankbot2.jankbot2Class;
-
 @Config
 @Disabled
 @TeleOp
-public class NewControls extends LinearOpMode {
+public class AravControls extends LinearOpMode {
 
     public static int armDown = 0;
     public static int armUp = 350;
