@@ -17,7 +17,7 @@ public class jankbot2Class {
     private int prev;
 
     public jankbot2Class(HardwareMap hardwareMap) {
-        arm = hardwareMap.get(DcMotorEx.class, "lift");
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
         //autoClaw = hardwareMap.get(Servo.class, "autoClaw");
@@ -65,7 +65,7 @@ public class jankbot2Class {
 //        arm.setPower(0.7);
 //    }
 
-    public void setLift(int pos) {
+    public void setArm(int pos) {
         arm.setTargetPosition(pos);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower((pos>prev) ? 0.75 : 0.5);

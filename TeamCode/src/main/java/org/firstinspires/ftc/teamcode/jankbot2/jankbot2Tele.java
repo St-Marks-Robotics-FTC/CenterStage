@@ -90,7 +90,7 @@ public class jankbot2Tele extends LinearOpMode {
             }
 
             if (pad1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-                robot.setLift(robot.arm.getCurrentPosition()+10);
+                robot.setArm(robot.arm.getCurrentPosition()+10);
             }
 
 //            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
@@ -108,21 +108,21 @@ public class jankbot2Tele extends LinearOpMode {
 //            }
             if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
                 level = Math.min(2, level+1);
-                robot.setLift(armPos[level]);
+                robot.setArm(armPos[level]);
             } else if (pad1.wasJustPressed(GamepadKeys.Button.A)/* && !closed*/) {
                 if (!closed) {
                     level = 0;
                 } else {
                     level = Math.max(0, level-1);
                 }
-                robot.setLift(armPos[level]);
+                robot.setArm(armPos[level]);
             }
 //            else if (gamepad1.right_bumper) {
 //                robot.setArm(robot.arm.getCurrentPosition()+30);
 //            } else if(gamepad1.left_bumper){
 //                robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
             /*}*/ else if(gamepad1.right_trigger>=0.3){
-                robot.setLift(robot.arm.getCurrentPosition()-20);
+                robot.setArm(robot.arm.getCurrentPosition()-20);
             }
 
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
