@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.jankbot2;
+package org.firstinspires.ftc.teamcode.jankbot2.tele;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.jankbot2.jankbot2Class;
 
 @Config
 @Disabled
