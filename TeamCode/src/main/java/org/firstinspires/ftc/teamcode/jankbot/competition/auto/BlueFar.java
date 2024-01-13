@@ -79,7 +79,7 @@ public class BlueFar extends LinearOpMode {
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
                 .waitSeconds(0.5)
-                .back(4)
+                .forward(4)
                 .strafeLeft(28)
                 .build();
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
@@ -105,7 +105,7 @@ public class BlueFar extends LinearOpMode {
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
                 .waitSeconds(0.5)
-                .back(4)
+                .forward(4)
                 .strafeLeft(22)
                 .build();
         TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
@@ -117,7 +117,7 @@ public class BlueFar extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
                 .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
                 .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(-30, 37, Math.toRadians(150)), Math.toRadians(-30))
+                .splineToSplineHeading(new Pose2d(-30, 33, Math.toRadians(150)), Math.toRadians(-30))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
                 //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
                 .waitSeconds(1)
@@ -125,13 +125,13 @@ public class BlueFar extends LinearOpMode {
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-45, 12, Math.toRadians(180)), Math.toRadians(0))
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(25, 12) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(12, 12) , Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(40, 47), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
                 .waitSeconds(0.5)
-                .back(4)
+                .forward(4)
                 .strafeLeft(18)
                 .build();
 
