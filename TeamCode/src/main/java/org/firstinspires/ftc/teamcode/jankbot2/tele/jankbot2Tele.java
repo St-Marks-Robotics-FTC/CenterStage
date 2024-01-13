@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.jankbot2.jankbot2Class;
 @TeleOp
 public class jankbot2Tele extends LinearOpMode {
 
-    public static int armDown = 0;
+    public static int armDown = 12;
     public static int armIdle = 50;
     public static int armUp = 350;
     public static int armUp2 = 250; //CHANGE
