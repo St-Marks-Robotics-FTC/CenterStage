@@ -135,22 +135,22 @@ public class BlueClose2 extends LinearOpMode {
 //                .forward(3)
 //                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
                 .build();
-        TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
-                .setReversed(true)
-                .setTangent(Math.toRadians(-90))
-                .UNSTABLE_addTemporalMarkerOffset(0.75, ()->{robot.jankOuttake.armDown();})
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.closeBoth();})
-                .splineToSplineHeading(new Pose2d(18,40, Math.toRadians(135)), Math.toRadians(-60))
-                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.openLeft();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.scoreArm();})
-                .waitSeconds(1.5)
-                .setTangent(Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(10, 24, Math.toRadians(180)), Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(60))
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.openRight();})
-                .forward(4)
-                .strafeRight(10)
-                .build();
+//        TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
+////                .setReversed(true)
+////                .setTangent(Math.toRadians(-90))
+////                .UNSTABLE_addTemporalMarkerOffset(0.75, ()->{robot.jankOuttake.armDown();})
+////                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.closeBoth();})
+////                .splineToSplineHeading(new Pose2d(18,40, Math.toRadians(135)), Math.toRadians(-60))
+////                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.openLeft();})
+////                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.scoreArm();})
+////                .waitSeconds(1.5)
+////                .setTangent(Math.toRadians(180))
+////                .splineToSplineHeading(new Pose2d(10, 24, Math.toRadians(180)), Math.toRadians(-90))
+////                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(60))
+////                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.openRight();})
+////                .forward(4)
+////                .strafeRight(10)
+//                .build();
 
         //robot.closeClaw();
         while (opModeInInit()) {
@@ -173,7 +173,7 @@ public class BlueClose2 extends LinearOpMode {
                 robot.drive.followTrajectorySequence(middle);
                 break;
             case "left":
-                robot.drive.followTrajectorySequence(left);
+//                robot.drive.followTrajectorySequence(left);
                 break;
         }
 
