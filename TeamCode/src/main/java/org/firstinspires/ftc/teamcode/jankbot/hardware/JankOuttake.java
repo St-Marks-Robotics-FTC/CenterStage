@@ -12,7 +12,7 @@ public class JankOuttake {
     Servo clawRight;
 
     private static double leftClose=0.65;
-    private static double rightClose=0.34;
+    private static double rightClose=0.34; // .34
     private static double leftOpen=0.8;
     private static double rightOpen =0.25;
 
@@ -46,11 +46,11 @@ public class JankOuttake {
     }
 
     public void openLeft() {
-        clawLeft.setPosition(leftClose);
+        clawLeft.setPosition(leftOpen);
     }
 
     public void openRight() {
-        clawRight.setPosition(rightClose);
+        clawRight.setPosition(rightOpen);
     }
 
     public void scoreArm() {

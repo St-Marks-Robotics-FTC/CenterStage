@@ -150,34 +150,6 @@ public class BlueClose2 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.openRight();})
                 .forward(4)
                 .strafeRight(10)
-//                .setReversed(true)
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-//                    robot.intake.tiltUp();
-//                    robot.outtake.openBothClaw();
-//                })
-//                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-//                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
-//                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{
-//                    robot.intake.tiltDown();
-//                    robot.outtake.v4barScore();
-//                })
-//                .splineToSplineHeading(new Pose2d(23, 34, Math.toRadians(90)), Math.toRadians(-90))
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-//                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-//                .waitSeconds(1)
-//
-//
-//                .setReversed(false)
-//                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-//                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(0))
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
-//                .waitSeconds(1.5)
-//
-//
-//                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-//                .waitSeconds(0.5)
-//                .forward(3)
-//                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
                 .build();
 
         //robot.closeClaw();

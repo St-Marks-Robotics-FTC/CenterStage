@@ -90,18 +90,18 @@ public class MeepMeepTesting {
 //                                .splineToConstantHeading(new Vector2d(46, 31), Math.toRadians(45))
 //                                .waitSeconds(1)
 
-                                .setReversed(true)
-                                .setTangent(Math.toRadians(-110))
-                                .splineToSplineHeading(new Pose2d(-42,24, Math.toRadians(180)), Math.toRadians(-30))
-                                .waitSeconds(1)
-                                .setTangent(Math.toRadians(180))
-                                //.splineToSplineHeading(new Pose2d(-32, 24, Math.toRadians(180)), Math.toRadians(-90))
-                                .splineToConstantHeading(new Vector2d(-42, 12), Math.toRadians(0))
-                                .waitSeconds(1)
-                                .setTangent(0)
-                                .splineToSplineHeading(new Pose2d(20, 12, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(48, 36, Math.toRadians(180)), Math.toRadians(60))
-
+//                                .setReversed(true)
+//                                .setTangent(Math.toRadians(-110))
+//                                .splineToSplineHeading(new Pose2d(-42,24, Math.toRadians(180)), Math.toRadians(-30))
+//                                .waitSeconds(1)
+//                                .setTangent(Math.toRadians(180))
+//                                //.splineToSplineHeading(new Pose2d(-32, 24, Math.toRadians(180)), Math.toRadians(-90))
+//                                .splineToConstantHeading(new Vector2d(-42, 12), Math.toRadians(0))
+//                                .waitSeconds(1)
+//                                .setTangent(0)
+//                                .splineToSplineHeading(new Pose2d(20, 12, Math.toRadians(180)), Math.toRadians(0))
+//                                .splineToSplineHeading(new Pose2d(48, 36, Math.toRadians(180)), Math.toRadians(60))
+//
 
 
 
@@ -141,6 +141,20 @@ public class MeepMeepTesting {
 
 
 
+                                .setReversed(true)
+                                .setTangent(Math.toRadians(-90))
+//                                .UNSTABLE_addTemporalMarkerOffset(0.75, ()->{robot.jankOuttake.armDown();})
+//                                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.closeBoth();})
+                                .splineToSplineHeading(new Pose2d(18,40, Math.toRadians(135)), Math.toRadians(-60))
+//                                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.openLeft();})
+//                                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.scoreArm();})
+                                .waitSeconds(1.5)
+                                .setTangent(Math.toRadians(180))
+                                .splineToSplineHeading(new Pose2d(10, 24, Math.toRadians(180)), Math.toRadians(-90))
+                                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(60))
+//                                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.openRight();})
+                                .forward(4)
+                                .strafeRight(10)
 
 
 
