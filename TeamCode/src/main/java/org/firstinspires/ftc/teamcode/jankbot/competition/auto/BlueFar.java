@@ -65,7 +65,8 @@ public class BlueFar extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.closeBoth();})
                 .splineToSplineHeading(new Pose2d(-42,40, Math.toRadians(60)), Math.toRadians(-120))
                 .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.openLeft();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.scoreArm();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake
+                        .scoreArm();})
                 .waitSeconds(1.5)
                 .setTangent(Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(-32, 24, Math.toRadians(180)), Math.toRadians(-90))

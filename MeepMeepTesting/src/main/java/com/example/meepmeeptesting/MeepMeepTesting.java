@@ -14,10 +14,10 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(40, 40, Math.toRadians(120), Math.toRadians(120), 15)
+                .setConstraints(65, 56, Math.toRadians(120), Math.toRadians(120), 15)
                 .setDimensions(13.5, 14) // Set size of bot
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-41, 64, Math.toRadians(-90))) // Blue Far
+                        drive.trajectorySequenceBuilder(new Pose2d(-41, -64, Math.toRadians(90))) // Blue Far
                         //drive.trajectorySequenceBuilder(new Pose2d(17, 63.5, Math.toRadians(-90))) // Blue Close
                                 //close
 //                                .setReversed(true)
@@ -137,24 +137,24 @@ public class MeepMeepTesting {
 //                                .forward(3)
 //                                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
 
-
-
-
-
                                 .setReversed(true)
-                                .setTangent(Math.toRadians(-90))
+                                .setTangent(Math.toRadians(80))
 //                                .UNSTABLE_addTemporalMarkerOffset(0.75, ()->{robot.jankOuttake.armDown();})
 //                                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.closeBoth();})
-                                .splineToSplineHeading(new Pose2d(18,40, Math.toRadians(135)), Math.toRadians(-60))
+                                .splineToSplineHeading(new Pose2d(-32,-36, Math.toRadians(-160)), Math.toRadians(30))
 //                                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.openLeft();})
 //                                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.scoreArm();})
                                 .waitSeconds(1.5)
                                 .setTangent(Math.toRadians(180))
-                                .splineToSplineHeading(new Pose2d(10, 24, Math.toRadians(180)), Math.toRadians(-90))
-                                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(60))
+                                //.splineToSplineHeading(new Pose2d(-32, 24, Math.toRadians(180)), Math.toRadians(-90))
+                                .splineToConstantHeading(new Vector2d(-32, -12), Math.toRadians(0))
+                                .waitSeconds(1)
+                                .setTangent(0)
+                                .splineToSplineHeading(new Pose2d(20, -12, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(48, -30, Math.toRadians(180)), Math.toRadians(-60))
 //                                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.openRight();})
                                 .forward(4)
-                                .strafeRight(10)
+                                .strafeLeft(10)
 
 
 

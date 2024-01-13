@@ -6,13 +6,13 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedPropThreshold;
+//import org.firstinspires.ftc.teamcode.Vision.Prop.RredPropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -50,77 +50,107 @@ public class RedClose2 extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Jankbot(hardwareMap);
 
-        Pose2d startPose = new Pose2d(17, -59, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(17, -62, Math.toRadians(90));
         robot.drive.setPoseEstimate(startPose);
 
-        TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left side
+        TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // right side
                 .setReversed(true)
-                .setTangent(Math.toRadians(80))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(5, -36, Math.toRadians(-30)), Math.toRadians(130))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .setTangent(Math.toRadians(-45))
-                .splineToSplineHeading(new Pose2d(50, -42, Math.toRadians(180)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .setTangent(Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0.75, ()->{robot.jankOuttake.armDown();})
+                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.closeBoth();})
+                .splineToSplineHeading(new Pose2d(10,-40, Math.toRadians(-45)), Math.toRadians(120))
+                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.openLeft();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.scoreArm();})
                 .waitSeconds(1.5)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .back(4)
-                .strafeRight(28)
+                .splineToSplineHeading(new Pose2d(48, -42, Math.toRadians(180)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.openRight();})
+                .forward(4)
+                .strafeLeft(10)
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.intake.tiltUp();
+//                    robot.outtake.openBothClaw();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
+//                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+//                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{
+//                    robot.intake.tiltDown();
+//                    robot.outtake.v4barScore();
+//                })
+//                .splineToSplineHeading(new Pose2d(5, 36, Math.toRadians(30)), Math.toRadians(-130))
+////                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
+//                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
+//                .waitSeconds(1) // Score Purple
+//
+//
+//
+//                .setReversed(false)
+//                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
+//                .splineToSplineHeading(new Pose2d(50, 42, Math.toRadians(180)), Math.toRadians(0))
+//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+//                .waitSeconds(1.5)
+//
+//                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
+//                .waitSeconds(0.5)
+//                .forward(3)
+//                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
                 .build();
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
                 .setTangent(Math.toRadians(90))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(15, -29, Math.toRadians(-90)), Math.toRadians(90))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(50, -36, Math.toRadians(180)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0.75, ()->{robot.jankOuttake.armDown();})
+                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.closeBoth();})
+                .splineToSplineHeading(new Pose2d(16,-35, Math.toRadians(-90)), Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.openLeft();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.scoreArm();})
                 .waitSeconds(1.5)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .back(4)
-                .strafeRight(22)
+                .setTangent(0)
+                .splineToSplineHeading(new Pose2d(48, -36, Math.toRadians(180)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.openRight();})
+                .forward(4)
+                .strafeLeft(16)
+//                .setReversed(true)
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.intake.tiltUp();
+//                    robot.outtake.openBothClaw();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
+//                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+//                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{
+//                    robot.intake.tiltDown();
+//                    robot.outtake.v4barScore();
+//                })
+//                .splineToSplineHeading(new Pose2d(15, 29, Math.toRadians(90)), Math.toRadians(-90))
+////                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
+//                .waitSeconds(1)
+//
+//
+//                .setReversed(false)
+//                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
+//                .splineToSplineHeading(new Pose2d(50, 36, Math.toRadians(180)), Math.toRadians(0))
+//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+//                .waitSeconds(1.5)
+//
+//
+//                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
+//                .waitSeconds(0.5)
+//                .forward(3)
+//                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
                 .build();
-        TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // right
+        TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
                 .setReversed(true)
                 .setTangent(Math.toRadians(90))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(19, -37, Math.toRadians(-125)), Math.toRadians(55))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .setTangent(Math.toRadians(-135))
-                .splineToConstantHeading(new Vector2d(11, -32), Math.toRadians(80))
-                .splineToSplineHeading(new Pose2d(48, -30, Math.toRadians(180)), Math.toRadians(-30))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0.75, ()->{robot.jankOuttake.armDown();})
+                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.closeBoth();})
+                .splineToSplineHeading(new Pose2d(18,-40, Math.toRadians(-135)), Math.toRadians(60))
+                .UNSTABLE_addTemporalMarkerOffset(0, ()->{robot.jankOuttake.openLeft();})
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.scoreArm();})
                 .waitSeconds(1.5)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .back(4)
-                .strafeRight(18)
+                .setTangent(Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(10, -24, Math.toRadians(180)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(48, -42, Math.toRadians(180)), Math.toRadians(-60))
+                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.jankOuttake.openRight();})
+                .forward(4)
+                .strafeLeft(22)
                 .build();
 
         //robot.closeClaw();
@@ -132,10 +162,10 @@ public class RedClose2 extends LinearOpMode {
             telemetry.update();
         }
 
+
         waitForStart();
-        //robot.setArm(-700);
-        //robot.special.grabPixel();
-        sleep(500);
+
+
         switch (loc) {
             case "right":
                 robot.drive.followTrajectorySequence(right);
