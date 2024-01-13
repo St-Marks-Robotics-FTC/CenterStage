@@ -54,7 +54,7 @@ public class BlueFar extends LinearOpMode {
         //drive = new MecanumDrive(hardwareMap);
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Jankbot(hardwareMap);
-
+//bruh
         Pose2d startPose = new Pose2d(-41, 60, Math.toRadians(90));
         robot.drive.setPoseEstimate(startPose);
 
