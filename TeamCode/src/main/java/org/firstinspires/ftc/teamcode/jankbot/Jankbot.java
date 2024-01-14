@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.jankbot;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.jankbot.hardware.Intake;
-import org.firstinspires.ftc.teamcode.jankbot.hardware.JankOuttake;
-import org.firstinspires.ftc.teamcode.jankbot.hardware.Outtake;
-import org.firstinspires.ftc.teamcode.jankbot.hardware.SpecialTeams;
-import org.firstinspires.ftc.teamcode.jankbot.util.*;
+import org.firstinspires.ftc.teamcode.jankbot.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.jankbot.Subsystems.JankOuttake;
+import org.firstinspires.ftc.teamcode.jankbot.Subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.jankbot.Subsystems.SpecialTeams;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 
 public class Jankbot {

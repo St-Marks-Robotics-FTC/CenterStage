@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.jankbot.hardware;
+package org.firstinspires.ftc.teamcode.jankbot.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
