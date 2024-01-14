@@ -9,9 +9,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class SpecialTeams {
 
+    Servo preload;
     DcMotorEx hang;
     Servo drone;
-    Servo preload;
+
+
+    // Preload
+    public static double preloadGrab = 0.3;
+    public static double preloadRelease = 0.6;
 
     // Hang
     public static int hangPrepare = 700;
@@ -33,11 +38,11 @@ public class SpecialTeams {
 
     //Preload pixel
     public void grabPixel() {
-        preload.setPosition(0.3);
+        preload.setPosition(preloadGrab);
     }
 
     public void releasePixel() {
-        preload.setPosition(0.6);
+        preload.setPosition(preloadRelease);
     }
 
     // Hang
