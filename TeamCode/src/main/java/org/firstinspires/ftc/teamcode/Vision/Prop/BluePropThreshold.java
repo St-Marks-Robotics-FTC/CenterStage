@@ -71,11 +71,11 @@ public class BluePropThreshold implements VisionProcessor {
 
 
         if(averagedRightBox > blueThreshold){        //Must Tune Red Threshold
-            outStr = "center";
+            outStr = "right";
         }else if(averagedLeftBox> blueThreshold){
             outStr = "left";
         }else{
-            outStr = "right";
+            outStr = "none";
         }
 
 

@@ -83,11 +83,11 @@ public class RedPropThreshold implements VisionProcessor {
 
 
         if(averagedLeftBox > redThreshold){        //Must Tune Red Threshold
-            outStr = "center";
+            outStr = "left";
         }else if(averagedRightBox> redThreshold){
             outStr = "right";
         }else{
-            outStr = "left";
+            outStr = "none";
         }
         avgLeft = averagedLeftBox;
         avgRight = averagedRightBox;
