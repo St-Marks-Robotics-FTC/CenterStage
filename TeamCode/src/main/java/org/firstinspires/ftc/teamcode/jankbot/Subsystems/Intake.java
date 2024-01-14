@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake {
 
     public DcMotorEx intake;
-    public Servo dropdown;
     public Servo tilt1;
     public Servo tilt2;
 
@@ -29,7 +28,6 @@ public class Intake {
     public Intake(HardwareMap hardwareMap) {
         //intake
         intake = hardwareMap.get(DcMotorEx.class, "intake");
-        dropdown = hardwareMap.get(Servo.class, "dropdown");
         //transfer
         tilt1 = hardwareMap.get(Servo.class, "tilt1");
         tilt2 = hardwareMap.get(Servo.class, "tilt2");
