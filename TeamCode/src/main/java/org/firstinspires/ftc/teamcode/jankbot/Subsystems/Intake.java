@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 //import org.firstinspires.ftc.teamcode.jankbot.util.ActionQueue;
 
@@ -16,6 +17,8 @@ public class Intake {
     public Servo tilt1;
     public Servo tilt2;
 
+    TouchSensor pixel1;
+    TouchSensor pixel2;
     AnalogInput tiltAngle;
 
 
@@ -77,6 +80,14 @@ public class Intake {
     public void setTilt(double pos) {
         tilt1.setPosition(pos);
         tilt2.setPosition(pos);
+    }
+
+    // Sensors
+    public boolean getPixel1() {
+        return pixel1.isPressed();
+    }
+    public boolean getPixel2() {
+        return pixel2.isPressed();
     }
 
     public double getTiltAngleDegrees() {
