@@ -15,7 +15,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
@@ -71,8 +70,8 @@ public class BlueCycle extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barScore();})
                 .splineToConstantHeading(new Vector2d(46, 31), Math.toRadians(45))
                 .waitSeconds(0.5)
-                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->robot.outtake.openBothClaw())
-                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->robot.outtake.closeBothClaw())
+                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->robot.outtake.openBothClaws())
+                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->robot.outtake.closeBothClaws())
                 .UNSTABLE_addTemporalMarkerOffset(0, ()->robot.outtake.v4barStow())
                 .build();
 

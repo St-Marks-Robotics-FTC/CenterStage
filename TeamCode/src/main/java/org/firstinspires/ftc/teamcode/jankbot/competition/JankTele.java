@@ -93,7 +93,7 @@ public class JankTele extends LinearOpMode {
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
-                    robot.outtake.closeBothClaw(); // Claw Grab
+                    robot.outtake.closeBothClaws(); // Claw Grab
                 })
                 .transitionTimed(0.5)
                 .onExit( () -> {
@@ -112,12 +112,12 @@ public class JankTele extends LinearOpMode {
 
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
-                    robot.outtake.slidesTo(slideLevel); // Extend Slide
+                    robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                     robot.outtake.v4barScore(); // V4b Score Position
                 })
                 .loop( () -> {
                     robot.outtake.turretTo(turretLevel); // Spin Turret
-                    robot.outtake.slidesTo(slideLevel); // Extend Slide
+                    robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                 })
                 .transition( () ->  robot.outtake.getSlidePos() > 100) // Checks if slides are out
 
@@ -139,7 +139,7 @@ public class JankTele extends LinearOpMode {
                     if (Math.abs(pad2.getLeftY()) >= 0.1) {
                         robot.outtake.manualSlides(gamepad2.left_stick_y);
                     } else {
-                        robot.outtake.slidesTo(slideLevel); // Extend Slide to Level
+                        robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
                     }
 
                 })
@@ -156,7 +156,7 @@ public class JankTele extends LinearOpMode {
 
                 .state(LinearStates.SCORE)
                 .onEnter( () -> {
-                    robot.outtake.openBothClaw(); // Open Claw
+                    robot.outtake.openBothClaws(); // Open Claw
                 })
                 .transitionTimed(0.3)
 

@@ -15,7 +15,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedPropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
@@ -60,9 +59,9 @@ public class RedClose extends LinearOpMode {
                 .setReversed(true)
                 .setTangent(Math.toRadians(80))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaws();})
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
                 .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
                 .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
                 .splineToSplineHeading(new Pose2d(5, -36, Math.toRadians(-30)), Math.toRadians(130))
@@ -72,7 +71,7 @@ public class RedClose extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
                 .setTangent(Math.toRadians(-45))
                 .splineToSplineHeading(new Pose2d(50, -42, Math.toRadians(180)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
                 .waitSeconds(0.5)
@@ -83,9 +82,9 @@ public class RedClose extends LinearOpMode {
                 .setReversed(true)
                 .setTangent(Math.toRadians(90))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaws();})
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
                 .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
                 .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
                 .splineToSplineHeading(new Pose2d(15, -29, Math.toRadians(-90)), Math.toRadians(90))
@@ -94,7 +93,7 @@ public class RedClose extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
                 .setTangent(Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(50, -36, Math.toRadians(180)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
                 .waitSeconds(0.5)
@@ -105,9 +104,9 @@ public class RedClose extends LinearOpMode {
                 .setReversed(true)
                 .setTangent(Math.toRadians(90))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaws();})
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
                 .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
                 .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
                 .splineToSplineHeading(new Pose2d(19, -37, Math.toRadians(-125)), Math.toRadians(55))
@@ -118,7 +117,7 @@ public class RedClose extends LinearOpMode {
                 .setTangent(Math.toRadians(-135))
                 .splineToConstantHeading(new Vector2d(11, -32), Math.toRadians(80))
                 .splineToSplineHeading(new Pose2d(48, -30, Math.toRadians(180)), Math.toRadians(-30))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaw();})
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
                 .waitSeconds(0.5)

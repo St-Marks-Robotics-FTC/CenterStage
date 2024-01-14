@@ -15,28 +15,34 @@ public class Outtake {
 
     public Servo v4barLeft;
     public Servo v4barRight;
+    public Servo v4barAngle;
 
     public Servo clawLeft;
     public Servo clawRight;
 
     public Servo turret;
-    public Servo v4barPivot;
 
+
+    // Slides
     public static int slidesDown = 0;
     public static int level1 = 300;
     public static int levelIncrement = 60;
+
     public static double slideDownPower=0.2;
     public static double slideUpPower=0.5;
 
+    // V4Bar
     public static double v4barTransfer = 0.2;
     public static double v4barStow = 0.4;
     public static double v4barScore = 0.7;
 
+    // Claw
     public static double clawLeftClosed = 0.0;
     public static double clawRightClosed = 0.0;
     public static double clawLeftOpen = 0.3;
     public static double clawRightOpen = 0.3;
 
+    // Turret
     public static double turretTransfer = 0.5;
     public static double turret60 = 0.2;
 
@@ -46,27 +52,10 @@ public class Outtake {
 
 
 
-
-    public static int TOLERANCE =10;
-
-
-
     public Outtake (HardwareMap hardwareMap) {
-        //outtake
+        // Slides
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
-
-        v4barLeft = hardwareMap.get(Servo.class, "v4barLeft");
-        v4barRight = hardwareMap.get(Servo.class, "v4barRight");
-
-        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
-        clawRight = hardwareMap.get(Servo.class, "clawRight");
-
-        turret = hardwareMap.get(Servo.class, "turret");
-        v4barPivot = hardwareMap.get(Servo.class, "v4barPivot");
-
-
-
 
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -74,9 +63,21 @@ public class Outtake {
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        // V4Bar
+        v4barLeft = hardwareMap.get(Servo.class, "v4barLeft");
+        v4barRight = hardwareMap.get(Servo.class, "v4barRight");
+        v4barAngle = hardwareMap.get(Servo.class, "v4barPivot");
+
         v4barRight.setDirection(Servo.Direction.REVERSE);
 
+        // Claw
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
+
         clawLeft.setDirection(Servo.Direction.REVERSE);
+
+        // Turret
+        turret = hardwareMap.get(Servo.class, "turret");
 
     }
 
@@ -85,7 +86,7 @@ public class Outtake {
         setSlides(slidesDown);
     }
 
-    public void slidesTo(int level) {
+    public void slidesToLevel(int level) {
         setSlides(level1 +  (level - 1) * levelIncrement);
     }
 
@@ -95,10 +96,6 @@ public class Outtake {
 
     public int getSlidePos() {
         return (leftSlide.getCurrentPosition()+ rightSlide.getCurrentPosition())/2;
-    }
-
-    public void setSlideLvl1() {
-        setSlides(level1);
     }
 
     public void setSlides(int pos) {
@@ -138,13 +135,22 @@ public class Outtake {
         v4barLeft.setPosition(pos);
     }
 
+    // V4Bar Pivot
+    public void v4barPivotTransfer() {
+        v4barAngle.setPosition(pivotTransfer);
+    }
+
+    public void v4barPivotScore() {
+        v4barAngle.setPosition(pivotScore);
+    }
+
 
     // Claw
-    public void closeBothClaw() {
+    public void closeBothClaws() {
         closeLeft();
         closeRight();
     }
-    public void openBothClaw() {
+    public void openBothClaws() {
         openLeft();
         openRight();
     }
@@ -187,16 +193,6 @@ public class Outtake {
         return turret.getPosition();
     }
 
-
-
-    // V4Bar Pivot
-    public void v4barPivotTransfer() {
-        v4barPivot.setPosition(pivotTransfer);
-    }
-
-    public void v4barPivotScore() {
-        v4barPivot.setPosition(pivotScore);
-    }
 
 
 }
