@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.jankbot.competition;
 
+import static com.arcrobotics.ftclib.util.MathUtils.clamp;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -297,7 +299,7 @@ public class JankTele extends LinearOpMode {
 
                 // Set desired angular velocity to the heading controller output + angular
                 // velocity feedforward
-                double headingInput = headingController.update(poseEstimate.getHeading());
+                double headingInput = clamp(headingController.update(poseEstimate.getHeading()), -1, 1);
 
                 robot.drive.setWeightedDrivePower(
                         new Pose2d(tranScaleFactor * y, tranScaleFactor * x, headingInput)
