@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.jankbot.competition;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
@@ -16,6 +18,9 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
+import org.firstinspires.ftc.teamcode.jankbot.competition.auto.PoseStorage;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 
 import java.util.List;
 
@@ -48,6 +53,9 @@ public class JankTele extends LinearOpMode {
     Jankbot robot;
     GamepadEx pad1, pad2;
 
+    private PIDFController headingController = new PIDFController(MecanumDrive.HEADING_PID);
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -66,16 +74,31 @@ public class JankTele extends LinearOpMode {
         ToggleButtonReader hangToggle = new ToggleButtonReader(
                 pad1, GamepadKeys.Button.DPAD_RIGHT
         );
+        ToggleButtonReader headingToggle = new ToggleButtonReader(
+                pad1, GamepadKeys.Button.RIGHT_STICK_BUTTON
+        );
 
 
         pad2 = new GamepadEx(gamepad2);
 
 
         ElapsedTime time = new ElapsedTime();
-        
-        
-        
-        
+
+
+
+
+        // Retrieve our pose from the PoseStorage.currentPose static field
+        // See AutoTransferPose.java for further details
+        robot.drive.getLocalizer().setPoseEstimate(PoseStorage.currentPose);
+
+        // Set input bounds for the heading controller
+        // Automatically handles overflow
+        headingController.setInputBounds(-Math.PI, Math.PI);
+
+
+
+
+
         // State Machine
 
         StateMachine machine = new StateMachineBuilder()
@@ -229,9 +252,26 @@ public class JankTele extends LinearOpMode {
 
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
             double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
-            robot.drive.setWeightedDrivePower(
-                    new Pose2d(tranScaleFactor * y, tranScaleFactor * x, rotScaleFactor * 0.3 * rx)
-            );
+            if (headingToggle.getState()) {
+                Pose2d poseEstimate = robot.drive.getPoseEstimate(); // Read pose
+
+                headingController.setTargetPosition(Math.toRadians(0));
+
+                // Set desired angular velocity to the heading controller output + angular
+                // velocity feedforward
+                double headingInput = headingController.update(poseEstimate.getHeading());
+
+                robot.drive.setWeightedDrivePower(
+                        new Pose2d(tranScaleFactor * y, tranScaleFactor * x, headingInput)
+                );
+
+            } else {
+                robot.drive.setWeightedDrivePower(
+                        new Pose2d(tranScaleFactor * y, tranScaleFactor * x, rotScaleFactor * rx)
+                );
+            }
+
+
 
 
 
@@ -304,6 +344,7 @@ public class JankTele extends LinearOpMode {
             telemetry.update();
             pad1.readButtons();
             hangToggle.readValue();
+            headingToggle.readValue();
             pad2.readButtons();
 
         }
