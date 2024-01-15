@@ -44,7 +44,7 @@ public class BlueFarPropThreshold implements VisionProcessor {
 
 
         Scalar lowHSVRedLower = new Scalar(0, 100, 20);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(10, 255, 255);
+        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
 
         Scalar redHSVRedLower = new Scalar(160, 100, 20); //Wraps around Color Wheel
         Scalar highHSVRedUpper = new Scalar(180, 255, 255);
