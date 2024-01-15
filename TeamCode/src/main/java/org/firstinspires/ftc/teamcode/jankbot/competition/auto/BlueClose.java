@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
+import org.firstinspires.ftc.teamcode.jankbot.competition.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
@@ -24,7 +25,6 @@ public class BlueClose extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static String loc = "left";
-    //MecanumDrive drive;
     Jankbot robot;
 
     private VisionPortal portal;
@@ -46,9 +46,6 @@ public class BlueClose extends LinearOpMode {
                 .build();
 
 
-
-        //drive = new MecanumDrive(hardwareMap);
-//        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Jankbot(hardwareMap);
 
         Pose2d startPose = new Pose2d(17, 63.5, Math.toRadians(90));
@@ -158,16 +155,19 @@ public class BlueClose extends LinearOpMode {
 
 
         switch (loc) {
-            case "right":
-                robot.drive.followTrajectorySequence(right);
-                break;
-            case "center":
-                robot.drive.followTrajectorySequence(middle);
-                break;
             case "left":
                 robot.drive.followTrajectorySequence(left);
                 break;
+            case "right":
+                robot.drive.followTrajectorySequence(middle);
+                break;
+            case "none":
+                robot.drive.followTrajectorySequence(right);
+                break;
         }
+        // Transfer the current pose to PoseStorage so we can use it in TeleOp
+        PoseStorage.currentPose = robot.drive.getPoseEstimate();
+
 
     }
 }

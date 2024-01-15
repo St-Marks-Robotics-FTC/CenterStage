@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.jankbot.competition.auto;
+package org.firstinspires.ftc.teamcode.jankbot.competition;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 

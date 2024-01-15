@@ -139,13 +139,13 @@ public class RedClose extends LinearOpMode {
         //robot.special.grabPixel();
         sleep(500);
         switch (loc) {
+            case "left":
+                robot.drive.followTrajectorySequence(middle);
+                break;
             case "right":
                 robot.drive.followTrajectorySequence(right);
                 break;
-            case "center":
-                robot.drive.followTrajectorySequence(middle);
-                break;
-            case "left":
+            case "none":
                 robot.drive.followTrajectorySequence(left);
                 break;
         }
