@@ -90,11 +90,23 @@ public class Intake {
     }
 
     // Sensors
+    public boolean is2Aligned() {
+        return pixel1.isPressed() && pixel2.isPressed() && alignSwitch.isPressed();
+    }
+
+    public boolean is2NotAligned() {
+        return pixel1.isPressed() && pixel2.isPressed() && !alignSwitch.isPressed();
+    }
+
     public boolean getPixel1() {
         return pixel1.isPressed();
     }
     public boolean getPixel2() {
         return pixel2.isPressed();
+    }
+
+    public boolean isPixelAligned() {
+        return alignSwitch.isPressed();
     }
 
     public boolean isTiltUp() {
@@ -105,9 +117,7 @@ public class Intake {
         return tiltAngle.getVoltage() / 3.3 * 360.0;
     }
 
-    public boolean isPixelAligned() {
-        return alignSwitch.isPressed();
-    }
+
 
 
 }
