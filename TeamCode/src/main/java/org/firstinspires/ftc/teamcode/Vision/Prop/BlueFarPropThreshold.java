@@ -23,13 +23,13 @@ public class BlueFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(150, 400),
-            new Point(200, 450)
+            new Point(170, 160),
+            new Point(270, 300)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(200, 50),
-            new Point(300, 100)
+            new Point(500, 200),
+            new Point(600, 300)
     );
 
     @Override
@@ -39,12 +39,12 @@ public class BlueFarPropThreshold implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        Core.rotate(frame, frame, Core.ROTATE_90_COUNTERCLOCKWISE);
+//        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
         Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
 
 
         Scalar lowHSVRedLower = new Scalar(0, 100, 20);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(40, 255, 255);
+        Scalar lowHSVRedUpper = new Scalar(10, 255, 255);
 
         Scalar redHSVRedLower = new Scalar(160, 100, 20); //Wraps around Color Wheel
         Scalar highHSVRedUpper = new Scalar(180, 255, 255);
@@ -66,20 +66,21 @@ public class BlueFarPropThreshold implements VisionProcessor {
         double averagedRightBox = rightBox / RIGHT_RECTANGLE.area() / 255; //Makes value [0,1]
 
 
-        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,0,0));
-        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,0,0));
+        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,255,255));
+        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,255,255));
 
 
-        if(averagedLeftBox > blueThreshold){        //Must Tune Red Threshold
-            outStr = "left";
-        }else if(averagedRightBox> blueThreshold){
+        if(averagedRightBox > blueThreshold){        //Must Tune Red Threshold
             outStr = "right";
+        }else if(averagedLeftBox> blueThreshold){
+            outStr = "left";
         }else{
             outStr = "none";
         }
+
+
         avgLeft = averagedLeftBox;
         avgRight = averagedRightBox;
-
 
         finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as

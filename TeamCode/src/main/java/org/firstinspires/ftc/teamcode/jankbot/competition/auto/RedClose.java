@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
+import org.firstinspires.ftc.teamcode.Vision.Prop.RedPropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.jankbot.competition.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
@@ -29,19 +29,19 @@ public class RedClose extends LinearOpMode {
     Jankbot robot;
 
     private VisionPortal portal;
-    private BluePropThreshold bluePropThreshold;
+    private RedPropThreshold redPropThreshold;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        bluePropThreshold = new BluePropThreshold();
+        redPropThreshold = new RedPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(bluePropThreshold)
+                .addProcessor(redPropThreshold)
                 .build();
 
 
@@ -168,10 +168,10 @@ public class RedClose extends LinearOpMode {
 
 
         while (opModeInInit()) {
-            loc = bluePropThreshold.getPropPosition();
-            telemetry.addData("Prop Position", bluePropThreshold.getPropPosition());
-            telemetry.addData("Avg Left Box Value", bluePropThreshold.getAvergageLeft());
-            telemetry.addData("Avg Right Box Value", bluePropThreshold.getAvergageRight());
+            loc = redPropThreshold.getPropPosition();
+            telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Box Value", redPropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Box Value", redPropThreshold.getAvergageRight());
 
             if (gamepad1.a) {
                 middlePark = true;

@@ -23,14 +23,26 @@ public class RedFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(200, 150),
-            new Point(300, 250)
+            new Point(0, 190),
+            new Point(100, 280)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(540, 250),
-            new Point(640, 355)
+            new Point(370, 200),
+            new Point(470, 300)
     );
+
+
+// FAR SIDE
+//    static final Rect LEFT_RECTANGLE = new Rect(
+//            new Point(200, 150),
+//            new Point(300, 250)
+//    );
+//
+//    static final Rect RIGHT_RECTANGLE = new Rect(
+//            new Point(540, 250),
+//            new Point(640, 355)
+//    );
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
@@ -66,21 +78,20 @@ public class RedFarPropThreshold implements VisionProcessor {
         double averagedRightBox = rightBox / RIGHT_RECTANGLE.area() / 255; //Makes value [0,1]
 
 
-        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,255,255));
-        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,255,255));
+        Imgproc.rectangle(finalMat,LEFT_RECTANGLE, new Scalar(255,0,0));
+        Imgproc.rectangle(finalMat,RIGHT_RECTANGLE, new Scalar(255,0,0));
 
 
-        if(averagedRightBox > redThreshold){        //Must Tune Red Threshold
-            outStr = "right";
-        }else if(averagedLeftBox> redThreshold){
+        if(averagedLeftBox > redThreshold){        //Must Tune Red Threshold
             outStr = "left";
+        }else if(averagedRightBox> redThreshold){
+            outStr = "right";
         }else{
             outStr = "none";
         }
-
-
         avgLeft = averagedLeftBox;
         avgRight = averagedRightBox;
+
 
         finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as
