@@ -202,6 +202,8 @@ public class JankTele extends LinearOpMode {
 
         waitForStart();
 
+        machine.start();
+
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
