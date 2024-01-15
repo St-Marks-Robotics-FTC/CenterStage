@@ -40,6 +40,7 @@ public class JankTele extends LinearOpMode {
     
     int slideLevel = 1;
     int turretLevel = 0;
+    boolean manualSlides = false;
 
     boolean hangReady = false;
     double loopTime = 0;
@@ -68,6 +69,8 @@ public class JankTele extends LinearOpMode {
 
 
         pad2 = new GamepadEx(gamepad2);
+
+
         ElapsedTime time = new ElapsedTime();
         
         
@@ -81,6 +84,7 @@ public class JankTele extends LinearOpMode {
                 .onEnter( () -> {
                     robot.intake.tiltStow(); // Intake Stow
 
+                    robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.v4barTransfer(); // V4b ready for transfer
                     robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.retractSlides(); // Retract Slide
@@ -153,13 +157,15 @@ public class JankTele extends LinearOpMode {
                     robot.outtake.turretTo(turretLevel); // Spin Turret
                     // Manual Control
                     if (Math.abs(pad2.getLeftY()) >= 0.1) {
-                        robot.outtake.manualSlides(gamepad2.left_stick_y);
-                    } else {
+                        manualSlides = true;
+                        robot.outtake.manualSlides(pad2.getLeftY());
+                    } else if (!manualSlides) {
                         robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
                     }
 
                 })
                 .transition( () ->  gamepad1.b) // Score Button
+                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
                 .transition(() -> gamepad1.a,  // Retract Button Failsafe
                         LinearStates.IDLE2,
                         () -> {
@@ -185,6 +191,7 @@ public class JankTele extends LinearOpMode {
                     
                     slideLevel = 1;
                     turretLevel = 0;
+                    manualSlides = false;
                 })
                 .transition( () ->  robot.outtake.getSlidePos() < 15, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 

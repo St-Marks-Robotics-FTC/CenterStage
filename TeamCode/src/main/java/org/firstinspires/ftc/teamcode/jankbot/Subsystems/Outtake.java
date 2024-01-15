@@ -93,6 +93,10 @@ public class Outtake {
         setSlides(level1 +  (level - 1) * levelIncrement);
     }
 
+    public void manualSlides(double power) {
+        setSlides(getSlidePos() + (int) (power * 50));
+    }
+
     public boolean isDone() {
         return (!leftSlide.isBusy() && !rightSlide.isBusy());
     }
@@ -102,23 +106,12 @@ public class Outtake {
     }
 
     public void setSlides(int pos) {
-        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         rightSlide.setTargetPosition(pos);
         leftSlide.setTargetPosition(pos);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
-    }
-
-    public void manualSlides(double power) {
-        leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        leftSlide.setPower(power);
-        rightSlide.setPower(power);
     }
 
     // V4Bar
@@ -163,6 +156,10 @@ public class Outtake {
     public void openBothClaws() {
         openLeft();
         openRight();
+    }
+
+    public boolean isClawOpen() {
+        return (clawLeft.getPosition() == clawLeftOpen) && (clawRight.getPosition() == clawRightOpen);
     }
 
     public void closeLeft() {
