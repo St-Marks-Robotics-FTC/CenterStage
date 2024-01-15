@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
@@ -19,7 +18,6 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.jankbot.competition.auto.PoseStorage;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 
 import java.util.List;
@@ -54,6 +52,7 @@ public class JankTele extends LinearOpMode {
     GamepadEx pad1, pad2;
 
     private PIDFController headingController = new PIDFController(MecanumDrive.HEADING_PID);
+    double imuSetpoint = 0;
 
 
 
@@ -244,7 +243,7 @@ public class JankTele extends LinearOpMode {
             }
 
 
-            
+            Pose2d poseEstimate = robot.drive.getPoseEstimate();
 
             double y = -gamepad1.left_stick_y;
             double x = -gamepad1.left_stick_x * 1.1;
@@ -253,9 +252,7 @@ public class JankTele extends LinearOpMode {
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
             double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
             if (headingToggle.getState()) {
-                Pose2d poseEstimate = robot.drive.getPoseEstimate(); // Read pose
-
-                headingController.setTargetPosition(Math.toRadians(0));
+                headingController.setTargetPosition(Math.toRadians(imuSetpoint));
 
                 // Set desired angular velocity to the heading controller output + angular
                 // velocity feedforward
@@ -271,6 +268,12 @@ public class JankTele extends LinearOpMode {
                 );
             }
 
+            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                imuSetpoint += 2.5; // degrees
+            } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                imuSetpoint -= 2.5; // degrees
+            }
+
 
 
 
@@ -283,9 +286,9 @@ public class JankTele extends LinearOpMode {
                 slideLevel = Math.max(0, slideLevel - 1);
             }
 
-            if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 turretLevel = Math.min(4, turretLevel+1);
-            } else if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+            } else if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 turretLevel = Math.max(-4, turretLevel-1);
             }
 
@@ -327,10 +330,12 @@ public class JankTele extends LinearOpMode {
 
 
 
+            // Telemetry
+            telemetry.addData("Slide Level", slideLevel);
+            telemetry.addData("Turret Pos", turretLevel);
+            telemetry.addData("Manual Slides", manualSlides);
 
-            robot.drive.update();
 
-            Pose2d poseEstimate = robot.drive.getPoseEstimate();
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
@@ -341,11 +346,14 @@ public class JankTele extends LinearOpMode {
             telemetry.addData("hz ", 1000000000 / (loop - loopTime));
             loopTime = loop;
 
-            telemetry.update();
+            robot.drive.update();
+
             pad1.readButtons();
             hangToggle.readValue();
             headingToggle.readValue();
             pad2.readButtons();
+
+            telemetry.update();
 
         }
     }
