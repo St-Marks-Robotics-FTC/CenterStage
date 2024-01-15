@@ -90,7 +90,8 @@ public class JankTele extends LinearOpMode {
                     robot.intake.tiltDown(); // Drop Intake
                     robot.intake.setIntake(0.8); // Spin Intake
                 })
-                .transition( () -> gamepad1.right_trigger < 0.5) // if let go or intake sensor
+                .transition( () -> gamepad1.right_trigger < 0.5) // if let go
+                .transition( () -> (robot.intake.getPixel1() && robot.intake.getPixel2() && robot.intake.isPixelAligned()), () -> gamepad1.rumble(500)) // if both pixels are in -> rumble
 
 
                 .state(LinearStates.TILT)
@@ -99,6 +100,7 @@ public class JankTele extends LinearOpMode {
                     robot.intake.tiltUp(); // Intake tilts up
                 })
                 .transitionTimed(0.75)
+                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
 
 
@@ -211,7 +213,7 @@ public class JankTele extends LinearOpMode {
 
             double y = -gamepad1.left_stick_y;
             double x = -gamepad1.left_stick_x * 1.1;
-            double rx = -gamepad1.right_stick_x;
+            double rx = -gamepad1.right_stick_x * 0.8;
 
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
             double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
@@ -257,7 +259,7 @@ public class JankTele extends LinearOpMode {
                 robot.special.shootDrone();
             }
 
-            if (hangToggle.getState()) {
+            if (hangToggle.getState()) { // Dpad Right
                 robot.special.hangReady();
                 hangReady = true;
             } else if (hangReady){

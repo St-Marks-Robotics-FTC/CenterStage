@@ -19,6 +19,7 @@ public class Intake {
 
     TouchSensor pixel1;
     TouchSensor pixel2;
+    TouchSensor alignSwitch;
     AnalogInput tiltAngle;
 
 
@@ -27,6 +28,7 @@ public class Intake {
 
 
     public static double tiltUp = 0.6;
+    public static double tiltUpDegrees = 150;
     public static double tiltDown =0.2;
     public static double tiltStow = 0.3;
     public static double tiltStack = 0.3;
@@ -43,6 +45,11 @@ public class Intake {
         tilt2.setDirection(Servo.Direction.REVERSE);
 
         tiltAngle = hardwareMap.get(AnalogInput.class, "tiltAngle");
+
+
+        pixel1 = hardwareMap.get(TouchSensor.class, "pixel1");
+        pixel2 = hardwareMap.get(TouchSensor.class, "pixel2");
+        alignSwitch = hardwareMap.get(TouchSensor.class, "alignSwitch");
     }
 
 
@@ -90,8 +97,16 @@ public class Intake {
         return pixel2.isPressed();
     }
 
+    public boolean isTiltUp() {
+        return getTiltAngleDegrees() >= tiltUpDegrees;
+    }
+
     public double getTiltAngleDegrees() {
         return tiltAngle.getVoltage() / 3.3 * 360.0;
+    }
+
+    public boolean isPixelAligned() {
+        return alignSwitch.isPressed();
     }
 
 
