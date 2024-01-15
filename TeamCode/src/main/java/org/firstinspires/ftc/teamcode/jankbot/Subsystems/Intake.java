@@ -91,11 +91,11 @@ public class Intake {
 
     // Sensors
     public boolean is2Aligned() {
-        return pixel1.isPressed() && pixel2.isPressed() && alignSwitch.isPressed();
+        return getPixel1() && getPixel2() && isPixelAligned();
     }
 
     public boolean is2NotAligned() {
-        return pixel1.isPressed() && pixel2.isPressed() && !alignSwitch.isPressed();
+        return getPixel1() && getPixel2() && !isPixelAligned();
     }
 
     public boolean getPixel1() {

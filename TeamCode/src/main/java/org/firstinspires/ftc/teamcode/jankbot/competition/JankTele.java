@@ -128,7 +128,7 @@ public class JankTele extends LinearOpMode {
         StateMachine machine = new StateMachineBuilder()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 .state(LinearStates.IDLE1)                 // Driving to wing to pick up
-                .onEnter( () -> {
+                .onEnter( () -> { // Happens on Init as well
                     robot.intake.setIntake(0); // Stop Intake
                     robot.intake.tiltStow(); // Intake Stow
 
@@ -137,6 +137,7 @@ public class JankTele extends LinearOpMode {
                     robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.retractSlides(); // Retract Slide
                 })
+                .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button
 
                 .state(LinearStates.INTAKE)
@@ -144,15 +145,14 @@ public class JankTele extends LinearOpMode {
                     robot.intake.tiltDown(); // Drop Intake
                     robot.intake.setIntake(0.8); // Spin Intake
                 })
-                .transition( () -> gamepad1.right_trigger < 0.5) // if let go
+                .transition( () -> (gamepad1.right_trigger < 0.5) && (!robot.intake.getPixel1() || !robot.intake.getPixel2()) , LinearStates.IDLE1) // if let go and not both pixels
                 .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
 
 
 
-                .state(LinearStates.CHECK)
-                .transition( () ->  robot.intake.is2Aligned())
-                .transition( () ->  robot.intake.is2NotAligned(), JamStates.MAIN)
-                .transitionTimed(0.25)
+                .state(LinearStates.CHECK) // Accounts for delay between distance sensor and touch sensors
+                .transition( () ->  robot.intake.is2Aligned(), () -> gamepad1.rumble(500))
+                .transitionTimed(0.20)
 
 
                 .state(LinearStates.TILT)
@@ -160,7 +160,7 @@ public class JankTele extends LinearOpMode {
                     robot.intake.setIntake(0); // Stop Intake
                     robot.intake.tiltUp(); // Intake tilts up
                 })
-//                .transition( () ->  !robot.intake.is2Aligned(), ) // Tilt is up
+                .transition( () ->  robot.intake.is2NotAligned(), JamStates.MAIN) // JAM failsafe
                 .transitionTimed(0.75)
                 .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
@@ -362,6 +362,9 @@ public class JankTele extends LinearOpMode {
 
 
             // Telemetry
+            telemetry.addData("State", machine.getState());
+            telemetry.addData("Jam State", jamMachine.getState());
+
             telemetry.addData("Slide Level", slideLevel);
             telemetry.addData("Turret Pos", turretLevel);
             telemetry.addData("Manual Slides", manualSlides);
