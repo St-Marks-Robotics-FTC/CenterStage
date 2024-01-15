@@ -268,6 +268,7 @@ public class JankTele extends LinearOpMode {
                 );
             }
 
+            // Heading PID Adjustments
             if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
                 imuSetpoint += 2.5; // degrees
             } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
@@ -280,12 +281,14 @@ public class JankTele extends LinearOpMode {
 
 
 
+            // Slide Level Adjustments
             if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
                 slideLevel = Math.min(9, slideLevel + 1);
             } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                 slideLevel = Math.max(0, slideLevel - 1);
             }
 
+            // Turret Angle Adjustments
             if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 turretLevel = Math.min(4, turretLevel+1);
             } else if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
