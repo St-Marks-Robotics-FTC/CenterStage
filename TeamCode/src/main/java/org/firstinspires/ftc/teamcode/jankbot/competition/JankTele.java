@@ -79,6 +79,8 @@ public class JankTele extends LinearOpMode {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 .state(LinearStates.IDLE1)                 // Driving to wing to pick up
                 .onEnter( () -> {
+                    robot.intake.tiltStow(); // Intake Stow
+
                     robot.outtake.v4barTransfer(); // V4b ready for transfer
                     robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.retractSlides(); // Retract Slide
@@ -110,6 +112,7 @@ public class JankTele extends LinearOpMode {
                 })
                 .transitionTimed(0.5)
                 .onExit( () -> {
+                    robot.intake.tiltStow(); // Intake Stow
                     robot.outtake.v4barStow(); // V4b Stow Position
                 })
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
