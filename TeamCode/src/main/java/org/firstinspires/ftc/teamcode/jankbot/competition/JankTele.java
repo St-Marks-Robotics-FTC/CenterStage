@@ -299,7 +299,7 @@ public class JankTele extends LinearOpMode {
 
                 // Set desired angular velocity to the heading controller output + angular
                 // velocity feedforward
-                double headingInput = clamp(headingController.update(poseEstimate.getHeading()), -1, 1);
+                double headingInput = clamp(headingController.update(poseEstimate.getHeading()), -0.3, 0.3);
 
                 robot.drive.setWeightedDrivePower(
                         new Pose2d(tranScaleFactor * y, tranScaleFactor * x, headingInput)
