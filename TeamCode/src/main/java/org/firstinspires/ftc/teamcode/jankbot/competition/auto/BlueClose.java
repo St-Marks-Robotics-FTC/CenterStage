@@ -25,6 +25,7 @@ public class BlueClose extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static String loc = "left";
+    public static boolean middlePark = false;
     Jankbot robot;
 
     private VisionPortal portal;
@@ -33,8 +34,6 @@ public class BlueClose extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        dashboard = FtcDashboard.getInstance();
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         bluePropThreshold = new BluePropThreshold();
@@ -48,105 +47,139 @@ public class BlueClose extends LinearOpMode {
 
         robot = new Jankbot(hardwareMap);
 
-        Pose2d startPose = new Pose2d(17, 63.5, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(16.5, 63.5, Math.toRadians(90));
         robot.drive.setPoseEstimate(startPose);
 
-        TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // right side
+        TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // Truss side / No Prop Seen
+                // Drive to spike
                 .setReversed(true)
+                .splineToSplineHeading(new Pose2d(8, 34, Math.toRadians(180)), Math.toRadians(-150))
+
+
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.intake.tiltUp();
-                    robot.outtake.openBothClaws();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{
                     robot.intake.tiltDown();
+                    robot.intake.setIntake(-0.15);
+                })
+                .waitSeconds(1) // Score Purple Spike
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.intake.tiltStow();
+                    robot.intake.setIntake(0);
+                })
+
+
+                // Drive to Board
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(43, 28, Math.toRadians(180)), Math.toRadians(0))
+
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
                     robot.outtake.v4barScore();
                 })
-                .splineToSplineHeading(new Pose2d(5, 36, Math.toRadians(30)), Math.toRadians(-130))
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-                .waitSeconds(1) // Score Purple
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    robot.outtake.openBothClaws();
+                })
+                .waitSeconds(2.5) // Place Yellow
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.outtake.v4barTransfer();
+                })
 
-
-
-                .setReversed(false)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(50, 42, Math.toRadians(180)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
-                .waitSeconds(1.5)
-
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .forward(3)
-                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
                 .build();
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
+                .splineToSplineHeading(new Pose2d(16.5, 28, Math.toRadians(-150)), Math.toRadians(-90))
+
+
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.intake.tiltUp();
-                    robot.outtake.openBothClaws();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{
                     robot.intake.tiltDown();
+                    robot.intake.setIntake(-0.15);
+                })
+                .waitSeconds(1) // Score Purple Spike
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.intake.tiltStow();
+                    robot.intake.setIntake(0);
+                })
+
+
+
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(43, 35, Math.toRadians(180)), Math.toRadians(0))
+
+
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
                     robot.outtake.v4barScore();
                 })
-                .splineToSplineHeading(new Pose2d(15, 29, Math.toRadians(90)), Math.toRadians(-90))
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                .waitSeconds(1)
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    robot.outtake.openBothClaws();
+                })
+                .waitSeconds(2.5) // Place Yellow
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.outtake.v4barTransfer();
+                })
 
 
-                .setReversed(false)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(50, 36, Math.toRadians(180)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
-                .waitSeconds(1.5)
 
-
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .forward(3)
-                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
                 .build();
         TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
                 .setReversed(true)
+                .splineToSplineHeading(new Pose2d(28, 36, Math.toRadians(-135)), Math.toRadians(-45))
+
+
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.intake.tiltUp();
-                    robot.outtake.openBothClaws();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{
                     robot.intake.tiltDown();
+                    robot.intake.setIntake(-0.15);
+                })
+                .waitSeconds(1) // Score Purple Spike
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.intake.tiltStow();
+                    robot.intake.setIntake(0);
+                })
+
+
+
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(43, 42, Math.toRadians(180)), Math.toRadians(0))
+
+
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
                     robot.outtake.v4barScore();
                 })
-                .splineToSplineHeading(new Pose2d(23, 34, Math.toRadians(90)), Math.toRadians(-90))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-                .waitSeconds(1)
-
-
-                .setReversed(false)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
-                .waitSeconds(1.5)
-
-
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .forward(3)
-                .lineToLinearHeading(new Pose2d(45, 12, Math.toRadians(-155)))
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    robot.outtake.openBothClaws();
+                })
+                .waitSeconds(2.5) // Place Yellow
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.outtake.v4barTransfer();
+                })
                 .build();
 
-        //robot.closeClaw();
+
+
+
+
+        // On Init
+        robot.intake.tiltStow();
+        robot.outtake.v4barStow();
+        robot.outtake.closeBothClaws();
+
+
+
+
+
         while (opModeInInit()) {
             loc = bluePropThreshold.getPropPosition();
             telemetry.addData("Prop Position", bluePropThreshold.getPropPosition());
-            telemetry.addData("Avg Left Value", bluePropThreshold.getAvergageLeft());
-            telemetry.addData("Avg Right Value", bluePropThreshold.getAvergageRight());
+            telemetry.addData("Avg Left Box Value", bluePropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Box Value", bluePropThreshold.getAvergageRight());
+
+            if (gamepad1.a) {
+                middlePark = true;
+            } else if (gamepad1.b) {
+                middlePark = false;
+            }
+            telemetry.addData("Ideal Park?", middlePark);
+
             telemetry.update();
         }
 
@@ -165,6 +198,23 @@ public class BlueClose extends LinearOpMode {
                 robot.drive.followTrajectorySequence(right);
                 break;
         }
+
+        if (middlePark) {
+            TrajectorySequence idealPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Ideal Park pointed towards truss
+                    .setReversed(false)
+                    .lineToLinearHeading(new Pose2d(43, 13, Math.toRadians(-155)))
+                    .build();
+            robot.drive.followTrajectorySequence(idealPark);
+        } else {
+            TrajectorySequence cornerPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Corner Park
+                    .setReversed(false)
+                    .lineToLinearHeading(new Pose2d(46, 58, Math.toRadians(-125))) // Corner Park
+                    .build();
+            robot.drive.followTrajectorySequence(cornerPark);
+        }
+
+
+
         // Transfer the current pose to PoseStorage so we can use it in TeleOp
         PoseStorage.currentPose = robot.drive.getPoseEstimate();
 
