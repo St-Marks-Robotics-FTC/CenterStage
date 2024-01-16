@@ -274,6 +274,7 @@ public class JankTele extends LinearOpMode {
 
         waitForStart();
 
+        robot.special.holdDrone();
         machine.start();
 
         if (isStopRequested()) return;

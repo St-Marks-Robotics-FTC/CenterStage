@@ -15,149 +15,207 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
+import org.firstinspires.ftc.teamcode.jankbot.competition.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Disabled
-@Autonomous (group = "red", preselectTeleOp = "JankTele")
+@Autonomous (group = "Blue", preselectTeleOp = "JankTele")
 public class RedFar extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static String loc = "left";
-    //MecanumDrive drive;
+    public static boolean middlePark = false;
     Jankbot robot;
 
     private VisionPortal portal;
-    private RedFarPropThreshold redPropThreshold;
-    private static int waitTime = 10000; //milliseconds
+    private RedFarPropThreshold redFarPropThreshold;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        dashboard = FtcDashboard.getInstance();
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        redPropThreshold = new RedFarPropThreshold();
+        redFarPropThreshold = new RedFarPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(redPropThreshold)
+                .addProcessor(redFarPropThreshold)
                 .build();
 
 
-
-        //drive = new MecanumDrive(hardwareMap);
-//        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Jankbot(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-41, -60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-40, -63.5, Math.toRadians(-90));
         robot.drive.setPoseEstimate(startPose);
 
-        TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left side
+        TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) //
+                // Drive to spike
                 .setReversed(true)
-                .setTangent(Math.toRadians(110))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(-42, -40, Math.toRadians(-60)), Math.toRadians(110))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .setTangent(Math.toRadians(-45))
-                .splineToLinearHeading(new Pose2d(-26, -12, Math.toRadians(-180)), Math.toRadians(0))
-                .setTangent(0)
-                .splineToConstantHeading(new Vector2d(25, -12) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, -42), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
-                .waitSeconds(1.5)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .back(4)
-                .strafeRight(28)
+                .splineToSplineHeading(new Pose2d(8, -34, Math.toRadians(180)), Math.toRadians(150))
+
+
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.intake.tiltDown();
+                    robot.intake.setIntake(-0.15);
+                })
+                .waitSeconds(1) // Score Purple Spike
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.intake.tiltStow();
+                    robot.intake.setIntake(0);
+                })
+
+
+                // Drive to Board
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(43, 28, Math.toRadians(180)), Math.toRadians(0))
+
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+                    robot.outtake.v4barScore();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    robot.outtake.openBothClaws();
+                })
+                .waitSeconds(2.5) // Place Yellow
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.outtake.v4barTransfer();
+                })
+
                 .build();
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
-                .setTangent(Math.toRadians(110))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(-33, -28, Math.toRadians(-120)), Math.toRadians(30))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .setTangent(Math.toRadians(-150))
-                .splineToLinearHeading(new Pose2d(-48, -12, Math.toRadians(-180)), Math.toRadians(0))
-                .setTangent(0)
-                .splineToConstantHeading(new Vector2d(25, -12) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, -36), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
-                .waitSeconds(1.5)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .back(4)
-                .strafeRight(22)
-                .build();
-        TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // right
+                .splineToSplineHeading(new Pose2d(16.5, -28, Math.toRadians(150)), Math.toRadians(90))
+
+
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.intake.tiltDown();
+                    robot.intake.setIntake(-0.15);
+                })
+                .waitSeconds(1) // Score Purple Spike
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.intake.tiltStow();
+                    robot.intake.setIntake(0);
+                })
+
+
+
                 .setReversed(true)
-                .setTangent(Math.toRadians(110))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.intake.tiltUp();})
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.outtake.openBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {robot.outtake.v4barTransfer();})
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {robot.outtake.closeBothClaws();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {robot.intake.tiltDown();})
-                .UNSTABLE_addTemporalMarkerOffset(1.5, ()->{robot.outtake.v4barScore();})
-                .splineToSplineHeading(new Pose2d(-30, -37, Math.toRadians(-150)), Math.toRadians(30))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.special.releasePixel();})
-                //.UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.transfer();})
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.outtake.v4barScore();})
-                .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-45, -12, Math.toRadians(180)), Math.toRadians(0))
-                .setTangent(0)
-                .splineToConstantHeading(new Vector2d(25, -12) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, -30), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.outtake.openBothClaws();})
-                .waitSeconds(1.5)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{robot.outtake.v4barStow();})
-                .waitSeconds(0.5)
-                .back(4)
-                .strafeRight(18)
+                .splineToSplineHeading(new Pose2d(43, -35, Math.toRadians(180)), Math.toRadians(0))
+
+
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+                    robot.outtake.v4barScore();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    robot.outtake.openBothClaws();
+                })
+                .waitSeconds(2.5) // Place Yellow
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.outtake.v4barTransfer();
+                })
+
+
+
+                .build();
+        TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // Truss side / no prop seen
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(-31, -31, Math.toRadians(180)), Math.toRadians(45))
+
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    robot.special.releasePixel();
+                })
+                .waitSeconds(0.5) // Score Purple Spike
+
+
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(-60, -11.5), Math.toRadians(180))
+//                                .splineToSplineHeading(new Pose2d(-60, -11.5, Math.toRadians(180)), Math.toRadians(180))
+
+
+                .waitSeconds(1) // Pick from stack
+
+
+                // Drive to Board
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(40, -11.5, Math.toRadians(180)), Math.toRadians(0))
+                .waitSeconds(0.2) // Wat for robot
+                .lineToLinearHeading(new Pose2d(46, -42, Math.toRadians(180)))
+                .waitSeconds(.3)
+                .lineToLinearHeading(new Pose2d(47, -43, Math.toRadians(180)))
+
+                .waitSeconds(1.5) // Place Yellow
                 .build();
 
-        //robot.closeClaw();
+
+
+
+
+        // On Init
+        robot.special.holdPixel();
+        robot.intake.tiltStow();
+        robot.outtake.v4barStow();
+        robot.outtake.openBothClaws();
+
+
+
+
+
+
         while (opModeInInit()) {
-            loc = redPropThreshold.getPropPosition();
-            telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
-            telemetry.addData("Avg Left Value", redPropThreshold.getAvergageLeft());
-            telemetry.addData("Avg Right Value", redPropThreshold.getAvergageRight());
+            loc = redFarPropThreshold.getPropPosition();
+            telemetry.addData("Prop Position", redFarPropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Box Value", redFarPropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Box Value", redFarPropThreshold.getAvergageRight());
+
+            if (gamepad1.a) {
+                middlePark = true;
+            } else if (gamepad1.b) {
+                middlePark = false;
+            }
+            telemetry.addData("Ideal Park?", middlePark);
+
             telemetry.update();
         }
 
+
         waitForStart();
-        //robot.setArm(-700);
-        //robot.special.grabPixel();
-        sleep(waitTime);
+
+
         switch (loc) {
-            case "right":
-                robot.drive.followTrajectorySequence(right);
-                break;
-            case "center":
-                robot.drive.followTrajectorySequence(middle);
-                break;
             case "left":
                 robot.drive.followTrajectorySequence(left);
                 break;
+            case "right":
+                robot.drive.followTrajectorySequence(middle);
+                break;
+            case "none":
+                robot.drive.followTrajectorySequence(right);
+                break;
         }
+
+        if (middlePark) {
+            TrajectorySequence idealPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Ideal Park pointed towards truss
+                    .setReversed(false)
+                    .lineToLinearHeading(new Pose2d(43, -13, Math.toRadians(155)))
+                    .build();
+            robot.drive.followTrajectorySequence(idealPark);
+        } else {
+            TrajectorySequence cornerPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Corner Park
+                    .setReversed(false)
+                    .lineToLinearHeading(new Pose2d(46, -58, Math.toRadians(125))) // Corner Park
+                    .build();
+            robot.drive.followTrajectorySequence(cornerPark);
+        }
+
+
+
+        // Transfer the current pose to PoseStorage so we can use it in TeleOp
+        PoseStorage.currentPose = robot.drive.getPoseEstimate();
+
+
     }
 }

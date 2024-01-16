@@ -14,7 +14,7 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(50, 40, Math.toRadians(120), Math.toRadians(120), 15)
+                .setConstraints(55, 40, Math.toRadians(120), Math.toRadians(120), 12)
                 .setDimensions(13.5, 14) // Set size of bot
                 .followTrajectorySequence(drive ->
 //                        drive.trajectorySequenceBuilder(new Pose2d(16.5, 63.5, Math.toRadians(90))) // Blue Close Starting Position
@@ -39,20 +39,54 @@ public class MeepMeepTesting {
 
                                 .setReversed(true)
                                 .splineToSplineHeading(new Pose2d(-31, -31, Math.toRadians(180)), Math.toRadians(45))
-                                .waitSeconds(1) // Score Purple Spike
+                                .waitSeconds(0.5) // Score Purple Spike
 
 
                                 .setReversed(false)
                                 .splineToConstantHeading(new Vector2d(-60, -11.5), Math.toRadians(180))
 //                                .splineToSplineHeading(new Pose2d(-60, -11.5, Math.toRadians(180)), Math.toRadians(180))
-                                .waitSeconds(2) // Score Yellow Spike
+//                                .waitSeconds(1) // Pick from stack
 
 
                                 // Drive to Board
                                 .setReversed(true)
-                                .splineToSplineHeading(new Pose2d(32, -11.5, Math.toRadians(180)), Math.toRadians(0))
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(43, -42, Math.toRadians(180)))
+                                .splineToSplineHeading(new Pose2d(40, -11.5, Math.toRadians(180)), Math.toRadians(0))
+                                .waitSeconds(0.2) // Wat for robot
+                                .lineToLinearHeading(new Pose2d(46, -42, Math.toRadians(180)))
+                                .waitSeconds(.3)
+                                .lineToLinearHeading(new Pose2d(47, -43, Math.toRadians(180)))
+
+                                .waitSeconds(1.5) // Place Yellow
+
+
+                                // Cycle 2-3
+                                .setReversed(false)
+                                .splineToConstantHeading(new Vector2d(23, -11.5), Math.toRadians(180))
+                                .splineToConstantHeading(new Vector2d(-60, -11.5), Math.toRadians(180))
+                                .waitSeconds(1)
+
+                                .setReversed(true)
+                                .splineToConstantHeading(new Vector2d(23, -11.5), Math.toRadians(0))
+                                .splineToConstantHeading(new Vector2d(46, -30), Math.toRadians(-45))
+                                .waitSeconds(1) // place whites
+
+
+//                                // 4-5
+//                                .setReversed(false)
+//                                .setTangent(Math.toRadians(135))
+//                                .splineToConstantHeading(new Vector2d(23, -11.5), Math.toRadians(180))
+//                                .splineToConstantHeading(new Vector2d(-60, -11.5), Math.toRadians(180))
+//                                .waitSeconds(1)
+//
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(23, -11.5), Math.toRadians(0))
+//                                .splineToConstantHeading(new Vector2d(45, -30), Math.toRadians(-45))
+//                                .waitSeconds(1) // place whites
+
+
+
+
+
 //                                .splineToConstantHeading(new Vector2d(43, -42), Math.toRadians(-70))
 //                                .splineToSplineHeading(new Pose2d(43, -42, Math.toRadians(180)), Math.toRadians(-90))
 

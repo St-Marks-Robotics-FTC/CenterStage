@@ -37,7 +37,7 @@ public class SpecialTeams {
     }
 
     //Preload pixel
-    public void grabPixel() {
+    public void holdPixel() {
         preload.setPosition(preloadGrab);
     }
 
