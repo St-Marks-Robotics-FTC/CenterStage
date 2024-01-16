@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import java.util.List;
 
 @Config
-@Disabled
+//@Disabled
 @TeleOp
 public class JankTele extends LinearOpMode {
 
@@ -60,7 +60,7 @@ public class JankTele extends LinearOpMode {
     GamepadEx pad1, pad2;
 
     private PIDFController headingController = new PIDFController(MecanumDrive.HEADING_PID);
-    double imuSetpoint = 0;
+    double imuSetpoint = 180;
 
 
 
