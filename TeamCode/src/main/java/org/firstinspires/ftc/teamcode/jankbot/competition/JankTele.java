@@ -81,9 +81,9 @@ public class JankTele extends LinearOpMode {
         ToggleButtonReader hangToggle = new ToggleButtonReader(
                 pad1, GamepadKeys.Button.DPAD_RIGHT
         );
-        ToggleButtonReader headingToggle = new ToggleButtonReader(
-                pad1, GamepadKeys.Button.RIGHT_STICK_BUTTON
-        );
+//        ToggleButtonReader headingToggle = new ToggleButtonReader(
+//                pad1, GamepadKeys.Button.RIGHT_STICK_BUTTON
+//        );
 
 
         pad2 = new GamepadEx(gamepad2);
@@ -295,7 +295,7 @@ public class JankTele extends LinearOpMode {
 
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
             double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
-            if (headingToggle.getState()) {
+            if (gamepad1.left_trigger >= 0.5) {
                 headingController.setTargetPosition(Math.toRadians(imuSetpoint));
 
                 // Set desired angular velocity to the heading controller output + angular
@@ -388,7 +388,7 @@ public class JankTele extends LinearOpMode {
 
             pad1.readButtons();
             hangToggle.readValue();
-            headingToggle.readValue();
+//            headingToggle.readValue();
             pad2.readButtons();
 
             telemetry.update();
