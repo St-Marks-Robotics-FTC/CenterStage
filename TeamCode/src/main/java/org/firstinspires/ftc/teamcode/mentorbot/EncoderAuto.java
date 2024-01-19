@@ -29,11 +29,19 @@
 
 package org.firstinspires.ftc.teamcode.mentorbot;
 
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
+import org.firstinspires.ftc.vision.VisionPortal;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -61,15 +69,28 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
+@Autonomous(name="Mentor Auto", group="Robot")
 @Disabled
 public class EncoderAuto extends LinearOpMode {
+    private VisionPortal portal;
+    private BlueClosePipeline bluePropThreshold;
+    public static String loc = "left";
+
+
 
     /* Declare OpMode members. */
     private DcMotor         frontLeftMotor   = null;
     private DcMotor         backLeftMotor  = null;
     private DcMotor         frontRightMotor   = null;
     private DcMotor         backRightMotor  = null;
+
+
+    DcMotor arm;
+    Servo wrist;
+    Servo leftClaw;
+    Servo rightClaw;
+
+
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -89,6 +110,15 @@ public class EncoderAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        bluePropThreshold = new BlueClosePipeline();
+        portal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCameraResolution(new Size(640, 480))
+                .setCamera(BuiltinCameraDirection.BACK)
+                .addProcessor(bluePropThreshold)
+                .build();
+
 
         // Initialize the drive system variables.
         frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
@@ -112,20 +142,87 @@ public class EncoderAuto extends LinearOpMode {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
+
+
+
+        // Robot specific
+        arm = hardwareMap.dcMotor.get("arm");
+        wrist = hardwareMap.servo.get("wrist");
+        leftClaw = hardwareMap.servo.get("leftClaw");
+        rightClaw = hardwareMap.servo.get("rightClaw");
+
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
+
+
+
+
+
+
+
+
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d :%7d :%7d",
                           frontLeftMotor.getCurrentPosition(),
                           backLeftMotor.getCurrentPosition(), frontRightMotor.getCurrentPosition(), backRightMotor.getCurrentPosition());
         telemetry.update();
 
+
+
+        while (opModeInInit()) {
+            loc = bluePropThreshold.getPropPosition();
+            telemetry.addData("Prop Position", bluePropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Box Value", bluePropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Box Value", bluePropThreshold.getAvergageRight());
+
+            telemetry.update();
+        }
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
+        switch (loc) {
+            case "left":
+                encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // Drive forward
+                encoderDrive(TURN_SPEED,   -12, 12, 4.0);  // Turn Right
+                encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // Drive forward
+
+                encoderDrive(TURN_SPEED,   -24, 24, 4.0);  // 180
+
+                rightClaw.setPosition(0.6); // open Purple
+
+                break;
+            case "right":
+                encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // Drive forward
+
+                rightClaw.setPosition(0.6); // open Purple
+
+                break;
+            case "none":
+                encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // Drive forward
+                encoderDrive(TURN_SPEED,   12, -12, 4.0);  // Turn Left
+
+                rightClaw.setPosition(0.6); // open Purple
+
+                break;
+        }
+
+
         encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+
+        moveArm(500, 0.5);
+
         encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+        leftClaw.setPosition(0.2); // open yellow
+
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -202,4 +299,15 @@ public class EncoderAuto extends LinearOpMode {
             sleep(250);   // optional pause after each move.
         }
     }
+
+
+    public void moveArm(int position, double speed) {
+        arm.setTargetPosition(position);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(speed);
+    }
+
+
+
+
 }
