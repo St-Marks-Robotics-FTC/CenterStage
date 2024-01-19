@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -139,11 +140,11 @@ public class APril_tag_drive_test_lol_i_want_to_die extends LinearOpMode
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         if (USE_WEBCAM)
-            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+            setManualExposure(3, 250);  // Use low exposure time to reduce motion blur
 
         // Wait for driver to press start
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
@@ -158,30 +159,35 @@ public class APril_tag_drive_test_lol_i_want_to_die extends LinearOpMode
 
             // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-            int i = 0;
             for (AprilTagDetection detection : currentDetections) {
                 // Look to see if we have size info on this tag.
                 if (detection.metadata != null) {
-                    targetFound = true;
-                    values += detection.ftcPose.yaw;
-                    i++;
+                    //  Check to see if we want to track towards this tag.
+                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                        // Yes, we want to use this tag.
+                        targetFound = true;
+                        desiredTag = detection;
+                        break;  // don't look any further.
+                    } else {
+                        // This tag is in the library, but we do not want to track it right now.
+                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+                    }
                 } else {
                     // This tag is NOT in the library, so we don't have enough information to track to it.
                     telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                 }
             }
-            values /= i;
 
             // Tell the driver what we see, and what to do.
-//            if (targetFound) {
-//                telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-//                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-//                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-//                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-//                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-//            } else {
-//                telemetry.addData("\n>","Drive using joysticks to find valid target\n");
-//            }
+            if (targetFound) {
+                telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
+                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
+                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
+                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+            } else {
+                telemetry.addData("\n>","Drive using joysticks to find valid target\n");
+            }
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
             if (gamepad1.left_trigger >= 0.5 && targetFound) {
@@ -191,26 +197,41 @@ public class APril_tag_drive_test_lol_i_want_to_die extends LinearOpMode
                 //double  headingError    = values;
                 double  yawError = values;
 
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+
+
+                if (gamepad1.left_bumper) {
+                    drive  = -gamepad1.left_stick_y * 0.4;  // Reduce drive rate to 50%.
+                    strafe = -gamepad1.left_stick_x * 0.4;  // Reduce strafe rate to 50%.
+                } else {
+                    drive  = -gamepad1.left_stick_y;
+                    strafe = -gamepad1.left_stick_x;
+                }
+
+                turn = Range.clip(-yawError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
                 //drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
 
                 //telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
                 //telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+            } else {
+
+                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
+
+                if (gamepad1.left_bumper) {
+                    drive  = -gamepad1.left_stick_y * 0.4;  // Reduce drive rate to 50%.
+                    strafe = -gamepad1.left_stick_x * 0.4;  // Reduce strafe rate to 50%.
+                    turn   = -gamepad1.right_stick_x * 0.3;  // Reduce turn rate to 33%.
+                } else {
+                    drive  = -gamepad1.left_stick_y;
+                    strafe = -gamepad1.left_stick_x;
+                    turn   = -gamepad1.right_stick_x;
+                }
+
+                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             }
-//            else {
-//
-//                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-//                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
-//                strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
-//                turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
-//                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-//            }
             //turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
             // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-            drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
-            //strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
-            turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
             telemetry.update();
 
             // Apply desired axes motions to the drivetrain.
