@@ -21,12 +21,13 @@ public class MecanumTeleop extends LinearOpMode {
 
     Servo drone;
 
-    double leftOpen = 0.2;
-    double rightOpen = 0.2;
-    double leftClose = 0.6;
-    double rightClose = 0.6;
+    double leftOpen = 0.48;
+    double leftClose = 0.4;
+    double rightOpen = 0.1;
+    double rightClose = 0.19;
 
-    int armLevel = 0;
+    int armLevel = 1;
+    boolean stow = false;
 
 
     @Override
@@ -44,13 +45,13 @@ public class MecanumTeleop extends LinearOpMode {
         // Make sure your ID's match your configuration
         frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
         backLeftMotor = hardwareMap.dcMotor.get("backLeft");
-        frontRightMotor = hardwareMap.dcMotor.get("rightFront");
-        backRightMotor = hardwareMap.dcMotor.get("rightBack");
+        frontRightMotor = hardwareMap.dcMotor.get("frontRight");
+        backRightMotor = hardwareMap.dcMotor.get("backRight");
 
         arm = hardwareMap.dcMotor.get("arm");
         wrist = hardwareMap.servo.get("wrist");
-        leftClaw = hardwareMap.servo.get("leftClaw");
-        rightClaw = hardwareMap.servo.get("rightClaw");
+        leftClaw = hardwareMap.servo.get("leftclaw");
+        rightClaw = hardwareMap.servo.get("rightclaw");
 
         drone = hardwareMap.servo.get("drone");
 
@@ -58,9 +59,15 @@ public class MecanumTeleop extends LinearOpMode {
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
         // See the note about this earlier on this page.
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -68,6 +75,10 @@ public class MecanumTeleop extends LinearOpMode {
 
         drone.setPosition(0.5); // hold
         waitForStart();
+
+        openClaw();
+        wrist.setPosition(0.4);
+        moveArm(35, 0.4);
 
         if (isStopRequested()) return;
         boolean up = false;
@@ -117,30 +128,48 @@ public class MecanumTeleop extends LinearOpMode {
             }
 
 
-            if (gamepad1.y) {
-                up = true;
-            } else if (gamepad1.a) {
-                up = false;
-            }
+
 
             if (up) {
-                if (armLevel == 1) {
-                    wrist.setPosition(0.4);
-                    moveArm(300, 0.4);
-                } else if (armLevel == 2) {
-                    wrist.setPosition(0.6);
-                    moveArm(500, 0.4);
-                } else if (armLevel == 3) {
-                    wrist.setPosition(0.7);
-                    moveArm(700, 0.4);
+
+                if (gamepad1.a) {
+                    up = false;
+                    stow = false;
                 }
+
+
+                if (armLevel == 1) {
+                    wrist.setPosition(0.6);
+                    moveArm(80, 0.4);
+                } else if (armLevel == 2) {
+                    wrist.setPosition(0.55);
+                    moveArm(230, 0.65);
+                }
+
+
             } else {
-                wrist.setPosition(0.1);
-                moveArm(0, 0.4);
+                if (gamepad1.y) {
+                    up = true;
+                }
+
+
+                if (gamepad1.a && !previousGamepad1.a) {
+                    stow = !stow;
+                }
+
+                if (stow) {
+                    wrist.setPosition(0.4);
+                    moveArm(35, 0.4);
+                } else {
+                    wrist.setPosition(0.9);
+                    moveArm(30, 0.4);
+                }
             }
 
+
+
             if (!previousGamepad2.dpad_up && currentGamepad2.dpad_up) {
-                armLevel = Math.min(3, armLevel + 1);
+                armLevel = Math.min(2, armLevel + 1);
             } else if (!previousGamepad2.dpad_down && currentGamepad2.dpad_down) {
                 armLevel = Math.max(0, armLevel - 1);
             }
@@ -160,11 +189,12 @@ public class MecanumTeleop extends LinearOpMode {
 
 
             if (gamepad2.y) {
-                drone.setPosition(0.1); // launch
+                drone.setPosition(1); // launch
             }
 
 
             telemetry.addData("Arm Level", armLevel);
+            telemetry.addData("Stow", stow);
             telemetry.addData("Arm Position", arm.getCurrentPosition());
             telemetry.addData("Wrist Position", wrist.getPosition());
 
