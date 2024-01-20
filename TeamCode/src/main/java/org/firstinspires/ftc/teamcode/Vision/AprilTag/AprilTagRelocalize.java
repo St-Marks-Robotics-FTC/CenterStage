@@ -6,6 +6,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -14,6 +16,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AprilTagRelocalize {
 
@@ -23,10 +26,10 @@ public class AprilTagRelocalize {
     AprilTagProcessor aprilTagProcessor;
 
     VisionPortal.Builder visionPortalBuilder;
-    VisionPortal  visionPortal;
+    VisionPortal visionPortal;
 
     //how far away is the camera from the center of the robot
-    private int cameraOffsetY = 7;
+    private Pose2d cameraOffset = new Pose2d(0, -7, Math.toRadians(180));
     //5 inches away from the apriltag
     private double D = 6;
 
@@ -49,6 +52,7 @@ public class AprilTagRelocalize {
         visionPortalBuilder.setAutoStopLiveView(true);
 
         visionPortal = visionPortalBuilder.build();
+
     }
 
     public Pose2d getTagPos(int tag) {
@@ -65,8 +69,26 @@ public class AprilTagRelocalize {
         } else {
             //double angle = Math.toRadians(90)-target.ftcPose.bearing;
             return new Pose2d(target.ftcPose.x-D*Math.sin(target.ftcPose.yaw),
-                    target.ftcPose.y+cameraOffsetY-D*Math.cos(target.ftcPose.yaw),
-                    Math.toRadians(90)+target.ftcPose.yaw);
+                    target.ftcPose.y-D*Math.cos(target.ftcPose.yaw),
+                    Math.toRadians(90)+target.ftcPose.yaw).plus(cameraOffset);
         }
+    }
+
+    public void setManualExposure(int exposureMS, int gain) {
+        // Wait for the camera to be open, then use the controls
+
+        if (visionPortal == null) {
+            return;
+        }
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            return;
+        }
+        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+        if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+            exposureControl.setMode(ExposureControl.Mode.Manual);
+        }
+        exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+        gainControl.setGain(gain);
     }
 }

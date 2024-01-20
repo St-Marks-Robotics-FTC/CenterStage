@@ -8,9 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.vision.VisionPortal;
+
+import java.util.concurrent.TimeUnit;
 
 @Config
 @TeleOp (group = "test")
@@ -23,8 +28,10 @@ public class AprilTagTest extends OpMode {
     private final double STRAFE_SENSITIVITY = 1.0;
     private final double TURN_SENSITIVITY = 0.6;
     private int tag = 1;
+    private int exposure = 6;
+    private int gain = 140;
     //TODO: find the tag poses
-    private Pose2d tagPose = new Pose2d();
+    private Pose2d tagPose1 = new Pose2d(63, 41.5, Math.toRadians(180));
     //1 = blue left
     //2 = blue middle
     //3 = blue right
@@ -41,13 +48,16 @@ public class AprilTagTest extends OpMode {
     }
 
     @Override
-    public void loop() {
+    public void init_loop() {
         Pose2d relocalizePose = relocalize.getTagPos(tag);
-        Pose2d predictPose = tagPose.minus(relocalizePose);
+        Pose2d predictPose = tagPose1.minus(relocalizePose);
         telemetry.addData("relocalizePose: ", relocalizePose.toString());
         telemetry.addData("estimated pose from ", predictPose.toString());
         telemetry.addData("Current Pose: ", robot.drive.getPoseEstimate().toString());
         telemetry.addData("Traveling to : ", relocalizePose.plus(robot.drive.getPoseEstimate()).toString());
+        telemetry.addData("Exposure: ", exposure);
+        telemetry.addData("Gain: ", gain);
+        relocalize.setManualExposure(exposure, gain);
         if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
             TrajectorySequence traj1 = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                     .lineToSplineHeading(relocalizePose.plus(robot.drive.getPoseEstimate()))
@@ -64,5 +74,14 @@ public class AprilTagTest extends OpMode {
 
             robot.drive.setMotorPowers(leftFrontSpeed, leftBackSpeed,  rightBackSpeed, rightFrontSpeed);
         }
+        if (gamepad1.a) exposure++;
+        if (gamepad1.b) exposure--;
+        if (gamepad1.x) gain+=10;
+        if (gamepad1.y) gain-=10;
+    }
+
+    @Override
+    public void loop() {
+
     }
 }
