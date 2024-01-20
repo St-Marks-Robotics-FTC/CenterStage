@@ -24,6 +24,7 @@ public class AprilTagRelocalize {
     AprilTagLibrary aprilTagLibrary;
     AprilTagProcessor.Builder aprilTagProcessorBuilder;
     AprilTagProcessor aprilTagProcessor;
+    AprilTagVisionProcessor visionProcessor;
 
     VisionPortal.Builder visionPortalBuilder;
     VisionPortal visionPortal;
@@ -42,6 +43,7 @@ public class AprilTagRelocalize {
         aprilTagProcessorBuilder = new AprilTagProcessor.Builder();
         aprilTagProcessorBuilder.setTagLibrary(aprilTagLibrary);
         aprilTagProcessor = aprilTagProcessorBuilder.build();
+        visionProcessor = new AprilTagVisionProcessor();
 
         visionPortalBuilder = new VisionPortal.Builder();
         visionPortalBuilder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
@@ -50,6 +52,7 @@ public class AprilTagRelocalize {
         visionPortalBuilder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
         visionPortalBuilder.enableLiveView(true);
         visionPortalBuilder.setAutoStopLiveView(true);
+        visionPortalBuilder.addProcessor(visionProcessor); // to rotate the camera 180
 
         visionPortal = visionPortalBuilder.build();
 
