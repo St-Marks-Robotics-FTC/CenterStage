@@ -17,8 +17,8 @@ public class Jankbot {
 
     public Jankbot(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap);
-        intake = new Intake(hardwareMap);
-        outtake = new Outtake(hardwareMap);
+        //intake = new Intake(hardwareMap);
+        //outtake = new Outtake(hardwareMap);
     }
 
 //    public void update() {
