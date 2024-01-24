@@ -23,6 +23,10 @@ public class FallbackClass {
     public ServoImplEx clawLeft;
     public ServoImplEx clawRight;
 
+
+    public ServoImplEx drone;
+
+
     // Slides
     public static int slidesDown = 0;
     public static int level1 = 300;
@@ -47,6 +51,10 @@ public class FallbackClass {
     // Claw
     public static double clawOpen = 0.25;
     public static double clawClose = 0.8;
+
+    // Drone
+    public static double droneHold = 0.5;
+    public static double droneRelease = 0.1;
 
 
 
@@ -160,6 +168,15 @@ public class FallbackClass {
     }
     public void closeRightClaw() {
         clawRight.setPosition(clawClose);
+    }
+
+
+    // Drone
+    public void droneHold() {
+        drone.setPosition(droneHold);
+    }
+    public void droneRelease() {
+        drone.setPosition(droneRelease);
     }
 
 }
