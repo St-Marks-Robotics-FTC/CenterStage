@@ -6,8 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
+
 @Config
 public class FallbackClass {
+
+    MecanumDrive drive;
 
     public DcMotorEx slideLeft;
     public DcMotorEx slideRight;
@@ -49,6 +53,8 @@ public class FallbackClass {
 
 
     public FallbackClass(HardwareMap hardwareMap) {
+
+        drive = new MecanumDrive(hardwareMap);
 
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
