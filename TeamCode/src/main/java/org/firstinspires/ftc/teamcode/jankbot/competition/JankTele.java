@@ -138,8 +138,8 @@ public class JankTele extends LinearOpMode {
                     robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.retractSlides(); // Retract Slide
                 })
-                .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer
-                .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button
+                .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer if 1 pixel
+                .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button Main one
 
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
