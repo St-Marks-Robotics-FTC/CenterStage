@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Testing;
+package org.firstinspires.ftc.teamcode.Fallback.Opmodes.Testing;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -7,16 +7,16 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 
 @Config
 @TeleOp
 public class ServoSync extends LinearOpMode {
 
-//    public static int motorPos = 0;
-//    public static double motorSpeed = 0.7;
 
-    public static String servoName = "clawRight";
+    public static String servo1Name = "clawLeft";
+    public static String servo2Name = "clawRight";
 
     public static Double pos = 0.5;
 
@@ -27,7 +27,10 @@ public class ServoSync extends LinearOpMode {
 
         waitForStart();
 
-        Servo servo = hardwareMap.get(Servo.class, servoName);
+        ServoImplEx servo1 = hardwareMap.get(ServoImplEx.class, servo1Name);
+        ServoImplEx servo2 = hardwareMap.get(ServoImplEx.class, servo2Name);
+
+        servo1.setDirection(Servo.Direction.REVERSE);
 
 
 
@@ -37,13 +40,13 @@ public class ServoSync extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            servo.setPosition(pos);
+            servo1.setPosition(pos);
+            servo2.setPosition(pos);
 
 
-
-
-            telemetry.addData("Name: ", servoName);
-            telemetry.addData("Position: ", pos);
+            telemetry.addData("Name 1", servo1Name);
+            telemetry.addData("Name 2", servo2Name);
+            telemetry.addData("Position", pos);
 
             telemetry.update();
         }
