@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -75,7 +76,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
  * to use those parameters.
  */
 @TeleOp(name = "Sensor: IMU Orthogonal", group = "Sensor")
-//@Disabled   // Comment this out to add to the OpMode list
+@Disabled   // Comment this out to add to the OpMode list
 public class ImuTest extends LinearOpMode
 {
     // The IMU sensor object

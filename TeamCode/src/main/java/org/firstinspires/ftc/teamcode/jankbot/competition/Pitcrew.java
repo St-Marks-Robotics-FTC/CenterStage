@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.jankbot.competition;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 
+@Disabled
 @TeleOp
 public class Pitcrew extends OpMode {
     Jankbot robot;
