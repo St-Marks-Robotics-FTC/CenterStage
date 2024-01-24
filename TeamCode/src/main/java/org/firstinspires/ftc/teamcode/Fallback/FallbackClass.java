@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 @Config
 public class FallbackClass {
 
-    MecanumDrive drive;
+    public MecanumDrive drive;
 
     public DcMotorEx slideLeft;
     public DcMotorEx slideRight;
@@ -77,8 +77,6 @@ public class FallbackClass {
         slideLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         slideRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-
-
     }
 
 
@@ -129,8 +127,9 @@ public class FallbackClass {
         setV4Bar(v4bScore);
         v4bAngle.setPosition(angleScore);
     }
-
-
+    public double getV4BarPos() {
+        return (v4bLeft.getPosition()+v4bRight.getPosition())/2;
+    }
     public void setV4Bar(double pos) {
         v4bLeft.setPosition(pos);
         v4bRight.setPosition(pos);
@@ -140,26 +139,26 @@ public class FallbackClass {
 
 
     // Claw
-    void openClaw() {
+    public void openClaw() {
         openLeftClaw();
         openRightClaw();
     }
-    void closeClaw() {
+    public void closeClaw() {
         closeLeftClaw();
         closeRightClaw();
     }
 
-    void openLeftClaw() {
+    public void openLeftClaw() {
         clawLeft.setPosition(clawOpen);
     }
-    void openRightClaw() {
+    public void openRightClaw() {
         clawRight.setPosition(clawOpen);
     }
 
-    void closeLeftClaw() {
+    public void closeLeftClaw() {
         clawLeft.setPosition(clawClose);
     }
-    void closeRightClaw() {
+    public void closeRightClaw() {
         clawRight.setPosition(clawClose);
     }
 
