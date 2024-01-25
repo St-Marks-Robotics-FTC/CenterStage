@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Fallback.FallbackClass;
 
 @Config
 @TeleOp
-public class Pitcrew extends OpMode {
+public class PitcrewFallback extends OpMode {
 
     FallbackClass robot;
     GamepadEx pad1;
