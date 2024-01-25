@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -30,9 +31,8 @@ public class AprilTagRelocalize {
     VisionPortal visionPortal;
 
     //how far away is the camera from the center of the robot
-    private Pose2d cameraOffset = new Pose2d(0, -7, Math.toRadians(180));
+    private Pose2d cameraOffset = new Pose2d(-7, 0, Math.toRadians(180));
     //5 inches away from the apriltag
-    private double D = 6;
 
     public AprilTagRelocalize(HardwareMap hardwareMap) {
         aprilTagLibraryBuilder = new AprilTagLibrary.Builder();
@@ -40,7 +40,8 @@ public class AprilTagRelocalize {
         //aprilTagLibraryBuilder.addTag(7, "TestTag" , 7.7, DistanceUnit.INCH);
 
         aprilTagLibrary = aprilTagLibraryBuilder.build();
-        aprilTagProcessorBuilder = new AprilTagProcessor.Builder();
+        aprilTagProcessorBuilder = new AprilTagProcessor.Builder()
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES);
         aprilTagProcessorBuilder.setTagLibrary(aprilTagLibrary);
         aprilTagProcessor = aprilTagProcessorBuilder.build();
         visionProcessor = new AprilTagVisionProcessor();
@@ -52,7 +53,7 @@ public class AprilTagRelocalize {
         visionPortalBuilder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
         visionPortalBuilder.enableLiveView(true);
         visionPortalBuilder.setAutoStopLiveView(true);
-        visionPortalBuilder.addProcessor(visionProcessor); // to rotate the camera 180
+        visionPortalBuilder.addProcessor(visionProcessor); //to rotate the camera 180
 
         visionPortal = visionPortalBuilder.build();
 
@@ -71,10 +72,24 @@ public class AprilTagRelocalize {
             return new Pose2d(999, 0, 0);
         } else {
             //double angle = Math.toRadians(90)-target.ftcPose.bearing;
-            return new Pose2d(target.ftcPose.x-D*Math.sin(target.ftcPose.yaw),
-                    target.ftcPose.y-D*Math.cos(target.ftcPose.yaw),
-                    Math.toRadians(90)+target.ftcPose.yaw).plus(cameraOffset);
+            return new Pose2d(
+                    target.ftcPose.range*Math.cos(Math.toRadians(target.ftcPose.bearing-target.ftcPose.yaw)),
+                    target.ftcPose.range*Math.sin(Math.toRadians(target.ftcPose.bearing-target.ftcPose.yaw)),
+                    angleWrap(Math.toRadians(90-target.ftcPose.yaw)));//.plus(cameraOffset);
         }
+    }
+
+    public double angleWrap(double radians) {
+
+        while (radians > Math.PI) {
+            radians -= 2 * Math.PI;
+        }
+        while (radians < -Math.PI) {
+            radians += 2 * Math.PI;
+        }
+
+        // keep in mind that the result is in radians
+        return radians;
     }
 
     public void setManualExposure(int exposureMS, int gain) {

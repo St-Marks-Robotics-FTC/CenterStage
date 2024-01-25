@@ -15,7 +15,7 @@ public class AprilTagVisionProcessor implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        Core.rotate(frame, frame, Core.ROTATE_180);
+        //Core.rotate(frame, frame, Core.ROTATE_180);
         return frame;
     }
 

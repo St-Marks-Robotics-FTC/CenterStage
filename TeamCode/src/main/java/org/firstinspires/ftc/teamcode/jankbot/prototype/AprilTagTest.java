@@ -27,11 +27,12 @@ public class AprilTagTest extends OpMode {
     private GamepadEx pad1;
     private final double STRAFE_SENSITIVITY = 1.0;
     private final double TURN_SENSITIVITY = 0.6;
-    private int tag = 1;
+    private int tag = 2;
     private int exposure = 6;
-    private int gain = 140;
+    private int gain = 100;
     //TODO: find the tag poses
     private Pose2d tagPose1 = new Pose2d(63, 41.5, Math.toRadians(180));
+    private Pose2d tagPose2 = new Pose2d(63, 36, Math.toRadians(180));
     //1 = blue left
     //2 = blue middle
     //3 = blue right
@@ -50,7 +51,7 @@ public class AprilTagTest extends OpMode {
     @Override
     public void init_loop() {
         Pose2d relocalizePose = relocalize.getTagPos(tag);
-        Pose2d predictPose = tagPose1.minus(relocalizePose);
+        Pose2d predictPose = tagPose2.minus(relocalizePose);
         telemetry.addData("relocalizePose: ", relocalizePose.toString());
         telemetry.addData("estimated pose from ", predictPose.toString());
         telemetry.addData("Current Pose: ", robot.drive.getPoseEstimate().toString());
