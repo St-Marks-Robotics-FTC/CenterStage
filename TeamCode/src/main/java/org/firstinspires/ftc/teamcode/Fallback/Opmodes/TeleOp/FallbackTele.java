@@ -46,6 +46,8 @@ public class FallbackTele extends LinearOpMode {
     boolean manualSlides = false;
 
     boolean hangReady = false;
+    boolean leftScored = false;
+    boolean rightScored = false;
     double loopTime = 0;
 
     FallbackClass robot;
@@ -125,6 +127,7 @@ public class FallbackTele extends LinearOpMode {
                 .state(LinearStates.STOW)
                 .onEnter( () -> {
                     robot.v4barStow(); // V4b Stow Position
+                    robot.retractSlides();
                 })
                 .transition( () ->  gamepad1.y ) // outtake Button Main one
 
@@ -142,11 +145,25 @@ public class FallbackTele extends LinearOpMode {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 .state(LinearStates.IDLE2)
-                .transition( () ->  gamepad1.b)
+                .loop( () -> {
+                    if (gamepad1.left_trigger > 0.5) {
+                        robot.openLeftClaw();
+                        leftScored = true;
+                    }
+                    if (gamepad1.right_trigger > 0.5) {
+                        robot.openRightClaw();
+                        rightScored = true;
+                    }
+
+                })
+                .transition( () ->  leftScored && rightScored)
+                .transition( () ->  gamepad1.a, LinearStates.STOW)
 
                 .state(LinearStates.SCORE)
                 .onEnter( () -> {
                     robot.openClaw(); // Open Claw
+                    leftScored = false;
+                    rightScored = false;
                 })
                 .transitionTimed(0.3)
 
@@ -192,22 +209,22 @@ public class FallbackTele extends LinearOpMode {
 
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
             double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
-            if (gamepad1.left_trigger >= 0.5) {
-                headingController.setTargetPosition(Math.toRadians(imuSetpoint));
-
-                // Set desired angular velocity to the heading controller output + angular
-                // velocity feedforward
-                double headingInput = clamp(headingController.update(poseEstimate.getHeading()), -0.3, 0.3);
-
-                robot.drive.setWeightedDrivePower(
-                        new Pose2d(tranScaleFactor * y, tranScaleFactor * x, headingInput)
-                );
-
-            } else {
+//            if (gamepad1.left_trigger >= 0.5) {
+//                headingController.setTargetPosition(Math.toRadians(imuSetpoint));
+//
+//                // Set desired angular velocity to the heading controller output + angular
+//                // velocity feedforward
+//                double headingInput = clamp(headingController.update(poseEstimate.getHeading()), -0.3, 0.3);
+//
+//                robot.drive.setWeightedDrivePower(
+//                        new Pose2d(tranScaleFactor * y, tranScaleFactor * x, headingInput)
+//                );
+//
+//            } else {
                 robot.drive.setWeightedDrivePower(
                         new Pose2d(tranScaleFactor * y, tranScaleFactor * x, rotScaleFactor * rx)
                 );
-            }
+//            }
 
             // Heading PID Adjustments
             if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
@@ -223,7 +240,7 @@ public class FallbackTele extends LinearOpMode {
 
 
             // Slide Level Adjustments
-            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 slideLevel = Math.min(6, slideLevel + 1);
             } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                 slideLevel = Math.max(0, slideLevel - 1);
@@ -255,8 +272,11 @@ public class FallbackTele extends LinearOpMode {
             // Telemetry
             telemetry.addData("State", machine.getState());
 
+            telemetry.addData("Left scored", leftScored);
+            telemetry.addData("Right scored", rightScored);
+
             telemetry.addData("Slide Level", slideLevel);
-            telemetry.addData("Manual Slides", manualSlides);
+//            telemetry.addData("Manual Slides", manualSlides);
             telemetry.addData("Heading Setpoint", imuSetpoint);
 
 
