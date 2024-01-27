@@ -64,26 +64,26 @@ public class FallbackClass {
 
         drive = new MecanumDrive(hardwareMap);
 
-        slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
-        slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
+        //slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
+        //slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
 
-        v4bLeft = hardwareMap.get(ServoImplEx.class, "v4bLeft");
-        v4bRight = hardwareMap.get(ServoImplEx.class, "v4bRight");
-        v4bAngle = hardwareMap.get(ServoImplEx.class, "v4bAngle");
+        //v4bLeft = hardwareMap.get(ServoImplEx.class, "v4bLeft");
+        //v4bRight = hardwareMap.get(ServoImplEx.class, "v4bRight");
+        //v4bAngle = hardwareMap.get(ServoImplEx.class, "v4bAngle");
 
-        clawLeft = hardwareMap.get(ServoImplEx.class, "clawLeft");
-        clawRight = hardwareMap.get(ServoImplEx.class, "clawRight");
+        //clawLeft = hardwareMap.get(ServoImplEx.class, "clawLeft");
+        //clawRight = hardwareMap.get(ServoImplEx.class, "clawRight");
 
         // Reverse
-        slideLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        v4bLeft.setDirection(ServoImplEx.Direction.REVERSE);
-        clawLeft.setDirection(ServoImplEx.Direction.REVERSE);
+        //slideLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        //v4bLeft.setDirection(ServoImplEx.Direction.REVERSE);
+        //clawLeft.setDirection(ServoImplEx.Direction.REVERSE);
 
         // RTP
-        slideLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        slideRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        slideLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        slideRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        //slideLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //slideRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //slideLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        //slideRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
     }
 

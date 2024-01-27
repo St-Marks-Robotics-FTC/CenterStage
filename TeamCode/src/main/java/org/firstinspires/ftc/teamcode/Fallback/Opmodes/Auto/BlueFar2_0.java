@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Fallback.FallbackClass;
+import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.jankbot.competition.PoseStorage;
@@ -21,7 +22,6 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.Trajec
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
-@Disabled
 @Autonomous (group = "Blue", preselectTeleOp = "JankTele")
 public class BlueFar2_0 extends LinearOpMode {
     FtcDashboard dashboard;
@@ -31,7 +31,7 @@ public class BlueFar2_0 extends LinearOpMode {
     FallbackClass robot;
 
     private VisionPortal portal;
-    private BluePropThreshold bluePropThreshold;
+    private BlueFarPropThreshold blueFarPropThreshold;
     private int delay = 10000;
 
 
@@ -39,12 +39,12 @@ public class BlueFar2_0 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        bluePropThreshold = new BluePropThreshold();
+        blueFarPropThreshold = new BlueFarPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(bluePropThreshold)
+                .addProcessor(blueFarPropThreshold)
                 .build();
 
 
@@ -57,53 +57,53 @@ public class BlueFar2_0 extends LinearOpMode {
                 // Drive to spike
                 .setReversed(true)
                 .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(-42, 40, Math.toRadians(60)), Math.toRadians(-110))
+                .splineToSplineHeading(new Pose2d(-42, 26, Math.toRadians(135)), Math.toRadians(-110))
 
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.openLeftClaw();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.openLeftClaw();
+//                })
                 .waitSeconds(1) // Score Purple Spike
 
                 // Drive to Board
                 .setReversed(true)
-                .setTangent(Math.toRadians(45))
+                .setTangent(Math.toRadians(-45))
                 .splineToLinearHeading(new Pose2d(-26, 12, Math.toRadians(180)), Math.toRadians(0))
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(25, 12) , Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
 
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
-                    robot.v4barScore();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-                    robot.openClaw();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+//                    robot.v4barScore();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+//                    robot.openClaw();
+//                })
                 .waitSeconds(2.5) // Place Yellow
 
                 .build();
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
                 .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(-37, 24, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-37, 16, Math.toRadians(90)), Math.toRadians(-90))
 
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.openLeftClaw();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.openLeftClaw();
+//                })
                 .waitSeconds(1) // Score Purple Spike
 
                 .setReversed(true)
-                .setTangent(Math.toRadians(-135))
+                .setTangent(Math.toRadians(-60))
                 .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(180)), Math.toRadians(0))
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(25, 12) , Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
 
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
-                    robot.v4barScore();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-                    robot.openClaw();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+//                    robot.v4barScore();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+//                    robot.openClaw();
+//                })
                 .waitSeconds(2.5) // Place Yellow
 
 
@@ -115,25 +115,25 @@ public class BlueFar2_0 extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-32, 33, Math.toRadians(0)), Math.toRadians(0))
 
 
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.openLeftClaw();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.openLeftClaw();
+//                })
                 .waitSeconds(1) // Score Purple Spike
 
                 .setReversed(true)
                 .setTangent(Math.toRadians(-135))
                 .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(180)), Math.toRadians(0))
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(25, 12) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, 41.5), Math.toRadians(0))
 
 
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
-                    robot.v4barScore();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-                    robot.openClaw();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+//                    robot.v4barScore();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+//                    robot.openClaw();
+//                })
                 .waitSeconds(2.5) // Place Yellow
                 .build();
 
@@ -142,13 +142,13 @@ public class BlueFar2_0 extends LinearOpMode {
 
 
         // On Init
-        robot.closeClaw();
+//        robot.closeClaw();
 
         while (opModeInInit()) {
-            loc = bluePropThreshold.getPropPosition();
-            telemetry.addData("Prop Position", bluePropThreshold.getPropPosition());
-            telemetry.addData("Avg Left Box Value", bluePropThreshold.getAvergageLeft());
-            telemetry.addData("Avg Right Box Value", bluePropThreshold.getAvergageRight());
+            loc = blueFarPropThreshold.getPropPosition();
+            telemetry.addData("Prop Position", blueFarPropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Box Value", blueFarPropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Box Value", blueFarPropThreshold.getAvergageRight());
 
             if (gamepad1.a) {
                 middlePark = true;
@@ -163,16 +163,16 @@ public class BlueFar2_0 extends LinearOpMode {
 
         waitForStart();
         sleep(delay);
-        robot.v4barPickup();
+//        robot.v4barPickup();
         switch (loc) {
             case "left":
-                robot.drive.followTrajectorySequence(left);
+                robot.drive.followTrajectorySequence(right);
                 break;
             case "right":
                 robot.drive.followTrajectorySequence(middle);
                 break;
             case "none":
-                robot.drive.followTrajectorySequence(right);
+                robot.drive.followTrajectorySequence(left);
                 break;
         }
 
