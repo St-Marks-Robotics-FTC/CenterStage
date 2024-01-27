@@ -35,6 +35,8 @@ public class FallbackTele extends LinearOpMode {
         GRAB,
         STOW,
         EXTEND,
+
+        IDLE2,
         SCORE,
         RETRACT
     }
@@ -104,13 +106,12 @@ public class FallbackTele extends LinearOpMode {
                     robot.v4barStow(); // V4b ready for transfer
                     robot.retractSlides(); // Retract Slide
                 })
-                .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button Main one
-
+                .transition( () ->  gamepad1.right_trigger > 0.5 ) // Drop intake down
                 .state(LinearStates.DOWN)
                 .onEnter( () -> {
                     robot.v4barPickup(); // V4b Transfer Position
                 })
-                .transition( () ->  gamepad1.right_trigger <= 0.5 ) // Intake Button Main one
+                .transition( () ->  gamepad1.right_trigger <= 0.5 ) // Picks up when trigger let go
 
                 .state(LinearStates.GRAB)
                 .onEnter( () -> {
@@ -140,6 +141,8 @@ public class FallbackTele extends LinearOpMode {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+                .state(LinearStates.IDLE2)
+                .transition( () ->  gamepad1.b)
 
                 .state(LinearStates.SCORE)
                 .onEnter( () -> {
@@ -221,7 +224,7 @@ public class FallbackTele extends LinearOpMode {
 
             // Slide Level Adjustments
             if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                slideLevel = Math.min(9, slideLevel + 1);
+                slideLevel = Math.min(6, slideLevel + 1);
             } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                 slideLevel = Math.max(0, slideLevel - 1);
             }
