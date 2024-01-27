@@ -34,7 +34,6 @@ public class FallbackTele extends LinearOpMode {
         DOWN,
         GRAB,
         STOW,
-        EXTEND,
 
         IDLE2,
         SCORE,
@@ -131,21 +130,17 @@ public class FallbackTele extends LinearOpMode {
                 })
                 .transition( () ->  gamepad1.y ) // outtake Button Main one
 
-                .state(LinearStates.EXTEND)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                .state(LinearStates.IDLE2)
                 .onEnter( () -> {
                     robot.slidesToLevel(slideLevel); // Extend Slide
                     robot.v4barScore(); // V4b Score Position
                 })
                 .loop( () -> {
                     robot.slidesToLevel(slideLevel); // Extend Slide
-                })
-                .transition( () ->  robot.getSlidePos() > 100) // Checks if slides are out
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                .state(LinearStates.IDLE2)
-                .loop( () -> {
                     if (gamepad1.left_trigger > 0.5) {
                         robot.openLeftClaw();
                         leftScored = true;

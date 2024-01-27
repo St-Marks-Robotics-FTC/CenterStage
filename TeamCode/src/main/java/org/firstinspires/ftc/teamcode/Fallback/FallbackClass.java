@@ -35,8 +35,8 @@ public class FallbackClass {
 
     // Slides
     public static int slidesDown = 0;
-    public static int level1 = 300;
-    public static int levelIncrement = 60;
+    public static int level1 = 0;
+    public static int levelIncrement = 80;
 
     public static double slideDownPower = 0.15;
     public static double slideUpPower = 0.2;
