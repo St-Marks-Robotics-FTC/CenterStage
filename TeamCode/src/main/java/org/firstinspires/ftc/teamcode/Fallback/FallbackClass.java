@@ -38,8 +38,8 @@ public class FallbackClass {
     public static int level1 = 300;
     public static int levelIncrement = 60;
 
-    public static double slideDownPower = 0.2;
-    public static double slideUpPower = 0.5;
+    public static double slideDownPower = 0.15;
+    public static double slideUpPower = 0.2;
 
 
     // V4B
