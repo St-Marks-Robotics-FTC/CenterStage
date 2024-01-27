@@ -59,7 +59,7 @@ public class FallbackClass {
     public static double clawClose = 0.8;
 
     // Drone
-    public static double droneHold = 0.5;
+    public static double droneHold = 0.8;
     public static double droneRelease = 0.1;
 
 
@@ -71,12 +71,14 @@ public class FallbackClass {
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
 
-        v4bLeft = hardwareMap.get(ServoImplEx.class, "v4bLeft");
-        v4bRight = hardwareMap.get(ServoImplEx.class, "v4bRight");
-        v4bAngle = hardwareMap.get(ServoImplEx.class, "v4bAngle");
+        v4bLeft = hardwareMap.get(ServoImplEx.class, "leftV4Bar");
+        v4bRight = hardwareMap.get(ServoImplEx.class, "rightV4Bar");
+        v4bAngle = hardwareMap.get(ServoImplEx.class, "pivot");
 
         clawLeft = hardwareMap.get(ServoImplEx.class, "clawLeft");
         clawRight = hardwareMap.get(ServoImplEx.class, "clawRight");
+
+        drone = hardwareMap.get(ServoImplEx.class, "drone");
 
         left = hardwareMap.get(TouchSensor.class, "leftSensor");
         right = hardwareMap.get(TouchSensor.class, "rightSensor");

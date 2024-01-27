@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import java.util.List;
 
 @Config
-@Disabled
+//@Disabled
 @TeleOp
 public class FallbackTele extends LinearOpMode {
 

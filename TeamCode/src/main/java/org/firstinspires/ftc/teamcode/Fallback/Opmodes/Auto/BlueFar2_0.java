@@ -63,14 +63,15 @@ public class BlueFar2_0 extends LinearOpMode {
 //                    robot.openLeftClaw();
 //                })
                 .waitSeconds(1) // Score Purple Spike
-
-                // Drive to Board
-                .setReversed(true)
-                .setTangent(Math.toRadians(-45))
-                .splineToLinearHeading(new Pose2d(-26, 12, Math.toRadians(180)), Math.toRadians(0))
-                .setTangent(0)
-                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
+                .back(4)
+//
+//                // Drive to Board
+//                .setReversed(true)
+//                .setTangent(Math.toRadians(-45))
+//                .splineToLinearHeading(new Pose2d(-26, 12, Math.toRadians(180)), Math.toRadians(0))
+//                .setTangent(0)
+//                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
+//                .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
 //                    robot.v4barScore();
@@ -90,13 +91,14 @@ public class BlueFar2_0 extends LinearOpMode {
 //                    robot.openLeftClaw();
 //                })
                 .waitSeconds(1) // Score Purple Spike
-
-                .setReversed(true)
-                .setTangent(Math.toRadians(-60))
-                .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(180)), Math.toRadians(0))
-                .setTangent(0)
-                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
+                .back(4)
+//
+//                .setReversed(true)
+//                .setTangent(Math.toRadians(-60))
+//                .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(180)), Math.toRadians(0))
+//                .setTangent(0)
+//                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
+//                .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
 //                    robot.v4barScore();
@@ -119,13 +121,14 @@ public class BlueFar2_0 extends LinearOpMode {
 //                    robot.openLeftClaw();
 //                })
                 .waitSeconds(1) // Score Purple Spike
-
-                .setReversed(true)
-                .setTangent(Math.toRadians(-135))
-                .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(180)), Math.toRadians(0))
-                .setTangent(0)
-                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, 41.5), Math.toRadians(0))
+                .back(4)
+//
+//                .setReversed(true)
+//                .setTangent(Math.toRadians(-135))
+//                .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(180)), Math.toRadians(0))
+//                .setTangent(0)
+//                .splineToConstantHeading(new Vector2d(10, 12) , Math.toRadians(0))
+//                .splineToConstantHeading(new Vector2d(48, 41.5), Math.toRadians(0))
 
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
@@ -176,19 +179,19 @@ public class BlueFar2_0 extends LinearOpMode {
                 break;
         }
 
-        if (middlePark) {
-            TrajectorySequence idealPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Ideal Park pointed towards truss
-                    .setReversed(false)
-                    .lineToLinearHeading(new Pose2d(43, 13, Math.toRadians(-155)))
-                    .build();
-            robot.drive.followTrajectorySequence(idealPark);
-        } else {
-            TrajectorySequence cornerPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Corner Park
-                    .setReversed(false)
-                    .lineToLinearHeading(new Pose2d(46, 58, Math.toRadians(-125))) // Corner Park
-                    .build();
-            robot.drive.followTrajectorySequence(cornerPark);
-        }
+//        if (middlePark) {
+//            TrajectorySequence idealPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Ideal Park pointed towards truss
+//                    .setReversed(false)
+//                    .lineToLinearHeading(new Pose2d(43, 13, Math.toRadians(-155)))
+//                    .build();
+//            robot.drive.followTrajectorySequence(idealPark);
+//        } else {
+//            TrajectorySequence cornerPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Corner Park
+//                    .setReversed(false)
+//                    .lineToLinearHeading(new Pose2d(46, 58, Math.toRadians(-125))) // Corner Park
+//                    .build();
+//            robot.drive.followTrajectorySequence(cornerPark);
+//        }
 
 
 
