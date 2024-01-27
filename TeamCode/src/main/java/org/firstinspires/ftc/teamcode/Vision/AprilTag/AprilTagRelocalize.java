@@ -79,6 +79,55 @@ public class AprilTagRelocalize {
         }
     }
 
+    public Pose2d getTagPos(int[] tags) {
+        Pose2d answer = new Pose2d();
+        int total = 0;
+        for (int tag : tags) {
+            List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
+            AprilTagDetection target = null;
+            for (AprilTagDetection detection : detections) {
+                if (detection.metadata!=null && detection.id == tag) {
+                    target = detection;
+                }
+            }
+            if (target == null) {
+                continue;
+            } else {
+                //double angle = Math.toRadians(90)-target.ftcPose.bearing;
+                total++;
+                Pose2d average = new Pose2d(
+                        target.ftcPose.range*Math.cos(Math.toRadians(target.ftcPose.bearing-target.ftcPose.yaw)),
+                        target.ftcPose.range*Math.sin(Math.toRadians(target.ftcPose.bearing-target.ftcPose.yaw)),
+                        angleWrap(Math.toRadians(90-target.ftcPose.yaw))).plus(cameraOffset);
+                answer = answer.plus(average);
+            }
+        }
+        return new Pose2d(answer.getX()/total, answer.getY()/total, answer.getHeading()/total);
+    }
+
+    public boolean robot(int[] tags) {
+        int total=0;
+        for (int tag : tags) {
+            List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
+            AprilTagDetection target = null;
+            for (AprilTagDetection detection : detections) {
+                if (detection.metadata!=null && detection.id == tag) {
+                    target = detection;
+                }
+            }
+            if (target == null) {
+                continue;
+            } else {
+                //double angle = Math.toRadians(90)-target.ftcPose.bearing;
+                total++;
+            }
+        }
+        if (total<tags.length) {
+            return true;
+        }
+        return false;
+    }
+
     public double angleWrap(double radians) {
 
         while (radians > Math.PI) {

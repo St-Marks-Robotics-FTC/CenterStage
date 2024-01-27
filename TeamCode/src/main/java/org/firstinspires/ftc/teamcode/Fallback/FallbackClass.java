@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.Fallback;
 
+import android.text.method.Touch;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 
@@ -25,6 +28,9 @@ public class FallbackClass {
 
 
     public ServoImplEx drone;
+
+    public TouchSensor left;
+    public TouchSensor right;
 
 
     // Slides
@@ -58,33 +64,33 @@ public class FallbackClass {
 
 
 
-
-
     public FallbackClass(HardwareMap hardwareMap) {
 
         drive = new MecanumDrive(hardwareMap);
 
-        //slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
-        //slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
+        slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
+        slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
 
-        //v4bLeft = hardwareMap.get(ServoImplEx.class, "v4bLeft");
-        //v4bRight = hardwareMap.get(ServoImplEx.class, "v4bRight");
-        //v4bAngle = hardwareMap.get(ServoImplEx.class, "v4bAngle");
+        v4bLeft = hardwareMap.get(ServoImplEx.class, "v4bLeft");
+        v4bRight = hardwareMap.get(ServoImplEx.class, "v4bRight");
+        v4bAngle = hardwareMap.get(ServoImplEx.class, "v4bAngle");
 
-        //clawLeft = hardwareMap.get(ServoImplEx.class, "clawLeft");
-        //clawRight = hardwareMap.get(ServoImplEx.class, "clawRight");
+        clawLeft = hardwareMap.get(ServoImplEx.class, "clawLeft");
+        clawRight = hardwareMap.get(ServoImplEx.class, "clawRight");
 
-        // Reverse
-        //slideLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        //v4bLeft.setDirection(ServoImplEx.Direction.REVERSE);
-        //clawLeft.setDirection(ServoImplEx.Direction.REVERSE);
+        left = hardwareMap.get(TouchSensor.class, "leftSensor");
+        right = hardwareMap.get(TouchSensor.class, "rightSensor");
 
-        // RTP
-        //slideLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        //slideRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        //slideLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        //slideRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        //Reverse
+        slideLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        v4bLeft.setDirection(ServoImplEx.Direction.REVERSE);
+        clawLeft.setDirection(ServoImplEx.Direction.REVERSE);
 
+        //RTP
+        slideLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slideRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slideLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        slideRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
 
