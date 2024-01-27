@@ -25,11 +25,14 @@ public class LocalizationTest extends LinearOpMode {
         waitForStart();
 
         while (!isStopRequested()) {
+            double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
+            double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 0.8;
+
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
+                            -gamepad1.left_stick_y * tranScaleFactor,
+                            -gamepad1.left_stick_x * tranScaleFactor,
+                            -gamepad1.right_stick_x * rotScaleFactor
                     )
             );
 

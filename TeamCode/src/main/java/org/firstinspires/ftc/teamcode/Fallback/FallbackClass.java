@@ -80,8 +80,8 @@ public class FallbackClass {
 
         drone = hardwareMap.get(ServoImplEx.class, "drone");
 
-        left = hardwareMap.get(TouchSensor.class, "leftSensor");
-        right = hardwareMap.get(TouchSensor.class, "rightSensor");
+//        left = hardwareMap.get(TouchSensor.class, "leftSensor");
+//        right = hardwareMap.get(TouchSensor.class, "rightSensor");
 
         //Reverse
         slideLeft.setDirection(DcMotorEx.Direction.REVERSE);

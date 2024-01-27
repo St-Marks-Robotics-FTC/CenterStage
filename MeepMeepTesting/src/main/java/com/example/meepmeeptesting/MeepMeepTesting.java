@@ -17,17 +17,24 @@ public class MeepMeepTesting {
                 .setConstraints(65, 56, Math.toRadians(145), Math.toRadians(120), 15)
                 .setDimensions(13.5, 14) // Set size of bot
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(16.5, -63.5, Math.toRadians(-90))) // Blue Far
+                        drive.trajectorySequenceBuilder(new Pose2d(-38, 60, Math.toRadians(90))) // Blue Far
                         //drive.trajectorySequenceBuilder(new Pose2d(16.5, 63.5, Math.toRadians(90))) // Close
 
 
 //                                .splineToSplineHeading(new Pose2d(-34, -32, Math.toRadians(180)), Math.toRadians(35))
 //                                // place purple from back
 
+//                                .setReversed(true)
+////                                .splineTo(new Vector2d(-31, -34), Math.toRadians(0))
+//                                .splineToSplineHeading(new Pose2d(-30, -36, Math.toRadians(-135)), Math.toRadians(45))
+//                                .setReversed(false)
+                                .setReversed(true)
+                                .splineTo(new Vector2d(-30, 34), Math.toRadians(-35))
+                                .setReversed(false)
 
                         //drive.trajectorySequenceBuilder(new Pose2d(17, 63.5, Math.toRadians(-90))) // Blue Close
-                                .setReversed(true)
-                                .splineToSplineHeading(new Pose2d(16.5, -32, Math.toRadians(-90)), Math.toRadians(90))
+//                                .setReversed(true)
+//                                .splineToSplineHeading(new Pose2d(16.5, -32, Math.toRadians(-90)), Math.toRadians(90))
                                 //close
 //                                .setReversed(true)
 //                                .setTangent(Math.toRadians(-90))
@@ -110,30 +117,30 @@ public class MeepMeepTesting {
                                 .build()
                 );
 
-        RoadRunnerBotEntity closePartner = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(40, 40, Math.toRadians(120), Math.toRadians(120), 15)
-                .setDimensions(13.5, 14) // Set size of bot
-                .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(16.5, 63.5, Math.toRadians(90)))
-                                .setReversed(true)
-                                .setTangent(Math.toRadians(-90))
-                                .splineToSplineHeading(new Pose2d(24, 32, Math.toRadians(90)), Math.toRadians(-90))
-                                .waitSeconds(2)
-                                .setTangent(Math.toRadians(0))
-                                //.splineToConstantHeading(new Vector2d(11, 32), Math.toRadians(-80))
-                                .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(180)), Math.toRadians(0))
-                                .waitSeconds(2)
-                                .forward(4)
-                                .strafeRight(26)
-                                .build()
-                );
+//        RoadRunnerBotEntity closePartner = new DefaultBotBuilder(meepMeep)
+//                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+//                .setConstraints(40, 40, Math.toRadians(120), Math.toRadians(120), 15)
+//                .setDimensions(13.5, 14) // Set size of bot
+//                .followTrajectorySequence(drive ->
+//                        drive.trajectorySequenceBuilder(new Pose2d(16.5, 63.5, Math.toRadians(90)))
+//                                .setReversed(true)
+//                                .setTangent(Math.toRadians(-90))
+//                                .splineToSplineHeading(new Pose2d(24, 32, Math.toRadians(90)), Math.toRadians(-90))
+//                                .waitSeconds(2)
+//                                .setTangent(Math.toRadians(0))
+//                                //.splineToConstantHeading(new Vector2d(11, 32), Math.toRadians(-80))
+//                                .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(180)), Math.toRadians(0))
+//                                .waitSeconds(2)
+//                                .forward(4)
+//                                .strafeRight(26)
+//                                .build()
+//                );
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
-                .addEntity(closePartner)
+//                .addEntity(closePartner)
                 .start();
     }
 }

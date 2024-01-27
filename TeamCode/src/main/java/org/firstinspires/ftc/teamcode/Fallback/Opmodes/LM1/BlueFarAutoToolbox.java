@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Autonomous
-public class RedFarAutoToolbox extends LinearOpMode {
+public class BlueFarAutoToolbox extends LinearOpMode {
 
     FtcDashboard dashboard;
 
@@ -28,7 +29,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
 //    Arm robot;
 
     private VisionPortal portal;
-    private RedFarPropThreshold redFarPropThreshold;
+    private BlueFarPropThreshold redFarPropThreshold;
 
 
     @Override
@@ -37,7 +38,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        redFarPropThreshold = new RedFarPropThreshold();
+        redFarPropThreshold = new BlueFarPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
@@ -51,24 +52,22 @@ public class RedFarAutoToolbox extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
 //        robot = new Arm(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-38, -60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-38, 62, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // left
+        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // Right
                 .setReversed(true)
-//                                .splineToConstantHeading(new Vector2d(-41, -32), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(-42, -32, Math.toRadians(-45)), Math.toRadians(110))
+                .splineTo(new Vector2d(-43, 35), Math.toRadians(-120))
                 .setReversed(false)
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
-                .splineTo(new Vector2d(-38, -32), Math.toRadians(90))
+                .splineTo(new Vector2d(-38, 33), Math.toRadians(-90))
                 .setReversed(false)
                 .build();
-        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // right
+        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // Left
                 .setReversed(true)
-//                                .splineTo(new Vector2d(-31, -34), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-30, -36, Math.toRadians(-135)), Math.toRadians(45))
+                .splineTo(new Vector2d(-30, 34), Math.toRadians(-35))
                 .setReversed(false)
                 .build();
 //        TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
@@ -114,18 +113,17 @@ public class RedFarAutoToolbox extends LinearOpMode {
         sleep(1000);
         switch (loc) {
             case "left":
+                drive.followTrajectorySequence(traj11);
+                break;
+            case "right":
                 drive.followTrajectorySequence(traj12);
                 break;
             case "none":
                 drive.followTrajectorySequence(traj13);
                 break;
-            case "right":
-                drive.followTrajectorySequence(traj11);
-                break;
         }
 
 //        robot.openAutoClaw();
-        sleep(3000);
 ////        robot.setArm(-1650); // 390
 //
 //        //outtake
