@@ -57,18 +57,47 @@ public class BlueFarAutoToolbox extends LinearOpMode {
 
         TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // Right
                 .setReversed(true)
-                .splineTo(new Vector2d(-43, 35), Math.toRadians(-120))
-                .setReversed(false)
+//                .splineTo(new Vector2d(-38, 38), Math.toRadians(-90))
+                .back(20)
+                .waitSeconds(1)
+                .turn(Math.toRadians(-50))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
-                .splineTo(new Vector2d(-38, 33), Math.toRadians(-90))
+                .splineTo(new Vector2d(-38, 30), Math.toRadians(-90))
                 .setReversed(false)
+                .forward(6)
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // Left
                 .setReversed(true)
-                .splineTo(new Vector2d(-30, 34), Math.toRadians(-35))
-                .setReversed(false)
+//                .splineTo(new Vector2d(-38, 38), Math.toRadians(-90))
+                .back(20)
+                .waitSeconds(1)
+                .turn(Math.toRadians(80))
+//                .back(10)
+//                .setReversed(false)
+                .build();
+
+        TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end()) // Left
+                .setReversed(true)
+//                .splineTo(new Vector2d(-38, 38), Math.toRadians(-90))
+                .back(13)
+                .waitSeconds(1)
+                .forward(10)
+//                .turn(Math.toRadians(90))
+//                .back(10)
+//                .setReversed(false)
+                .build();
+
+        TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end()) // Left
+                .setReversed(true)
+//                .splineTo(new Vector2d(-38, 38), Math.toRadians(-90))
+                .back(8)
+                .waitSeconds(1)
+                .forward(10)
+//                .turn(Math.toRadians(90))
+//                .back(10)
+//                .setReversed(false)
                 .build();
 //        TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
 //                .lineToLinearHeading(new Pose2d(-34, -32, Math.toRadians(0)))
@@ -120,6 +149,20 @@ public class BlueFarAutoToolbox extends LinearOpMode {
                 break;
             case "none":
                 drive.followTrajectorySequence(traj13);
+                break;
+        }
+
+        switch (loc) {
+            case "left":
+                drive.setPoseEstimate(traj11.end());
+                drive.followTrajectorySequence(traj21);
+                break;
+            case "right":
+
+                break;
+            case "none":
+                drive.setPoseEstimate(traj13.end());
+                drive.followTrajectorySequence(traj23);
                 break;
         }
 

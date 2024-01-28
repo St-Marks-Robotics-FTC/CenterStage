@@ -4,6 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 
@@ -19,9 +21,12 @@ public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumDrive drive = new MecanumDrive(hardwareMap);
+        Servo drone = hardwareMap.get(Servo.class, "drone");
+
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        drone.setPosition(0.72);
         waitForStart();
 
         while (!isStopRequested()) {
@@ -37,6 +42,11 @@ public class LocalizationTest extends LinearOpMode {
             );
 
             drive.update();
+
+
+            if (gamepad1.y) {
+                drone.setPosition(1);
+            }
 
             Pose2d poseEstimate = drive.getPoseEstimate();
             telemetry.addData("x", poseEstimate.getX());
