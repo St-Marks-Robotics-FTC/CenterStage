@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.Trajec
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
+@Disabled
 @Autonomous (group = "Red", preselectTeleOp = "JankTele")
 public class RedFar1_0 extends LinearOpMode {
     FtcDashboard dashboard;
