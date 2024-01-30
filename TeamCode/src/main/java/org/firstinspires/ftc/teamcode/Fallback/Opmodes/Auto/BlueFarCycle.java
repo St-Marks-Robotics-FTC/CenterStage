@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,6 +20,8 @@ import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.jankbot.competition.PoseStorage;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
@@ -28,7 +31,7 @@ public class BlueFarCycle extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static String loc = "left";
-    public static boolean middlePark = false;
+    public static boolean middlePark = true;
     FallbackClass robot;
 
     private VisionPortal portal;
@@ -59,7 +62,7 @@ public class BlueFarCycle extends LinearOpMode {
                 // Drive to spike
                 .setReversed(true)
                 .setTangent(Math.toRadians(-120))
-                .splineToLinearHeading(new Pose2d(-33, 36, Math.toRadians(-30)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-33, 38, Math.toRadians(-30)), Math.toRadians(0))
 
 //                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
 //                    robot.openLeftClaw();
@@ -68,16 +71,16 @@ public class BlueFarCycle extends LinearOpMode {
 
                 //Intake a White
                 .setTangent(Math.toRadians(-135))
-                .splineToLinearHeading(new Pose2d(-65, 10, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-65, 8, Math.toRadians(180)), Math.toRadians(180))
 //                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
 //                    robot.closeLeftClaw();
 //                })
 
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(45))
-                .splineToLinearHeading(new Pose2d(-26, 10, Math.toRadians(180)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-26, 8, Math.toRadians(180)), Math.toRadians(0))
 
-                .splineToConstantHeading(new Vector2d(10, 10) , Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 8) , Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(43, 42), Math.toRadians(0))
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
@@ -101,16 +104,16 @@ public class BlueFarCycle extends LinearOpMode {
 
                 //Intake a White
                 .setTangent(Math.toRadians(-135))
-                .splineToLinearHeading(new Pose2d(-65, 10, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-65, 8, Math.toRadians(180)), Math.toRadians(180))
 //                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
 //                    robot.closeLeftClaw();
 //                })
 
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(45))
-                .splineToLinearHeading(new Pose2d(-26, 10, Math.toRadians(180)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-26, 8, Math.toRadians(180)), Math.toRadians(0))
 
-                .splineToConstantHeading(new Vector2d(10, 10) , Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 8) , Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(43, 36), Math.toRadians(0))
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
@@ -127,7 +130,7 @@ public class BlueFarCycle extends LinearOpMode {
         TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // left
                 .setTangent(Math.toRadians(-120))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(-52, 18, Math.toRadians(60)), Math.toRadians(-120))
+                .splineToLinearHeading(new Pose2d(-52, 21, Math.toRadians(60)), Math.toRadians(-120))
 
 //                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
 //                    robot.openLeftClaw();
@@ -136,17 +139,18 @@ public class BlueFarCycle extends LinearOpMode {
 
                 //Intake a White
                 .setTangent(Math.toRadians(-135))
-                .splineToLinearHeading(new Pose2d(-65, 10, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-63, 8, Math.toRadians(180)), Math.toRadians(180))
 //                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
 //                    robot.closeLeftClaw();
 //                })
 
                 .waitSeconds(1)
-                .setTangent(Math.toRadians(45))
-                .splineToLinearHeading(new Pose2d(-26, 10, Math.toRadians(180)), Math.toRadians(0))
-
-                .splineToConstantHeading(new Vector2d(10, 10) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(43, 30), Math.toRadians(0))
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(15, 8,Math.toRadians(180)),
+                        Math.toRadians(0),
+                        MecanumDrive.getVelocityConstraint(70, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(60))
+                .splineToSplineHeading(new Pose2d(43, 32,Math.toRadians(180)), Math.toRadians(45))
 
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
@@ -155,7 +159,7 @@ public class BlueFarCycle extends LinearOpMode {
 //                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
 //                    robot.openClaw();
 //                })
-                .waitSeconds(2.5) // Place Yellow
+                .waitSeconds(1) // Place Yellow
                 .build();
 
         // On Init
@@ -197,16 +201,22 @@ public class BlueFarCycle extends LinearOpMode {
                 break;
         }
         int cycles = 0;
-        while (time.milliseconds()>8000 && cycles<2) {
+        while (time.milliseconds()<25000 && cycles<2) {
             cycles++;
             TrajectorySequence cycle = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                     .setReversed(true)
                     .setTangent(Math.toRadians(-120))
-                    .splineToSplineHeading(new Pose2d(15, 10,Math.toRadians(180)), Math.toRadians(180))
-                    .splineToSplineHeading(new Pose2d(-65, 10, Math.toRadians(180)), Math.toRadians(180))
+                    .splineToSplineHeading(new Pose2d(15, 8,Math.toRadians(180)), Math.toRadians(180))
+                    .splineToSplineHeading(new Pose2d(-63, 10, Math.toRadians(180)),
+                            Math.toRadians(180),
+                            MecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                            MecanumDrive.getAccelerationConstraint(50))
                     .waitSeconds(0.5)
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(15, 10,Math.toRadians(180)), Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(15, 8,Math.toRadians(180)),
+                            Math.toRadians(0),
+                            MecanumDrive.getVelocityConstraint(70, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                            MecanumDrive.getAccelerationConstraint(60))
                     .splineToSplineHeading(new Pose2d(43, 32,Math.toRadians(180)), Math.toRadians(45))
                     .waitSeconds(0.5)
                     .build();

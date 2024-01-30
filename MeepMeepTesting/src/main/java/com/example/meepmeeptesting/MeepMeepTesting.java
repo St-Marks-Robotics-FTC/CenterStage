@@ -17,7 +17,7 @@ public class MeepMeepTesting {
                 .setConstraints(65, 56, Math.toRadians(145), Math.toRadians(120), 15)
                 .setDimensions(13.5, 14) // Set size of bot
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-38, 60, Math.toRadians(90))) // Blue Far
+                        drive.trajectorySequenceBuilder(new Pose2d(-41, -63.5, Math.toRadians(-90))) // Blue Far
                         //drive.trajectorySequenceBuilder(new Pose2d(16.5, 63.5, Math.toRadians(90))) // Close
 
 
@@ -29,8 +29,8 @@ public class MeepMeepTesting {
 //                                .splineToSplineHeading(new Pose2d(-30, -36, Math.toRadians(-135)), Math.toRadians(45))
 //                                .setReversed(false)
                                 .setReversed(true)
-                                .splineTo(new Vector2d(-30, 34), Math.toRadians(-35))
-                                .setReversed(false)
+                                .setTangent(Math.toRadians(90))
+                                .splineToSplineHeading(new Pose2d(-42, -34, Math.toRadians(-60)), Math.toRadians(90))
 
                         //drive.trajectorySequenceBuilder(new Pose2d(17, 63.5, Math.toRadians(-90))) // Blue Close
 //                                .setReversed(true)

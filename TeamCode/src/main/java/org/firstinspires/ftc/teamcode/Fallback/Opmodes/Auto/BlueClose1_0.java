@@ -59,7 +59,7 @@ public class BlueClose1_0 extends LinearOpMode {
 //                    robot.openLeftClaw();
 //                })
                 .waitSeconds(1) // Score Purple Spike
-                .back(4)
+                .forward(4)
 //                // Drive to Board
 //                .setReversed(true)
 //                .splineToSplineHeading(new Pose2d(43, -28, Math.toRadians(180)), Math.toRadians(0))
@@ -80,7 +80,7 @@ public class BlueClose1_0 extends LinearOpMode {
 //                    robot.openLeftClaw();
 //                })
                 .waitSeconds(1) // Score Purple Spike
-                .back(4)
+                .forward(4)
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
 //                    robot.v4barScore();
@@ -103,7 +103,7 @@ public class BlueClose1_0 extends LinearOpMode {
 //                    robot.openLeftClaw();
 //                })
                 .waitSeconds(1) // Score Purple Spike
-                .back(4)
+                .forward(4)
 
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {

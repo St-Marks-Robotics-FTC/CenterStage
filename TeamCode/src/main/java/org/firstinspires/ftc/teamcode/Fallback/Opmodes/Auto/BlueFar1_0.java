@@ -7,22 +7,21 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Fallback.FallbackClass;
+import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedPropThreshold;
-import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
 import org.firstinspires.ftc.teamcode.jankbot.competition.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Autonomous (group = "Red", preselectTeleOp = "JankTele")
-public class RedClose1_0 extends LinearOpMode {
+public class BlueFar1_0 extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static String loc = "left";
@@ -30,25 +29,25 @@ public class RedClose1_0 extends LinearOpMode {
     FallbackClass robot;
 
     private VisionPortal portal;
-    private RedPropThreshold redPropThreshold;
+    private BlueFarPropThreshold blueFarPropThreshold;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        redPropThreshold = new RedPropThreshold();
+        blueFarPropThreshold = new BlueFarPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(redPropThreshold)
+                .addProcessor(blueFarPropThreshold)
                 .build();
 
 
         robot = new FallbackClass(hardwareMap);
 
-        Pose2d startPose = new Pose2d(16.5, -63.5, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(16.5, 63.5, Math.toRadians(90));
         robot.drive.setPoseEstimate(startPose);
 
         TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // Truss side / No Prop Seen
@@ -125,10 +124,10 @@ public class RedClose1_0 extends LinearOpMode {
 //        robot.closeClaw();
 
         while (opModeInInit()) {
-            loc = redPropThreshold.getPropPosition();
-            telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
-            telemetry.addData("Avg Left Box Value", redPropThreshold.getAvergageLeft());
-            telemetry.addData("Avg Right Box Value", redPropThreshold.getAvergageRight());
+            loc = blueFarPropThreshold.getPropPosition();
+            telemetry.addData("Prop Position", blueFarPropThreshold.getPropPosition());
+            telemetry.addData("Avg Left Box Value", blueFarPropThreshold.getAvergageLeft());
+            telemetry.addData("Avg Right Box Value", blueFarPropThreshold.getAvergageRight());
 
             if (gamepad1.a) {
                 middlePark = true;
