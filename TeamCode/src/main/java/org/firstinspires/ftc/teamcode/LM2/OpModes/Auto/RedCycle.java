@@ -178,10 +178,10 @@ public class RedCycle extends LinearOpMode {
         waitForStart();
 
         switch (loc) {
-            case "left":
+            case "none":
                 drive.followTrajectorySequence(left);
                 break;
-            case "center":
+            case "left":
                 drive.followTrajectorySequence(middle);
                 break;
             case "right":

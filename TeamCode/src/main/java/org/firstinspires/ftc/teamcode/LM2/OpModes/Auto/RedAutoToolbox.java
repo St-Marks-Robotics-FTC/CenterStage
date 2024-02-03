@@ -102,10 +102,10 @@ public class RedAutoToolbox extends LinearOpMode {
         //robot.setArm(-700);
         //sleep(1000);
         switch (loc) {
-            case "left":
+            case "none":
                 drive.followTrajectorySequence(traj11);
                 break;
-            case "center":
+            case "left":
                 drive.followTrajectorySequence(traj12);
                 break;
             case "right":
@@ -120,10 +120,10 @@ public class RedAutoToolbox extends LinearOpMode {
 
         //outtake
         switch (loc) {
-            case "left":
+            case "none":
                 drive.followTrajectorySequence(traj21);
                 break;
-            case "center":
+            case "left":
                 drive.followTrajectorySequence(traj22);
                 break;
             case "right":
@@ -137,10 +137,10 @@ public class RedAutoToolbox extends LinearOpMode {
         // 700
 
         switch (loc) {
-            case "left":
+            case "none":
                 drive.followTrajectorySequence(park1);
                 break;
-            case "center":
+            case "left":
                 drive.followTrajectorySequence(park2);
                 break;
             case "right":

@@ -183,10 +183,10 @@ public class BlueCycle extends LinearOpMode {
 
         waitForStart();
         switch (loc) {
-            case "right":
+            case "none":
                 drive.followTrajectorySequence(right);
                 break;
-            case "center":
+            case "right":
                 drive.followTrajectorySequence(middle);
                 break;
             case "left":

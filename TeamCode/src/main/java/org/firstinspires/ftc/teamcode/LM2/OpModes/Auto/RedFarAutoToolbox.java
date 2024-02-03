@@ -113,10 +113,10 @@ public class RedFarAutoToolbox extends LinearOpMode {
             case "left":
                 drive.followTrajectorySequence(traj11);
                 break;
-            case "center":
+            case "right":
                 drive.followTrajectorySequence(traj12);
                 break;
-            case "right":
+            case "none":
                 drive.followTrajectorySequence(traj13);
                 break;
         }
@@ -130,10 +130,10 @@ public class RedFarAutoToolbox extends LinearOpMode {
             case "left":
                 drive.followTrajectorySequence(traj21);
                 break;
-            case "center":
+            case "right":
                 drive.followTrajectorySequence(traj22);
                 break;
-            case "right":
+            case "none":
                 drive.followTrajectorySequence(traj23);
                 break;
         }
@@ -146,10 +146,10 @@ public class RedFarAutoToolbox extends LinearOpMode {
             case "left":
                 drive.followTrajectorySequence(park1);
                 break;
-            case "center":
+            case "right":
                 drive.followTrajectorySequence(park2);
                 break;
-            case "right":
+            case "none":
                 drive.followTrajectorySequence(park3);
                 break;
         }
