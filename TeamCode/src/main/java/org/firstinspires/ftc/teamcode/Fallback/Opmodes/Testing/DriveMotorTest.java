@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Fallback.Opmodes.Testing;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Fallback.Roadrunner.MecanumDrive;
 
+@Disabled
 @TeleOp
 public class DriveMotorTest extends OpMode {
 

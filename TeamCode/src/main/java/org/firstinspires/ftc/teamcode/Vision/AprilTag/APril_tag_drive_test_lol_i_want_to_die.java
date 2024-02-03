@@ -87,6 +87,8 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
+@Disabled
+
 @TeleOp(name="aprl tal", group = "Concept")
 
 public class APril_tag_drive_test_lol_i_want_to_die extends LinearOpMode
