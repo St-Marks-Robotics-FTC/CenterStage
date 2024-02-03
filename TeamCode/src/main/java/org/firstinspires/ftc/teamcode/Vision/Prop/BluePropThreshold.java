@@ -21,11 +21,15 @@ public class BluePropThreshold implements VisionProcessor {
     String outStr = "left"; //Set a default value in case vision does not work
     double avgLeft = 0;
     double avgRight = 0;
-
-    static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(140, 140),
-            new Point(240, 270)
-    );
+// Fallback
+//    static final Rect LEFT_RECTANGLE = new Rect(
+//            new Point(140, 140),
+//            new Point(240, 270)
+//    );
+static final Rect LEFT_RECTANGLE = new Rect(
+        new Point(190, 140),
+        new Point(290, 270)
+);
 
     static final Rect RIGHT_RECTANGLE = new Rect(
             new Point(500, 170),

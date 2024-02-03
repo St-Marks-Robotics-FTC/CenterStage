@@ -28,9 +28,15 @@ public class RedPropThreshold implements VisionProcessor {
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(370, 200),
-            new Point(470, 300)
+            new Point(270, 200),
+            new Point(370, 300)
     );
+
+    // Fallback
+//    static final Rect RIGHT_RECTANGLE = new Rect(
+//            new Point(370, 200),
+//            new Point(470, 300)
+//    );
 
 
 // FAR SIDE
