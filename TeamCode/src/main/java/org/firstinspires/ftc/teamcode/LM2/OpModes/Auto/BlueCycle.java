@@ -14,9 +14,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
-import org.firstinspires.ftc.teamcode.LM2.LM2class;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config

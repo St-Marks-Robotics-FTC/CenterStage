@@ -5,6 +5,8 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,6 +27,8 @@ public class LM2Tele extends LinearOpMode {
 
     public static boolean dpadupPressed = false;
     public static int[] hangPos = {970,1850}; //CHANGE
+
+    public static boolean droneLaunch = false;
 
     public static boolean closed = false;
     public static boolean leftClosed = false;
@@ -58,8 +62,13 @@ public class LM2Tele extends LinearOpMode {
 
         robot = new LM2class(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
+        TriggerReader droneTrigger = new TriggerReader(
+                pad1, GamepadKeys.Trigger.LEFT_TRIGGER
+        );
+
         ElapsedTime time = new ElapsedTime();
 
+        dpadupPressed = false; // So arm doesnt flip all the way w
         robot.openClaw();
         robot.closeDrone();
         waitForStart();
@@ -129,7 +138,10 @@ public class LM2Tele extends LinearOpMode {
                 robot.setArm(robot.arm.getCurrentPosition()-20);
             }
 
-            if (gamepad1.left_trigger>=0.) {
+            if (droneTrigger.wasJustPressed()) {
+                droneLaunch = !droneLaunch;
+            }
+            if (droneLaunch) {
                 robot.openDrone();
             } else {
                 robot.closeDrone();
@@ -168,6 +180,9 @@ public class LM2Tele extends LinearOpMode {
             }
             if (!rightClosed && !leftClosed) closed = false;
             pad1.readButtons();
+            droneTrigger.readValue();
+
+
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
             telemetry.addData("Left Claw closed", leftClosed);
@@ -175,10 +190,8 @@ public class LM2Tele extends LinearOpMode {
             //telemetry.addData("Current", robot.arm.getCurrent());
             telemetry.update();
 
-        }
-        while(robot.arm.getCurrentPosition()>=900){
-            robot.openClaw();
-            robot.safeRelease(hangPos[1]);
+
+
         }
     }
 }
