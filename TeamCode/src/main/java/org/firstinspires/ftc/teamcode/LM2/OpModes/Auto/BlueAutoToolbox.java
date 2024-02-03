@@ -11,8 +11,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Vision.BluePropThreshold;
-import org.firstinspires.ftc.teamcode.armbot.BozoClass;
+import org.firstinspires.ftc.teamcode.LM2.LM2class;
+import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
+import org.firstinspires.ftc.teamcode.LM2.LM2class;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -25,7 +26,7 @@ public class BlueAutoToolbox extends LinearOpMode {
 
     public static String loc = "left";
     MecanumDrive drive;
-    BozoClass robot;
+    LM2class robot;
 
     private VisionPortal portal;
     private BluePropThreshold bluePropThreshold;
@@ -49,7 +50,7 @@ public class BlueAutoToolbox extends LinearOpMode {
 
         drive = new MecanumDrive(hardwareMap);
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
-        robot = new BozoClass(hardwareMap);
+        robot = new LM2class(hardwareMap);
 
         Pose2d startPose = new Pose2d(15, 60, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);

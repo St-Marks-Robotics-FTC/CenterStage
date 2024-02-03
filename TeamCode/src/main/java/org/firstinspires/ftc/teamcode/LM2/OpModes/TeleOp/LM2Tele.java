@@ -10,11 +10,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.armbot.BozoClass;
+import org.firstinspires.ftc.teamcode.LM2.LM2class;
 
 @Config
 @TeleOp
-public class BozoTele extends LinearOpMode {
+public class LM2Tele extends LinearOpMode {
 
     public static int armDown = 0;
     public static int armUp = 350;
@@ -31,7 +31,7 @@ public class BozoTele extends LinearOpMode {
     public static boolean rightClosed = false;
     public static boolean droneToggle = false;
 
-    public static BozoClass robot;
+    public static LM2class robot;
     public static GamepadEx pad1;
 
 
@@ -56,7 +56,7 @@ public class BozoTele extends LinearOpMode {
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
-        robot = new BozoClass(hardwareMap);
+        robot = new LM2class(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
         ElapsedTime time = new ElapsedTime();
 

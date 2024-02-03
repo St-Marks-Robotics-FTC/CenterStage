@@ -14,8 +14,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Fallback.FallbackClass;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
-import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
-import org.firstinspires.ftc.teamcode.jankbot.competition.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
@@ -182,7 +180,7 @@ public class BlueCloseCycle extends LinearOpMode {
 
 
         // Transfer the current pose to PoseStorage so we can use it in TeleOp
-        PoseStorage.currentPose = robot.drive.getPoseEstimate();
+//        PoseStorage.currentPose = robot.drive.getPoseEstimate();
 
 
     }

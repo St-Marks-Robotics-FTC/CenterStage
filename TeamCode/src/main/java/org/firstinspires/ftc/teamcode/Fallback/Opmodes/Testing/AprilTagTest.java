@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
-import org.firstinspires.ftc.teamcode.jankbot.Jankbot;
+import org.firstinspires.ftc.teamcode.Fallback.FallbackClass;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @TeleOp (group = "test")
 public class AprilTagTest extends OpMode {
 
-    private Jankbot robot;
+    private FallbackClass robot;
     private AprilTagRelocalize relocalize;
 
     private GamepadEx pad1;
@@ -41,7 +41,7 @@ public class AprilTagTest extends OpMode {
     //6 = red right
     @Override
     public void init() {
-        robot = new Jankbot(hardwareMap);
+        robot = new FallbackClass(hardwareMap);
         relocalize = new AprilTagRelocalize(hardwareMap);
         Pose2d startPose = new Pose2d(0, 0, 0);
         robot.drive.setPoseEstimate(startPose);

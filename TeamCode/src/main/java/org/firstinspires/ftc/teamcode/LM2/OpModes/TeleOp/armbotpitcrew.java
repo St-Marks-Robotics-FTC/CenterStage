@@ -3,16 +3,17 @@ package org.firstinspires.ftc.teamcode.LM2.OpModes.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.armbot.BozoClass;
+import org.firstinspires.ftc.teamcode.LM2.LM2class;
+import org.firstinspires.ftc.teamcode.LM2.LM2class;
 
 @TeleOp
 public class armbotpitcrew extends OpMode {
 
-    BozoClass robot;
+    LM2class robot;
 
     @Override
     public void init() {
-        robot = new BozoClass(hardwareMap);
+        robot = new LM2class(hardwareMap);
     }
 
     @Override
