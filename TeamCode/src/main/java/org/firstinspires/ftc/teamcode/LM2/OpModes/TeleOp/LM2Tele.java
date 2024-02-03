@@ -69,6 +69,7 @@ public class LM2Tele extends LinearOpMode {
         ElapsedTime time = new ElapsedTime();
 
         dpadupPressed = false; // So arm doesnt flip all the way w
+        droneLaunch = false;
         robot.openClaw();
         robot.closeDrone();
         waitForStart();
