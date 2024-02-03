@@ -81,7 +81,10 @@ public class BlueFarCycle extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-26, 8, Math.toRadians(180)), Math.toRadians(0))
 
                 .splineToConstantHeading(new Vector2d(10, 8) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(43, 42), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(43, 38),
+                        Math.toRadians(0),
+                        MecanumDrive.getVelocityConstraint(65, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(60))
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
 //                    robot.v4barScore();
@@ -95,7 +98,10 @@ public class BlueFarCycle extends LinearOpMode {
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 .setReversed(true)
                 .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(-40, 24, Math.toRadians(90)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-39, 16, Math.toRadians(90)),
+                        Math.toRadians(-90),
+                        MecanumDrive.getVelocityConstraint(75, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(55))
 
 //                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
 //                    robot.openLeftClaw();
@@ -104,7 +110,10 @@ public class BlueFarCycle extends LinearOpMode {
 
                 //Intake a White
                 .setTangent(Math.toRadians(-135))
-                .splineToLinearHeading(new Pose2d(-63, 11, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-63, 10, Math.toRadians(180)),
+                        Math.toRadians(180),
+                        MecanumDrive.getVelocityConstraint(70, DriveConstants.MAX_ANG_VEL+Math.toRadians(35), DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(55))
 //                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
 //                    robot.closeLeftClaw();
 //                })
@@ -113,11 +122,14 @@ public class BlueFarCycle extends LinearOpMode {
                 .setTangent(Math.toRadians(45))
                 .splineToLinearHeading(new Pose2d(-26, 8, Math.toRadians(180)), Math.toRadians(0))
 
-                .splineToSplineHeading(new Pose2d(10, 8, Math.toRadians(180)),
+                .splineToSplineHeading(new Pose2d(6, 8, Math.toRadians(180)),
                         Math.toRadians(0),
                         MecanumDrive.getVelocityConstraint(70, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         MecanumDrive.getAccelerationConstraint(60))
-                .splineToSplineHeading(new Pose2d(41, 33, Math.toRadians(180)), Math.toRadians(45))
+                .splineToSplineHeading(new Pose2d(39, 33, Math.toRadians(180)),
+                        Math.toRadians(45),
+                        MecanumDrive.getVelocityConstraint(65, DriveConstants.MAX_ANG_VEL-Math.toRadians(0), DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(55))
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
 //                    robot.v4barScore();
@@ -150,13 +162,16 @@ public class BlueFarCycle extends LinearOpMode {
 //                    robot.closeLeftClaw();
 //                })
 
-                .waitSeconds(1)
+                .waitSeconds(0.5)
                 .setTangent(Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(10, 8,Math.toRadians(180)),
                         Math.toRadians(0),
                         MecanumDrive.getVelocityConstraint(70, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         MecanumDrive.getAccelerationConstraint(60))
-                .splineToSplineHeading(new Pose2d(41, 27,Math.toRadians(180)), Math.toRadians(45))
+                .splineToSplineHeading(new Pose2d(41, 27, Math.toRadians(180)),
+                        Math.toRadians(45),
+                        MecanumDrive.getVelocityConstraint(65, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(55))
 
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
@@ -198,15 +213,15 @@ public class BlueFarCycle extends LinearOpMode {
                 //robot.drive.followTrajectorySequence(right);
                 //depositY=33;
                 robot.drive.followTrajectorySequence(middle);
-                depositY=27;
+                depositY=28;
                 break;
             case "right":
                 robot.drive.followTrajectorySequence(middle);
-                depositY=27;
+                depositY=28;
                 break;
             case "none":
                 robot.drive.followTrajectorySequence(left);
-                depositY=27;
+                depositY=28;
                 break;
         }
         int cycles = 0;
@@ -216,19 +231,19 @@ public class BlueFarCycle extends LinearOpMode {
                     .setReversed(true)
                     .setTangent(Math.toRadians(-120))
                     .splineToSplineHeading(new Pose2d(15, 8,Math.toRadians(180)), Math.toRadians(180))
-                    .splineToSplineHeading(new Pose2d(-64.5, 11, Math.toRadians(180)),
+                    .splineToSplineHeading(new Pose2d(-62.5, 11, Math.toRadians(180)),
                             Math.toRadians(180),
                             MecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                            MecanumDrive.getAccelerationConstraint(50))
+                            MecanumDrive.getAccelerationConstraint(55))
                     .waitSeconds(0.5)
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(10, 8,Math.toRadians(180)),
+                    .splineToSplineHeading(new Pose2d(6, 8,Math.toRadians(180)),
                             Math.toRadians(0),
                             MecanumDrive.getVelocityConstraint(70, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                            MecanumDrive.getAccelerationConstraint(60))
-                    .splineToSplineHeading(new Pose2d(41, depositY,Math.toRadians(180)),
+                            MecanumDrive.getAccelerationConstraint(55))
+                    .splineToSplineHeading(new Pose2d(39, depositY,Math.toRadians(180)),
                             Math.toRadians(45),
-                            MecanumDrive.getVelocityConstraint(70, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                            MecanumDrive.getVelocityConstraint(65, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                             MecanumDrive.getAccelerationConstraint(60))
                     .resetConstraints()
                     .waitSeconds(0.5)
