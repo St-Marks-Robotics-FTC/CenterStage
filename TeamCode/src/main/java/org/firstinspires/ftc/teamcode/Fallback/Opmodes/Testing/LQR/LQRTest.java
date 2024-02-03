@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.jankbot.prototype.LQR;
+package org.firstinspires.ftc.teamcode.Fallback.Opmodes.Testing.LQR;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

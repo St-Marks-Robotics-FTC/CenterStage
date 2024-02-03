@@ -1,13 +1,9 @@
-package org.firstinspires.ftc.teamcode.jankbot.prototype.LQR;
+package org.firstinspires.ftc.teamcode.Fallback.Opmodes.Testing.LQR;
 
-import android.opengl.Matrix;
-
-import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.QRDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.ejml.simple.SimpleMatrix;
-import org.opencv.core.Mat;
 
 public class LQR {
     private static SimpleMatrix a;
