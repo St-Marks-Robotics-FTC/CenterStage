@@ -12,16 +12,17 @@ public class BozoClass {
     public DcMotorEx arm;
     public Servo clawLeft;
     public Servo clawRight;
-    public Servo autoClaw;
+    public Servo drone;
 
     private double target = 0.0;
     private int prev;
 
     public BozoClass(HardwareMap hardwareMap) {
         arm = hardwareMap.get(DcMotorEx.class, "arm");
+        //reversed on accident
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
-        //autoClaw = hardwareMap.get(Servo.class, "autoClaw");
+        drone = hardwareMap.get(Servo.class, "drone");
 
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -37,22 +38,30 @@ public class BozoClass {
         //target = 0.3;
     }
     public void closeLeft() {
-        clawLeft.setPosition(0.65);
+        clawLeft.setPosition(0.6);
     }
     public void closeRight() {
-        clawRight.setPosition(0.34);
+        clawRight.setPosition(0.66);
     }
     public void openLeft() {
-        clawLeft.setPosition(0.8);
+        clawLeft.setPosition(0.4);
     }
     public void openRight() {
-        clawRight.setPosition(0.25);
+        clawRight.setPosition(0.45);
     }
 
     public void openClaw() {
         openLeft();
         openRight();
         //target = 0.7;
+    }
+
+    public void closeDrone() {
+        drone.setPosition(0.1);
+    }
+
+    public void openDrone() {
+        drone.setPosition(0.35);
     }
     public void hang(int pos){
         arm.setTargetPosition(pos);

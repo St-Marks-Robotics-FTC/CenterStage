@@ -19,7 +19,7 @@ public class servoTest extends LinearOpMode {
 //    public static int motorPos = 0;
 //    public static double motorSpeed = 0.7;
 
-    public static String servoName = "claw1";
+    public static String servoName = "clawRight";
 
     public static Double pos = 0.5;
 

@@ -18,7 +18,7 @@ public class motorTest extends LinearOpMode {
 //    public static int motorPos = 0;
 //    public static double motorSpeed = 0.7;
 
-    public static String motorName = "arm";
+    public static String motorName = "backRight";
 
 
     @Override

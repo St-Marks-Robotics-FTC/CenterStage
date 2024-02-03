@@ -29,6 +29,7 @@ public class BozoTele extends LinearOpMode {
     public static boolean closed = false;
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
+    public static boolean droneToggle = false;
 
     public static BozoClass robot;
     public static GamepadEx pad1;
@@ -60,6 +61,7 @@ public class BozoTele extends LinearOpMode {
         ElapsedTime time = new ElapsedTime();
 
         robot.openClaw();
+        robot.closeDrone();
         waitForStart();
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -125,6 +127,12 @@ public class BozoTele extends LinearOpMode {
 //                robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
             /*}*/ else if(gamepad1.right_trigger>=0.3){
                 robot.setArm(robot.arm.getCurrentPosition()-20);
+            }
+
+            if (gamepad1.left_trigger>=0.) {
+                robot.openDrone();
+            } else {
+                robot.closeDrone();
             }
 
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
