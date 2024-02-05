@@ -94,7 +94,7 @@ public class DriveConstants {
             RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
     public static double MAX_VEL = 40;
-    public static double MAX_ACCEL = 40;
+    public static double MAX_ACCEL = 35;
     public static double MAX_ANG_VEL = Math.toRadians(128.98557618116823);
     public static double MAX_ANG_ACCEL = Math.toRadians(128.98557618116823);
 
