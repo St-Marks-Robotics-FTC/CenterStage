@@ -49,9 +49,22 @@ public class LM2class {
         clawRight.setPosition(0.45);
     }
 
+    public void scoreLeft() {
+        clawLeft.setPosition(0.5);
+    }
+    public void scoreRight() {
+        clawRight.setPosition(0.55);
+    }
+
     public void openClaw() {
         openLeft();
         openRight();
+        //target = 0.7;
+    }
+
+    public void scoreClaw() {
+        scoreLeft();
+        scoreRight();
         //target = 0.7;
     }
 
@@ -79,6 +92,10 @@ public class LM2class {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower((pos>prev) ? 0.75 : 0.5);
         prev = pos;
+    }
+
+    public int armPosition() {
+        return arm.getCurrentPosition();
     }
 
     public void zeroArm() {

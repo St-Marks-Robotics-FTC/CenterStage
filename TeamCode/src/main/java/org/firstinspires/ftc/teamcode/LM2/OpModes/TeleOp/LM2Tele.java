@@ -130,6 +130,10 @@ public class LM2Tele extends LinearOpMode {
                     level = Math.max(0, level-1);
                 }
                 robot.setArm(armPos[level]);
+
+                if (!closed && level == 0) {
+                    robot.openClaw();
+                }
             }
 //            else if (gamepad1.right_bumper) {
 //                robot.setArm(robot.arm.getCurrentPosition()+30);
@@ -155,7 +159,11 @@ public class LM2Tele extends LinearOpMode {
 
                 closed = true;
             } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
-                robot.openClaw();
+                if (robot.armPosition() > 25) {
+                    robot.scoreClaw();
+                } else {
+                    robot.openClaw();
+                }
                 leftClosed = false;
                 rightClosed = false;
 
