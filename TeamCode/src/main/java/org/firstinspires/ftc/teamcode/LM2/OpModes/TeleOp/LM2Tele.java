@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.LM2.OpModes.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
@@ -13,11 +14,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
+import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
 @Config
 @TeleOp
 public class LM2Tele extends LinearOpMode {
 
+    // Arm
     public static int armDown = 0;
     public static int armUp = 350;
     public static int armUp2 = 405; //CHANGE
@@ -28,14 +31,18 @@ public class LM2Tele extends LinearOpMode {
     public static boolean dpadupPressed = false;
     public static int[] hangPos = {970,1850}; //CHANGE
 
+    // Drone
     public static boolean droneLaunch = false;
 
+    // Claw
     public static boolean closed = false;
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
-    public static boolean droneToggle = false;
+
+
 
     public static LM2class robot;
+    MecanumDrive drive;
     public static GamepadEx pad1;
 
 
@@ -61,6 +68,7 @@ public class LM2Tele extends LinearOpMode {
 
 
         robot = new LM2class(hardwareMap);
+        drive = new MecanumDrive(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
         TriggerReader droneTrigger = new TriggerReader(
                 pad1, GamepadKeys.Trigger.LEFT_TRIGGER
@@ -78,54 +86,38 @@ public class LM2Tele extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = gamepad1.right_stick_x;
+            double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
+            double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
+
+            double y = -gamepad1.left_stick_y * tranScaleFactor;
+            double x = -gamepad1.left_stick_x * tranScaleFactor;
+            double rx = -gamepad1.right_stick_x * rotScaleFactor;
+
+
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
+            double frontLeftPower = (y + x + rx) / denominator * tranScaleFactor;
+            double backLeftPower = (y - x + rx) / denominator * tranScaleFactor;
+            double frontRightPower = (y - x - rx) / denominator * tranScaleFactor;
+            double backRightPower = (y + x - rx) / denominator * tranScaleFactor;
 
-            if (gamepad1.left_bumper) {
-                frontLeftMotor.setPower(0.3 * frontLeftPower);
-                backLeftMotor.setPower(0.3 * backLeftPower);
-                frontRightMotor.setPower(0.3 * frontRightPower);
-                backRightMotor.setPower(0.3 * backRightPower);
-            } else {
-                frontLeftMotor.setPower(frontLeftPower);
-                backLeftMotor.setPower(backLeftPower);
-                frontRightMotor.setPower(frontRightPower);
-                backRightMotor.setPower(backRightPower);
-            }
+            frontLeftMotor.setPower(frontLeftPower);
+            backLeftMotor.setPower(backLeftPower);
+            frontRightMotor.setPower(frontRightPower);
+            backRightMotor.setPower(backRightPower);
 
-            if (pad1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-                robot.setArm(robot.arm.getCurrentPosition()+10);
-            }
 
-            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
-                if(!dpadupPressed){
-                    robot.setArm(hangPos[0]);
-                    dpadupPressed = true;
-                } else {
-                    robot.hang(hangPos[1]);
-                    dpadupPressed=false;
-                }
-            }
-            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
-                robot.safeRelease(hangPos[1]);
-                //dpadupPressed = true;
-            }
+
+
             if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
                 level = Math.min(2, level+1);
                 robot.setArm(armPos[level]);
             } else if (pad1.wasJustPressed(GamepadKeys.Button.A)/* && !closed*/) {
                 if (!closed) {
-                    level = 0;
+                    level = 0; // goes down bypassing level 1 when already scored
                 } else {
                     level = Math.max(0, level-1);
                 }
@@ -133,16 +125,14 @@ public class LM2Tele extends LinearOpMode {
 
                 if (!closed && level == 0) {
                     robot.openClaw();
-                }
-            }
-//            else if (gamepad1.right_bumper) {
-//                robot.setArm(robot.arm.getCurrentPosition()+30);
-//            } else if(gamepad1.left_bumper){
-//                robot.setArm(Math.max(robot.arm.getCurrentPosition()-30,0));
-            /*}*/ else if(gamepad1.right_trigger>=0.3){
+                } // makes score claw to open claw
+            } else if (pad1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+                robot.setArm(robot.arm.getCurrentPosition()+15);
+            } else if(gamepad1.right_trigger>=0.3){
                 robot.setArm(robot.arm.getCurrentPosition()-20);
             }
 
+            // Drone
             if (droneTrigger.wasJustPressed()) {
                 droneLaunch = !droneLaunch;
             }
@@ -152,6 +142,7 @@ public class LM2Tele extends LinearOpMode {
                 robot.closeDrone();
             }
 
+            // Claw
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
                 robot.closeClaw();
                 leftClosed = true;
@@ -159,17 +150,17 @@ public class LM2Tele extends LinearOpMode {
 
                 closed = true;
             } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
-                if (robot.armPosition() > 25) {
-                    robot.scoreClaw();
+                if (level >= 1) {
+                    robot.scoreClaw(); // slightly open
                 } else {
-                    robot.openClaw();
+                    robot.openClaw(); // fully open
                 }
                 leftClosed = false;
                 rightClosed = false;
 
                 closed = false;
             }
-            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) { // left claw toggle
                 if (!leftClosed){
                     robot.closeLeft();
                     leftClosed = true;
@@ -177,8 +168,7 @@ public class LM2Tele extends LinearOpMode {
                     robot.openLeft();
                     rightClosed = false;
                 }
-            }
-            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+            } else if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) { // right claw toggle
                 if (!rightClosed){
                     robot.closeRight();
                     rightClosed = true;
@@ -187,16 +177,38 @@ public class LM2Tele extends LinearOpMode {
                     rightClosed = false;
                 }
             }
-            if (!rightClosed && !leftClosed) closed = false;
+            if (!rightClosed && !leftClosed) closed = false; // if both are open, claw is open
+            else if (rightClosed && leftClosed) closed = true; // if both are closed, claw is closed
+
+
+
+
+            // Hang
+            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+                if(!dpadupPressed){
+                    robot.setArm(hangPos[0]);
+                    dpadupPressed = true;
+                } else {
+                    robot.hang(hangPos[1]);
+                    dpadupPressed=false;
+                }
+            }
+
+
+
+
+
             pad1.readButtons();
             droneTrigger.readValue();
 
 
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
+            telemetry.addData("Arm Target", robot.arm.getTargetPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
+
+            telemetry.addData("Claw Closed", closed);
             telemetry.addData("Left Claw closed", leftClosed);
             telemetry.addData("Right Claw closed", rightClosed);
-            //telemetry.addData("Current", robot.arm.getCurrent());
             telemetry.update();
 
 

@@ -94,10 +94,6 @@ public class LM2class {
         prev = pos;
     }
 
-    public int armPosition() {
-        return arm.getCurrentPosition();
-    }
-
     public void zeroArm() {
         arm.setPower(-0.1);
     }
