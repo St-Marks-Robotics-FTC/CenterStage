@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class LM2class {
 
@@ -12,6 +13,9 @@ public class LM2class {
     public Servo clawLeft;
     public Servo clawRight;
     public Servo drone;
+
+    public TouchSensor leftSensor;
+    public TouchSensor rightSensor;
 
     private double target = 0.0;
     private int prev;
@@ -26,6 +30,9 @@ public class LM2class {
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        leftSensor = hardwareMap.get(TouchSensor.class, "leftSensor");
+        rightSensor = hardwareMap.get(TouchSensor.class, "rightSensor");
     }
 
     public boolean clawState() {
@@ -96,6 +103,13 @@ public class LM2class {
 
     public void zeroArm() {
         arm.setPower(-0.1);
+    }
+
+    public boolean detectLeft() {
+        return leftSensor.isPressed();
+    }
+    public boolean detectRight() {
+        return rightSensor.isPressed();
     }
 
 }
