@@ -27,13 +27,13 @@ public class BluePropThreshold implements VisionProcessor {
 //            new Point(240, 270)
 //    );
 static final Rect LEFT_RECTANGLE = new Rect(
-        new Point(190, 140),
-        new Point(290, 270)
+        new Point(50, 50),
+        new Point(150, 120)
 );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(500, 170),
-            new Point(600, 270)
+            new Point(400, 30),
+            new Point(470, 70)
     );
 
     @Override

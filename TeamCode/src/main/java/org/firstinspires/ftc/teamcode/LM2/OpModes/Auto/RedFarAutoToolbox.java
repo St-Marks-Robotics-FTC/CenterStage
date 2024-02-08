@@ -108,49 +108,49 @@ public class RedFarAutoToolbox extends LinearOpMode {
         }
 
         waitForStart();
-        sleep(16000);
+        sleep(12000);
         switch (loc) {
             case "none":
-                drive.followTrajectorySequence(traj11);
+                drive.followTrajectorySequence(traj13);
                 break;
             case "left":
-                drive.followTrajectorySequence(traj12);
+                drive.followTrajectorySequence(traj11);
                 break;
             case "right":
-                drive.followTrajectorySequence(traj13);
+                drive.followTrajectorySequence(traj12);
                 break;
         }
 
         robot.openLeft();
         sleep(3000);
-        robot.setArm(375); // 390
+        robot.setArm(420); // 390
 
         //outtake
         switch (loc) {
             case "none":
-                drive.followTrajectorySequence(traj21);
+                drive.followTrajectorySequence(traj23);
                 break;
             case "left":
-                drive.followTrajectorySequence(traj22);
+                drive.followTrajectorySequence(traj21);
                 break;
             case "right":
-                drive.followTrajectorySequence(traj23);
+                drive.followTrajectorySequence(traj22);
                 break;
         }
 
         //robot.openClaw();
         robot.openRight();
-        sleep(1000);
+        sleep(500);
 
         switch (loc) {
             case "none":
-                drive.followTrajectorySequence(park1);
+                drive.followTrajectorySequence(park3);
                 break;
             case "left":
-                drive.followTrajectorySequence(park2);
+                drive.followTrajectorySequence(park1);
                 break;
             case "right":
-                drive.followTrajectorySequence(park3);
+                drive.followTrajectorySequence(park2);
                 break;
         }
         robot.setArm(0); // 700

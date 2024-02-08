@@ -73,7 +73,7 @@ public class LM2class {
     }
 
     public void openDrone() {
-        drone.setPosition(0.35);
+        drone.setPosition(0.5);
     }
     public void hang(int pos){
         arm.setTargetPosition(pos);

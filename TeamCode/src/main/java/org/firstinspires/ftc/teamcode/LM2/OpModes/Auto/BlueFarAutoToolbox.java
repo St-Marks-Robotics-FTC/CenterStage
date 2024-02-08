@@ -78,7 +78,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
                 .setTangent(Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(-31, 9), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, 9, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(59, 29, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, 28.5, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .lineToLinearHeading(new Pose2d(-34, 32, Math.toRadians(-120)))
@@ -109,7 +109,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
         }
 
         waitForStart();
-        sleep(12000);
+        sleep(10000);
         switch (loc) {
             case "none":
                 drive.followTrajectorySequence(traj11);
@@ -124,7 +124,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
 
         robot.openRight();
         sleep(3000);
-        robot.setArm(380); // 390
+        robot.setArm(420); // 390
 
         //outtake
         switch (loc) {
@@ -141,8 +141,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
 
         //robot.openClaw();
         robot.openLeft();
-        sleep(1000);
-
+        sleep(500);
         switch (loc) {
             case "none":
                 drive.followTrajectorySequence(park1);

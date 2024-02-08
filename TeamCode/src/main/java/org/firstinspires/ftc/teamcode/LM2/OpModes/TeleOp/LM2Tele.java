@@ -90,8 +90,8 @@ public class LM2Tele extends LinearOpMode {
             double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
 
             double y = -gamepad1.left_stick_y * tranScaleFactor;
-            double x = -gamepad1.left_stick_x * tranScaleFactor;
-            double rx = -gamepad1.right_stick_x * rotScaleFactor;
+            double x = gamepad1.left_stick_x * tranScaleFactor;
+            double rx = gamepad1.right_stick_x * rotScaleFactor;
 
 
 
