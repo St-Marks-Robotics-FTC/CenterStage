@@ -160,7 +160,7 @@ public class AravControls extends LinearOpMode {
 
                 })
 
-                .transition( () ->  gamepad1.right_bumper && !leftClosed && !rightClosed, "DOWN") // right bumper and both sides open
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !leftClosed && !rightClosed, "DOWN") // right bumper and both sides open
 
                 .build();
 
