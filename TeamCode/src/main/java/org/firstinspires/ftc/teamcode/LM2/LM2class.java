@@ -47,20 +47,20 @@ public class LM2class {
         clawLeft.setPosition(0.6);
     }
     public void closeRight() {
-        clawRight.setPosition(0.66);
+        clawRight.setPosition(0.7);
     }
     public void openLeft() {
-        clawLeft.setPosition(0.4);
+        clawLeft.setPosition(0.48);
     }
     public void openRight() {
-        clawRight.setPosition(0.45);
+        clawRight.setPosition(0.5);
     }
 
     public void scoreLeft() {
-        clawLeft.setPosition(0.5);
+        clawLeft.setPosition(0.52);
     }
     public void scoreRight() {
-        clawRight.setPosition(0.55);
+        clawRight.setPosition(0.6);
     }
 
     public void openClaw() {
