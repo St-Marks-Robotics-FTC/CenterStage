@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.Fallback.Opmodes.TeleOp;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Fallback.FallbackClass;
 
+@Disabled
 @Config
 @TeleOp
 public class PitcrewFallback extends OpMode {
