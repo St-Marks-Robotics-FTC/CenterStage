@@ -24,7 +24,8 @@ public class AravControls extends LinearOpMode {
 
     enum LinearStates {
         DOWN,
-        UP
+        UP,
+        HANG
     }
 
 
@@ -78,10 +79,10 @@ public class AravControls extends LinearOpMode {
         robot = new LM2class(hardwareMap);
         drive = new MecanumDrive(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
-        TriggerReader leftReader = new TriggerReader(
+        TriggerReader leftTrigger = new TriggerReader(
                 pad1, GamepadKeys.Trigger.LEFT_TRIGGER
         );
-        TriggerReader rightReader = new TriggerReader(
+        TriggerReader rightTrigger = new TriggerReader(
                 pad1, GamepadKeys.Trigger.RIGHT_TRIGGER
         );
 
@@ -128,10 +129,10 @@ public class AravControls extends LinearOpMode {
                     robot.setArm(armPos[level]);
                 })
                 .loop( () -> {
-                    if (leftReader.wasJustPressed()) {
+                    if (leftTrigger.wasJustPressed()) {
                         leftClosed = !leftClosed;
                     }
-                    if (rightReader.wasJustPressed()) {
+                    if (rightTrigger.wasJustPressed()) {
                         rightClosed = !rightClosed;
                     }
 
@@ -169,6 +170,27 @@ public class AravControls extends LinearOpMode {
                 })
 
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !leftClosed && !rightClosed, LinearStates.DOWN) // right bumper and both sides open
+
+
+                .state(LinearStates.HANG)
+                .onEnter( () -> {
+                    robot.setArm(hangPos[0]);
+                    dpadupPressed = true;
+                })
+                .loop( () -> {
+                    // Hang
+                    if(pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
+                        if(!dpadupPressed){
+                            robot.setArm(hangPos[0]);
+                            dpadupPressed = true;
+                        } else {
+                            robot.hang(hangPos[1]);
+                            dpadupPressed=false;
+                        }
+                    }
+                })
+                .transition( () ->  rightTrigger.wasJustPressed(), LinearStates.DOWN) // Drop Arm
+
 
                 .build();
 
@@ -226,7 +248,7 @@ public class AravControls extends LinearOpMode {
 
 
             // Drone
-            if (pad1.wasJustPressed(GamepadKeys.Button.BACK)) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.BACK)) { // left of touchpad
                 droneLaunch = !droneLaunch;
             }
             if (droneLaunch) {
@@ -243,23 +265,18 @@ public class AravControls extends LinearOpMode {
 
 
             // Hang
-            if(pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
-                if(!dpadupPressed){
-                    robot.setArm(hangPos[0]);
-                    dpadupPressed = true;
-                } else {
-                    robot.hang(hangPos[1]);
-                    dpadupPressed=false;
-                }
+            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                machine.setState(LinearStates.HANG);
             }
 
 
 
 
 
+
             pad1.readButtons();
-            leftReader.readValue();
-            rightReader.readValue();
+            leftTrigger.readValue();
+            rightTrigger.readValue();
 
 
             telemetry.addData("State", machine.getState());
