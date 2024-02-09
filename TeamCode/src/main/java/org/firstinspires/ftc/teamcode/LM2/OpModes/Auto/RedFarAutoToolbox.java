@@ -123,7 +123,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
 
         robot.openLeft();
         sleep(3000);
-        robot.setArm(420); // 390
+        robot.setArm(380); // 390
 
         //outtake
         switch (loc) {
