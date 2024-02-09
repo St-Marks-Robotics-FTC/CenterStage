@@ -22,6 +22,12 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 @TeleOp
 public class AravControls extends LinearOpMode {
 
+    enum LinearStates {
+        DOWN,
+        UP
+    }
+
+
     // Arm
     public static int armDown = 0;
     public static int armUp = 350;
@@ -86,7 +92,7 @@ public class AravControls extends LinearOpMode {
         // MAIN State Machine
         StateMachine machine = new StateMachineBuilder()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                .state("DOWN")                 // Driving to wing to pick up
+                .state(LinearStates.DOWN)                 // Driving to wing to pick up
                 .onEnter( () -> { // Happens on Init as well
                     level = 0;
                     robot.setArm(armPos[level]);
@@ -103,9 +109,11 @@ public class AravControls extends LinearOpMode {
 
                     if (robot.detectLeft()) {
                         robot.closeLeft();
+                        leftClosed = true;
                     }
                     if (robot.detectRight()) {
                         robot.closeRight();
+                        rightClosed = true;
                     }
                 })
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) ) // Raise arm
@@ -114,7 +122,7 @@ public class AravControls extends LinearOpMode {
 
 
 
-                .state("UP")
+                .state(LinearStates.UP)
                 .onEnter( () -> {
                     level = 1;
                     robot.setArm(armPos[level]);
@@ -128,17 +136,17 @@ public class AravControls extends LinearOpMode {
                     }
 
                     if (leftClosed) {
-                        robot.scoreLeft();
+                        robot.closeLeft();
                         leftClosed = true;
                     } else {
-                        robot.openLeft();
+                        robot.scoreLeft();
                         leftClosed = false;
                     }
                     if (rightClosed) {
-                        robot.scoreRight();
+                        robot.closeRight();
                         rightClosed = true;
                     } else {
-                        robot.openRight();
+                        robot.scoreRight();
                         rightClosed = false;
                     }
 
@@ -160,7 +168,7 @@ public class AravControls extends LinearOpMode {
 
                 })
 
-                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !leftClosed && !rightClosed, "DOWN") // right bumper and both sides open
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !leftClosed && !rightClosed, LinearStates.DOWN) // right bumper and both sides open
 
                 .build();
 
@@ -254,6 +262,7 @@ public class AravControls extends LinearOpMode {
             rightReader.readValue();
 
 
+            telemetry.addData("State", machine.getState());
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Target", robot.arm.getTargetPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
