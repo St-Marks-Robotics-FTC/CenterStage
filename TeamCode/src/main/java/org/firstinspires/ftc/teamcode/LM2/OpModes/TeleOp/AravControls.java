@@ -220,7 +220,7 @@ public class AravControls extends LinearOpMode {
 
         while (opModeIsActive()) {
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
-            double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
+            double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
 
             double y = -gamepad1.left_stick_y * tranScaleFactor;
             double x = gamepad1.left_stick_x * tranScaleFactor;
