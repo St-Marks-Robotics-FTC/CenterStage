@@ -124,7 +124,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
 
         robot.openRight();
         sleep(3000);
-        robot.setArm(420); // 390
+        robot.setArm(390); // 390
 
         //outtake
         switch (loc) {

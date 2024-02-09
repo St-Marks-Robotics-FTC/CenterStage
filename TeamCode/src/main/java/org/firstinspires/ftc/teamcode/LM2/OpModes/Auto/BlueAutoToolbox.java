@@ -106,13 +106,13 @@ public class BlueAutoToolbox extends LinearOpMode {
         //robot.setArm(-700);
         sleep(1000);
         switch (loc) {
-            case "right":
+            case "none":
                 drive.followTrajectorySequence(traj11);
                 break;
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(traj12);
                 break;
-            case "none":
+            case "left":
                 drive.followTrajectorySequence(traj13);
                 break;
         }
@@ -123,13 +123,13 @@ public class BlueAutoToolbox extends LinearOpMode {
 
         //outtake
         switch (loc) {
-            case "right":
+            case "none":
                 drive.followTrajectorySequence(traj21);
                 break;
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(traj22);
                 break;
-            case "none":
+            case "left":
                 drive.followTrajectorySequence(traj23);
                 break;
         }
@@ -139,13 +139,13 @@ public class BlueAutoToolbox extends LinearOpMode {
         sleep(1000);
 
         switch (loc) {
-            case "right":
+            case "none":
                 drive.followTrajectorySequence(park1);
                 break;
-            case "left":
+            case "right":
                 drive.followTrajectorySequence(park2);
                 break;
-            case "none":
+            case "left":
                 drive.followTrajectorySequence(park3);
                 break;
         }

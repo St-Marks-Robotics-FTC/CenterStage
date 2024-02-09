@@ -88,13 +88,13 @@ public class RedFarAutoToolbox extends LinearOpMode {
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
-                .back(8)
+                .back(12)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
-                .back(8)
+                .back(12)
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
-                .back(8)
+                .back(12)
                 .build();
 
         //robot.closeClaw();
@@ -123,7 +123,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
 
         robot.openLeft();
         sleep(3000);
-        robot.setArm(380); // 390
+        robot.setArm(350); // 390
 
         //outtake
         switch (loc) {
