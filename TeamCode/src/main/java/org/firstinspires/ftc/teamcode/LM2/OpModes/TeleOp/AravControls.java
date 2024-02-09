@@ -118,6 +118,7 @@ public class AravControls extends LinearOpMode {
                     }
                 })
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) ) // Raise arm
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP), LinearStates.HANG) // Hang
 
 
 
@@ -170,6 +171,7 @@ public class AravControls extends LinearOpMode {
                 })
 
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !leftClosed && !rightClosed, LinearStates.DOWN) // right bumper and both sides open
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP), LinearStates.HANG) // Hang
 
 
                 .state(LinearStates.HANG)
@@ -265,9 +267,9 @@ public class AravControls extends LinearOpMode {
 
 
             // Hang
-            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                machine.setState(LinearStates.HANG);
-            }
+//            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+//                machine.setState(LinearStates.HANG);
+//            }
 
 
 
