@@ -38,7 +38,7 @@ public class AravControls extends LinearOpMode {
     public static int level = 0;
 
     public static boolean dpadupPressed = false;
-    public static int[] hangPos = {970,1850}; //CHANGE
+    public static int[] hangPos = {970,2200}; //CHANGE
 
     // Drone
     public static boolean droneLaunch = false;

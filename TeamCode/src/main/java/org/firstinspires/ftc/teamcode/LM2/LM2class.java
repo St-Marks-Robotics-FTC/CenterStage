@@ -87,8 +87,7 @@ public class LM2class {
         drone.setPosition(0.5);
     }
     public void hang(int pos){
-        arm.setTargetPosition(pos);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setPower(1);
     }
 
