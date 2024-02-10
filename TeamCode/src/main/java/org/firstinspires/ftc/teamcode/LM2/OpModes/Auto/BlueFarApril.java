@@ -192,7 +192,7 @@ public class BlueFarApril extends LinearOpMode {
 
         initAprilTag();
         aprilTimer.reset();
-        while (aprilTimer.milliseconds() < 3000 && opModeIsActive()) {
+        while (aprilTimer.milliseconds() < 2000 && opModeIsActive()) {
 
             targetFound = false;
             desiredTag  = null;
@@ -215,7 +215,7 @@ public class BlueFarApril extends LinearOpMode {
             // Tell the driver what we see, and what to do.
             if (targetFound) {
 
-                strafe = desiredTag.ftcPose.x + 1; // negative when left
+                strafe = desiredTag.ftcPose.x + 0.5; // negative when left
 
                 telemetry.addData("Strafe value" , strafe);
                 telemetry.addData("Strafe Correction" , 1.5 * strafe);
