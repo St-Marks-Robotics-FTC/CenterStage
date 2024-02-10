@@ -85,8 +85,9 @@ public class RedCycle extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
-                .waitSeconds(1.5)
-
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d( 50, -32, Math.toRadians(0)))
+                .waitSeconds(1)
                 .back(4)
 
                 .build();
@@ -121,7 +122,9 @@ public class RedCycle extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
-                .waitSeconds(1.5)
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d( 50, -32, Math.toRadians(0)))
+                .waitSeconds(1)
 
                 .back(4)
 
@@ -158,8 +161,9 @@ public class RedCycle extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
-                .waitSeconds(1.5)
-
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d( 50, -32, Math.toRadians(0)))
+                .waitSeconds(1)
                 .back(4)
 
                 .build();
