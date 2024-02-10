@@ -76,6 +76,10 @@ public class BlueCycle extends LinearOpMode {
 
                 .splineToSplineHeading(new Pose2d(-60, 5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(1.5)
 
 
@@ -114,7 +118,11 @@ public class BlueCycle extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(11.5, 8, Math.toRadians(-180)), Math.toRadians(-180)) // going to stack
                 .splineToSplineHeading(new Pose2d(-11.5, 8, Math.toRadians(-180)), Math.toRadians(-180))
 
-                .splineToSplineHeading(new Pose2d(-60.5, 9, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .splineToSplineHeading(new Pose2d(-60.5, 7, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
+                .waitSeconds(0.3)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(1.5)
 
@@ -155,6 +163,10 @@ public class BlueCycle extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-11.5, 8, Math.toRadians(-180)), Math.toRadians(-180))
 
                 .splineToSplineHeading(new Pose2d(-62, 7, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
+                .waitSeconds(0.3)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(1.5)
 

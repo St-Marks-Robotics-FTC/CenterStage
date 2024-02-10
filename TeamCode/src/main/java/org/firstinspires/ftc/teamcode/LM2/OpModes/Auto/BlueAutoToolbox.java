@@ -93,6 +93,7 @@ public class BlueAutoToolbox extends LinearOpMode {
                 .strafeLeft(18)
                 .build();
 
+        robot.closeDrone();
         robot.closeClaw();
         while (opModeInInit()) {
             loc = bluePropThreshold.getPropPosition();

@@ -158,11 +158,11 @@ public class RedCycle extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0)), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(51.5, -32), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d( 50, -32, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d( 51, -32, Math.toRadians(0)))
                 .waitSeconds(1)
                 .back(4)
 

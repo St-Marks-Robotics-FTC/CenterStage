@@ -89,6 +89,7 @@ public class RedAutoToolbox extends LinearOpMode {
                 .strafeRight(18)
                 .build();
 
+        robot.closeDrone();
         robot.closeClaw();
         while (opModeInInit()) {
             loc = redPropThreshold.getPropPosition();

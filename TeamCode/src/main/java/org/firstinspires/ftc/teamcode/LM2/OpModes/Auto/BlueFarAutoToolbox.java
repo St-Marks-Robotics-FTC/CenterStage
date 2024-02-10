@@ -98,7 +98,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
                 .back(8)
                 .build();
 
-        //robot.closeClaw();
+        robot.closeDrone();
         robot.closeClaw();
         while (opModeInInit()) {
             loc = blueFarPropThreshold.getPropPosition();
