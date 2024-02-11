@@ -118,7 +118,7 @@ public class BlueCycle extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(11.5, 8, Math.toRadians(-180)), Math.toRadians(-180)) // going to stack
                 .splineToSplineHeading(new Pose2d(-11.5, 8, Math.toRadians(-180)), Math.toRadians(-180))
 
-                .splineToSplineHeading(new Pose2d(-60.5, 7, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .splineToSplineHeading(new Pose2d(-60.5, 10, Math.toRadians(-180)), Math.toRadians(-180)) // stack
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(0.3)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
@@ -130,13 +130,13 @@ public class BlueCycle extends LinearOpMode {
                 // stack to board
                 .setTangent(Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(-20, 9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(11.5, 9.5, Math.toRadians(0)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
-                .splineToConstantHeading(new Vector2d(51.5, 24), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(11.5, 7, Math.toRadians(0)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(360);})
+                .splineToConstantHeading(new Vector2d(52.5, 26), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d( 50, 32, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d( 51, 34, Math.toRadians(0)))
                 .waitSeconds(1)
                 .back(4)
 
