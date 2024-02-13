@@ -38,8 +38,8 @@ public class LM2Tele extends LinearOpMode {
     public static boolean closed = false;
     public static boolean leftClosed = false;
     public static boolean rightClosed = false;
-
-
+    public static boolean prevLeftClosed = false;
+    public static boolean prevRightClosed = false;
 
     public static LM2class robot;
     MecanumDrive drive;
@@ -147,6 +147,8 @@ public class LM2Tele extends LinearOpMode {
                 robot.closeClaw();
                 leftClosed = true;
                 rightClosed = true;
+                prevLeftClosed = true;
+                prevRightClosed = true;
 
                 closed = true;
             } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
@@ -157,7 +159,6 @@ public class LM2Tele extends LinearOpMode {
                 }
                 leftClosed = false;
                 rightClosed = false;
-
                 closed = false;
             }
             if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) { // left claw toggle
@@ -176,6 +177,14 @@ public class LM2Tele extends LinearOpMode {
                     robot.openRight();
                     rightClosed = false;
                 }
+            }
+            if (prevLeftClosed) {
+                gamepad1.rumble(1.0, 0.0, 1000);
+                prevLeftClosed=false;
+            }
+            if (prevRightClosed) {
+                gamepad1.rumble(0.0, 1.0, 1000);
+                prevRightClosed=false;
             }
             if (!rightClosed && !leftClosed) closed = false; // if both are open, claw is open
             else if (rightClosed && leftClosed) closed = true; // if both are closed, claw is closed
