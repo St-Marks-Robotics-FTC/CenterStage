@@ -98,10 +98,14 @@ public class AravControls extends LinearOpMode {
                     level = 0;
                     robot.setArm(armPos[level]);
                     robot.openClaw();
+                    leftClosed = false;
+                    rightClosed = false;
                 })
                 .loop( () -> {
                     if (gamepad1.left_trigger >= 0.3) {
                         robot.openClaw();
+                        leftClosed = false;
+                        rightClosed = false;
                     } else if (gamepad1.right_trigger >= 0.3) {
                         robot.closeClaw();
                         leftClosed = true;
@@ -109,10 +113,14 @@ public class AravControls extends LinearOpMode {
                     }
 
                     if (robot.detectLeft()) {
+                        if (!leftClosed)
+                            gamepad1.rumble(1.0, 0.0, 1000);
                         robot.closeLeft();
                         leftClosed = true;
                     }
                     if (robot.detectRight()) {
+                        if (!rightClosed)
+                            gamepad1.rumble(0.0, 1.0, 1000);
                         robot.closeRight();
                         rightClosed = true;
                     }
