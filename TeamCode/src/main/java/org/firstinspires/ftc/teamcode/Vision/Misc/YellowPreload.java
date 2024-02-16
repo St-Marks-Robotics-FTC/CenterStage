@@ -34,7 +34,7 @@ public class YellowPreload implements VisionProcessor {
         Imgproc.cvtColor(frame, hsvImage, Imgproc.COLOR_RGB2HSV);
 
         // Define lower and upper bounds for yellow color in HSV
-        Scalar lowerYellow = new Scalar(20, 100, 100);
+        Scalar lowerYellow = new Scalar(5, 100, 100);
         Scalar upperYellow = new Scalar(30, 255, 255);
 
         // Threshold the HSV image to get only yellow color
