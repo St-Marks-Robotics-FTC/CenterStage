@@ -114,13 +114,13 @@ public class AravControls extends LinearOpMode {
 
                     if (robot.detectLeft()) {
                         if (!leftClosed)
-                            gamepad1.rumble(1.0, 0.0, 1000);
+                            gamepad1.rumble(0.5, 0.0, 1000);
                         robot.closeLeft();
                         leftClosed = true;
                     }
                     if (robot.detectRight()) {
                         if (!rightClosed)
-                            gamepad1.rumble(0.0, 1.0, 1000);
+                            gamepad1.rumble(0.0, 0.5, 1000);
                         robot.closeRight();
                         rightClosed = true;
                     }
@@ -230,7 +230,7 @@ public class AravControls extends LinearOpMode {
 
         while (opModeIsActive()) {
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
-            double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
+            double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 0.9;
 
             double y = -gamepad1.left_stick_y * tranScaleFactor;
             double x = gamepad1.left_stick_x * tranScaleFactor;

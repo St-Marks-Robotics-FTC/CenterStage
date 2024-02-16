@@ -66,7 +66,7 @@ public class DistanceSlowTest extends OpMode {
         frontLeftMotor.setPower(maxPow*frontLeftPower);
         backLeftMotor.setPower(maxPow*backLeftPower);
         frontRightMotor.setPower(maxPow*frontRightPower);
-        backRightMotor.setPower(maxPow*backRightPower);
+        backRightMotor.setPower(maxPow* backRightPower);
 
     }
 }

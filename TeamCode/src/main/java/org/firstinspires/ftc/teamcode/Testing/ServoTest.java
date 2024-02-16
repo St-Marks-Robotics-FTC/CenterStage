@@ -16,7 +16,7 @@ public class ServoTest extends LinearOpMode {
 //    public static int motorPos = 0;
 //    public static double motorSpeed = 0.7;
 
-    public static String servoName = "clawRight";
+    public static String servoName = "clawLeft";
 
     public static Double pos = 0.5;
 
@@ -28,9 +28,6 @@ public class ServoTest extends LinearOpMode {
         waitForStart();
 
         Servo servo = hardwareMap.get(Servo.class, servoName);
-
-
-
 
         if (isStopRequested()) return;
 
