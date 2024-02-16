@@ -10,36 +10,38 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Vision.Prop.RedPropThreshold;
+import org.firstinspires.ftc.teamcode.Vision.Misc.YellowPreload;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Disabled
-@Autonomous(name="Vision Test")
-public class CameraTest extends LinearOpMode {
+//@Disabled
+@Autonomous
+public class VisionPortalTest extends LinearOpMode {
 
     private VisionPortal portal;
-    private RedPropThreshold redPropThreshold;
+    private YellowPreload yellowPreload;
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        redPropThreshold = new RedPropThreshold();
+        yellowPreload = new YellowPreload();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(redPropThreshold)
+                .addProcessor(yellowPreload)
                 .build();
 
 
         while (opModeInInit()) {
-            telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
+            telemetry.addData("Prop Position", yellowPreload.getCentroidX());
+            telemetry.addData("Prop Position", yellowPreload.getCentroidY());
             telemetry.update();
         }
 
         waitForStart();
-        telemetry.addData("Prop Position", redPropThreshold.getPropPosition());
+        telemetry.addData("Prop Position", yellowPreload.getCentroidX());
+        telemetry.addData("Prop Position", yellowPreload.getCentroidY());
         telemetry.update();                        //Will output prop position on Driver Station Console
 
 
