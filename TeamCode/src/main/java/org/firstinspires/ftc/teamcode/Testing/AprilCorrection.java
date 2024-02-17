@@ -6,18 +6,14 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
+import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
@@ -26,15 +22,14 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Config
 @Autonomous
 public class AprilCorrection extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private static int DESIRED_TAG_ID = 2;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    private VisionPortal visionPortal;               // Used to manage the video source.
+    private static int DESIRED_TAG_ID = 5;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    private VisionPortal aprilPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
@@ -68,7 +63,7 @@ public class AprilCorrection extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         boolean targetFound     = false;    // Set to true when an AprilTag target is detected
-        double  drivePower           = 0;        // Desired forward power/speed (-1 to +1)
+        double  forwardDist           = 0;        // Desired forward power/speed (-1 to +1)
         double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
         double  turn            = 0;        // Desired turning power/speed (-1 to +1)
 
@@ -142,6 +137,7 @@ public class AprilCorrection extends LinearOpMode {
             telemetry.addData("Avg Right Value", blueFarPropThreshold.getAvergageRight());
             telemetry.update();
         }
+        portal.close();
 
         waitForStart();
 //        sleep(1000);
@@ -180,13 +176,13 @@ public class AprilCorrection extends LinearOpMode {
         // Approach the target with apriltag
         switch (loc) {
             case "none":
-                DESIRED_TAG_ID = 1;
+                DESIRED_TAG_ID = 4;
                 break;
             case "left":
-                DESIRED_TAG_ID = 2;
+                DESIRED_TAG_ID = 5;
                 break;
             case "right":
-                DESIRED_TAG_ID = 3;
+                DESIRED_TAG_ID = 6;
                 break;
         }
 
@@ -203,7 +199,7 @@ public class AprilCorrection extends LinearOpMode {
                 // Look to see if we have size info on this tag.
                 if (detection.metadata != null) {
                     //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                    if (detection.id == DESIRED_TAG_ID) {
                         // Yes, we want to use this tag.
                         targetFound = true;
                         desiredTag = detection;
@@ -215,31 +211,35 @@ public class AprilCorrection extends LinearOpMode {
             // Tell the driver what we see, and what to do.
             if (targetFound) {
 
-                strafe = desiredTag.ftcPose.x; // negative when left
+                forwardDist = desiredTag.ftcPose.range;
+                strafe = desiredTag.ftcPose.x - 1; // negative when left
 
                 telemetry.addData("Strafe value" , strafe);
-                telemetry.addData("Strafe Correction" , 1.5 * strafe);
+                telemetry.addData("Strafe Correction" , 1 * strafe);
 
                 telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
                 telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
                 telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
                 telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+                telemetry.update();
+            } else {
+                telemetry.addLine("Nothing found");
+                telemetry.addData("Looking for", desiredTag);
+                telemetry.update();
             }
 
-            telemetry.update();
         }
 
-        if (Math.signum(strafe) == -1) {
-            TrajectorySequence strafeLeft = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .strafeLeft(1.5 * strafe)
-                    .build();
-            drive.followTrajectorySequence(strafeLeft);
-        } else if (Math.signum(strafe) == 1){
+
+
+        if (strafe != 0) {
             TrajectorySequence strafeRight = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .strafeRight(1.5 * strafe)
+                    .strafeRight(1 * strafe)
                     .build();
             drive.followTrajectorySequence(strafeRight);
         }
+
+
 
 
 
@@ -248,7 +248,8 @@ public class AprilCorrection extends LinearOpMode {
         sleep(1000);
 
         TrajectorySequence forward = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .forward(5)
+                .forward(forwardDist, MecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         drive.followTrajectorySequence(forward);
 
@@ -271,9 +272,9 @@ public class AprilCorrection extends LinearOpMode {
 //        }
 
         TrajectorySequence backwards = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .back(5)
+                .back(10)
                 .build();
-        drive.followTrajectorySequence(forward);
+        drive.followTrajectorySequence(backwards);
         robot.setArm(0); // 700
 
     }
@@ -291,66 +292,13 @@ public class AprilCorrection extends LinearOpMode {
      */
     private void initAprilTag() {
 
-        // Create the AprilTag processor.
-        aprilTag = new AprilTagProcessor.Builder()
+        // Create the AprilTag processor the easy way.
+        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
 
-                // The following default settings are available to un-comment and edit as needed.
-                //.setDrawAxes(false)
-                //.setDrawCubeProjection(false)
-                //.setDrawTagOutline(true)
-                //.setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
-                //.setTagLibrary(AprilTagGameDatabase.getCenterStageTagLibrary())
-                //.setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+        // Create the vision portal the easy way.
 
-                // == CAMERA CALIBRATION ==
-                // If you do not manually specify calibration parameters, the SDK will attempt
-                // to load a predefined calibration for your camera.
-                //.setLensIntrinsics(578.272, 578.272, 402.145, 221.506)
-                // ... these parameters are fx, fy, cx, cy.
+        aprilPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
 
-                .build();
-
-        // Adjust Image Decimation to trade-off detection-range for detection-rate.
-        // eg: Some typical detection data using a Logitech C920 WebCam
-        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
-        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
-        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second (default)
-        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second (default)
-        // Note: Decimation can be changed on-the-fly to adapt during a match.
-        //aprilTag.setDecimation(3);
-
-        // Create the vision portal by using a builder.
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-
-        // Set the camera (webcam vs. built-in RC phone camera).
-        if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        } else {
-            builder.setCamera(BuiltinCameraDirection.BACK);
-        }
-
-        // Choose a camera resolution. Not all cameras support all resolutions.
-        //builder.setCameraResolution(new Size(640, 480));
-
-        // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
-        //builder.enableLiveView(true);
-
-        // Set the stream format; MJPEG uses less bandwidth than default YUY2.
-        //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
-
-        // Choose whether or not LiveView stops if no processors are enabled.
-        // If set "true", monitor shows solid orange screen if no processors enabled.
-        // If set "false", monitor shows camera view without annotations.
-        //builder.setAutoStopLiveView(false);
-
-        // Set and enable the processor.
-        builder.addProcessor(aprilTag);
-
-        // Build the Vision Portal, using the above settings.
-        visionPortal = builder.build();
-
-        // Disable or re-enable the aprilTag processor at any time.
-        //visionPortal.setProcessorEnabled(aprilTag, true);
 
     }   // end method initAprilTag()
 

@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Fallback.Roadrunner.trajectorysequence.Tra
 //@Disabled
 @Autonomous(group = "drive")
 public class PathTest extends LinearOpMode {
-    public static double DISTANCE = 2;
+    public static double DISTANCE = -2;
 
     @Override
     public void runOpMode() throws InterruptedException {
