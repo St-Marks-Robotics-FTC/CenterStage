@@ -33,7 +33,7 @@ public class AravControls extends LinearOpMode {
     public static int armDown = 0;
     public static int armUp = 350;
     public static int armUp2 = 405; //CHANGE
-    public static int armUp3 = 480; //CHANGE
+    public static int armUp3 = 490; //CHANGE
     public static int[] armPos = {armDown,armUp2,armUp3};
     public static int level = 0;
 
