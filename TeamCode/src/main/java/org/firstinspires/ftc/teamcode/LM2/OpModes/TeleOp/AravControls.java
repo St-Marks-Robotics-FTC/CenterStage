@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,9 +19,13 @@ import org.firstinspires.ftc.teamcode.Fallback.Opmodes.TeleOp.FallbackTele;
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
+import java.util.List;
+
 @Config
 @TeleOp
 public class AravControls extends LinearOpMode {
+
+    double loopTime = 0;
 
     enum LinearStates {
         DOWN,
@@ -59,6 +64,12 @@ public class AravControls extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
         // Declare our motors
         // Make sure your ID's match your configuration
@@ -215,6 +226,14 @@ public class AravControls extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            // Will run one bulk read per cycle,
+            // even as frontLeftMotor.getCurrentPosition() is called twice
+            // because the caches are being handled manually and cleared
+            // once a loop
+            for (LynxModule hub : allHubs) {
+                hub.clearBulkCache();
+            }
+
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
             double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 0.9;
 
@@ -283,6 +302,11 @@ public class AravControls extends LinearOpMode {
             telemetry.addData("Claw Closed", closed);
             telemetry.addData("Left Claw closed", leftClosed);
             telemetry.addData("Right Claw closed", rightClosed);
+
+            // in da loop
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
             telemetry.update();
 
 
