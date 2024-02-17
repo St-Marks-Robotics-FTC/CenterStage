@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 /*
  * This is a simple routine to test turning capabilities.
  */
+@Disabled
+
 
 @Config
 @Autonomous(group = "drive")

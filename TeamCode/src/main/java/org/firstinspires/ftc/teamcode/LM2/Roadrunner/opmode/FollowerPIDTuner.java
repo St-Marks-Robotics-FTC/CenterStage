@@ -23,6 +23,9 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.Trajecto
  * These coefficients can be tuned live in dashboard.
  */
 
+@Disabled
+
+
 @Config
 @Autonomous(group = "drive")
 public class FollowerPIDTuner extends LinearOpMode {
