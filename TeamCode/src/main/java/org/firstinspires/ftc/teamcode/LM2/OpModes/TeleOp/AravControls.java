@@ -204,20 +204,6 @@ public class AravControls extends LinearOpMode {
 
                 .build();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         dpadupPressed = false; // So arm doesnt flip all the way w
         droneLaunch = false;
         robot.openClaw();
