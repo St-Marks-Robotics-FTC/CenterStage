@@ -15,6 +15,7 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
+import org.firstinspires.ftc.teamcode.LM2.Linkageclass;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
 import java.util.List;
@@ -33,11 +34,6 @@ public class LinkageTele extends LinearOpMode {
 
 
     // Arm
-    public static int armDown = 0;
-    public static int armUp = 350;
-    public static int armUp2 = 405; //CHANGE
-    public static int armUp3 = 490; //CHANGE
-    public static int[] armPos = {armDown,armUp2,armUp3};
     public static int level = 0;
 
     public static boolean dpadupPressed = false;
@@ -53,7 +49,7 @@ public class LinkageTele extends LinearOpMode {
 
 
 
-    public static LM2class robot;
+    public static Linkageclass robot;
     MecanumDrive drive;
     public static GamepadEx pad1;
 
@@ -85,7 +81,7 @@ public class LinkageTele extends LinearOpMode {
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
-        robot = new LM2class(hardwareMap);
+        robot = new Linkageclass(hardwareMap);
         drive = new MecanumDrive(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
         TriggerReader leftTrigger = new TriggerReader(
@@ -105,7 +101,7 @@ public class LinkageTele extends LinearOpMode {
                 .state(LinearStates.DOWN)                 // Driving to wing to pick up
                 .onEnter( () -> { // Happens on Init as well
                     level = 0;
-                    robot.setArm(armPos[level]);
+                    robot.setArm(0);
                     robot.openClaw();
                     leftClosed = false;
                     rightClosed = false;
@@ -144,9 +140,9 @@ public class LinkageTele extends LinearOpMode {
                 .state(LinearStates.UP)
                 .onEnter( () -> {
                     level = 1;
-                    robot.setArm(armPos[level]);
                 })
                 .loop( () -> {
+                    // Claw
                     if (leftTrigger.wasJustPressed()) {
                         leftClosed = !leftClosed;
                     }
@@ -169,20 +165,44 @@ public class LinkageTele extends LinearOpMode {
                         rightClosed = false;
                     }
 
+                    // Arm adjustment
                     if (gamepad1.y) {
                         robot.setArm(robot.arm.getCurrentPosition()+15);
                     } else if(gamepad1.a){
                         robot.setArm(robot.arm.getCurrentPosition()-20);
                     }
 
+                    // Level change
                     if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
-                        if(level == 2){
-                            level = 1;
-                            robot.setArm(armPos[level]);
-                        } else if (level == 1){
-                            level = 2;
-                            robot.setArm(armPos[level]);
-                        }
+                        level = Math.min(6, level+1);
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.B)){
+                        level = Math.max(1, level-1);
+                    }
+
+                    if (level == 1) {
+                        robot.setArm(405);
+                        robot.setWrist(0.2);
+                        robot.setLinkage(0);
+                    } else if (level == 2) {
+                        robot.setArm(490);
+                        robot.setWrist(0.25);
+                        robot.setLinkage(0);
+                    }  else if (level == 3) {
+                        robot.setArm(600);
+                        robot.setWrist(0.3);
+                        robot.setLinkage(0);
+                    } else if (level == 4) {
+                        robot.setArm(700);
+                        robot.setWrist(0.35);
+                        robot.setLinkage(0.2);
+                    } else if (level == 5) {
+                        robot.setArm(800);
+                        robot.setWrist(0.4);
+                        robot.setLinkage(0.4);
+                    } else if (level == 6) {
+                        robot.setArm(900);
+                        robot.setWrist(0.45);
+                        robot.setLinkage(0.6);
                     }
 
                 })

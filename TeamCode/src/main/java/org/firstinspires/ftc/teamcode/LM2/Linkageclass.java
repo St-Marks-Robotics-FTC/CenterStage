@@ -120,17 +120,8 @@ public class Linkageclass {
         return rightSensor.isPressed();
     }
 
-    public void wristPickup() {
-        wrist.setPosition(0.5);
-    }
-
-    public void wristScore() {
-        wrist.setPosition(0.2);
-    }
-
-    public void retract() {
-        leftLinkage.setPosition(0.5);
-        rightLinkage.setPosition(0.5);
+    public void setWrist(double pos) {
+        wrist.setPosition(pos);
     }
 
     public void setLinkage(double pos) {
