@@ -97,7 +97,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
                 .back(12)
                 .build();
 
-        robot.closeDrone();
+        robot.holdDrone();
         robot.closeClaw();
         while (opModeInInit()) {
             loc = redFarPropThreshold.getPropPosition();

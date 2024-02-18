@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode.LM2.OpModes.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -81,7 +79,7 @@ public class LM2Tele extends LinearOpMode {
         dpadupPressed = false; // So arm doesnt flip all the way w
         droneLaunch = false;
         robot.openClaw();
-        robot.closeDrone();
+        robot.holdDrone();
         waitForStart();
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -139,9 +137,9 @@ public class LM2Tele extends LinearOpMode {
                 droneLaunch = !droneLaunch;
             }
             if (droneLaunch) {
-                robot.openDrone();
+                robot.shootDrone();
             } else {
-                robot.closeDrone();
+                robot.holdDrone();
             }
 
             // Claw

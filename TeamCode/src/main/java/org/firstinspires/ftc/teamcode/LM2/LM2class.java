@@ -17,7 +17,6 @@ public class LM2class {
     public TouchSensor leftSensor;
     public TouchSensor rightSensor;
 
-    private double target = 0.0;
     private int prev;
 
     public LM2class(HardwareMap hardwareMap) {
@@ -35,9 +34,6 @@ public class LM2class {
         rightSensor = hardwareMap.get(TouchSensor.class, "rightSensor");
     }
 
-    public boolean clawState() {
-        return target==0.3 ? true : false;
-    }
     public void closeClaw() {
         closeLeft();
         closeRight();
@@ -79,11 +75,11 @@ public class LM2class {
         //target = 0.7;
     }
 
-    public void closeDrone() {
+    public void holdDrone() {
         drone.setPosition(0.1);
     }
 
-    public void openDrone() {
+    public void shootDrone() {
         drone.setPosition(0.5);
     }
     public void hang(int pos){
@@ -91,21 +87,13 @@ public class LM2class {
         arm.setPower(1);
     }
 
-    public void safeRelease(int pos) {
-        arm.setTargetPosition(pos);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.7);
-    }
+
 
     public void setArm(int pos) {
         arm.setTargetPosition(pos);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower((pos>prev) ? 0.75 : 0.5);
         prev = pos;
-    }
-
-    public void zeroArm() {
-        arm.setPower(-0.1);
     }
 
     public boolean detectLeft() {

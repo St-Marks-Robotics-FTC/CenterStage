@@ -216,7 +216,7 @@ public class LinkageTele extends LinearOpMode {
         dpadupPressed = false; // So arm doesnt flip all the way w
         droneLaunch = false;
         robot.openClaw();
-        robot.closeDrone();
+        robot.holdDrone();
         waitForStart();
         machine.start();
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -265,9 +265,9 @@ public class LinkageTele extends LinearOpMode {
                 droneLaunch = !droneLaunch;
             }
             if (droneLaunch) {
-                robot.openDrone();
+                robot.shootDrone();
             } else {
-                robot.closeDrone();
+                robot.holdDrone();
             }
 
             // Claw

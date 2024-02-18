@@ -14,8 +14,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.checkerframework.checker.i18nformatter.qual.I18nFormat;
-import org.firstinspires.ftc.teamcode.Fallback.Opmodes.TeleOp.FallbackTele;
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
@@ -218,7 +216,7 @@ public class AravControls extends LinearOpMode {
         dpadupPressed = false; // So arm doesnt flip all the way w
         droneLaunch = false;
         robot.openClaw();
-        robot.closeDrone();
+        robot.holdDrone();
         waitForStart();
         machine.start();
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -267,9 +265,9 @@ public class AravControls extends LinearOpMode {
                 droneLaunch = !droneLaunch;
             }
             if (droneLaunch) {
-                robot.openDrone();
+                robot.shootDrone();
             } else {
-                robot.closeDrone();
+                robot.holdDrone();
             }
 
             // Claw

@@ -35,6 +35,8 @@ public class Linkageclass {
         leftLinkage = hardwareMap.get(Servo.class, "leftLinkage");
         rightLinkage = hardwareMap.get(Servo.class, "rightLinkage");
 
+        leftLinkage.setDirection(Servo.Direction.REVERSE);
+
         drone = hardwareMap.get(Servo.class, "drone");
 
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -89,24 +91,17 @@ public class Linkageclass {
         //target = 0.7;
     }
 
-    public void closeDrone() {
+    public void holdDrone() {
         drone.setPosition(0.1);
     }
 
-    public void openDrone() {
+    public void shootDrone() {
         drone.setPosition(0.5);
     }
     public void hang(int pos){
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setPower(1);
     }
-
-    public void safeRelease(int pos) {
-        arm.setTargetPosition(pos);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.7);
-    }
-
     public void setArm(int pos) {
         arm.setTargetPosition(pos);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -138,9 +133,9 @@ public class Linkageclass {
         rightLinkage.setPosition(0.5);
     }
 
-    public void extend() {
-        leftLinkage.setPosition(0.2);
-        rightLinkage.setPosition(0.8);
+    public void setLinkage(double pos) {
+        leftLinkage.setPosition(pos);
+        rightLinkage.setPosition(pos);
     }
 
 }
