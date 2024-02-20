@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
@@ -301,6 +302,7 @@ public class AravControls extends LinearOpMode {
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Target", robot.arm.getTargetPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
+            telemetry.addData("Arm Current", robot.arm.getCurrent(CurrentUnit.AMPS));
 
             telemetry.addData("Claw Closed", closed);
             telemetry.addData("Left Claw closed", leftClosed);
