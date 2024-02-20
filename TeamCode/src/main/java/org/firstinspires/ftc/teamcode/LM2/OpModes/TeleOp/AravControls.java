@@ -28,8 +28,11 @@ public class AravControls extends LinearOpMode {
 
     enum LinearStates {
         DOWN,
-        UP,
-        HANG
+        UP
+    }
+    enum SpecialStates {
+        HANG,
+        PUSH
     }
 
 
@@ -129,19 +132,20 @@ public class AravControls extends LinearOpMode {
 
                     if (robot.detectLeft()) {
                         if (!leftClosed)
-                            gamepad1.rumble(0.5, 0.0, 1000);
+                            gamepad1.rumble(0.25, 0, 500);
                         robot.closeLeft();
                         leftClosed = true;
                     }
                     if (robot.detectRight()) {
                         if (!rightClosed)
-                            gamepad1.rumble(0.0, 0.5, 1000);
+                            gamepad1.rumble(0.0, 0.25, 500);
                         robot.closeRight();
                         rightClosed = true;
                     }
                 })
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.B), SpecialStates.PUSH) // Let go on ground
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) ) // Raise arm
-                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP), LinearStates.HANG) // Hang
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP), SpecialStates.HANG) // Hang
 
 
 
@@ -194,10 +198,10 @@ public class AravControls extends LinearOpMode {
                 })
 
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !leftClosed && !rightClosed, LinearStates.DOWN) // right bumper and both sides open
-                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP), LinearStates.HANG) // Hang
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP), SpecialStates.HANG) // Hang
 
 
-                .state(LinearStates.HANG)
+                .state(SpecialStates.HANG)
                 .onEnter( () -> {
                     robot.setArm(hangPos[0]);
                     dpadupPressed = true;
@@ -215,6 +219,15 @@ public class AravControls extends LinearOpMode {
                     }
                 })
                 .transition( () ->  rightTrigger.wasJustPressed(), LinearStates.DOWN) // Drop Arm
+
+
+                .state(SpecialStates.PUSH)
+                .onEnter( () -> {
+                    robot.openClaw();
+                    leftClosed = false;
+                    rightClosed = false;
+                })
+                .transitionTimed(0.5, LinearStates.DOWN)
 
 
                 .build();
