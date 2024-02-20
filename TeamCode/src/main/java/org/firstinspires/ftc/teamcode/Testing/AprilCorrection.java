@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.LM2.LM2class;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.Vision.Misc.YellowPreload;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -29,7 +30,9 @@ public class AprilCorrection extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static int DESIRED_TAG_ID = 5;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    private VisionPortal aprilPortal;               // Used to manage the video source.
+
+    private VisionPortal portal;
+    private YellowPreload yellowDetector;
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
@@ -45,15 +48,16 @@ public class AprilCorrection extends LinearOpMode {
 
 
 
+
+
     FtcDashboard dashboard;
 
-    public static String loc = "left";
+    public static String loc = "middle";
     MecanumDrive drive;
     LM2class robot;
     ElapsedTime aprilTimer = new ElapsedTime();
 
-    private VisionPortal portal;
-    private BlueFarPropThreshold blueFarPropThreshold;
+
 
 
     @Override
@@ -68,110 +72,57 @@ public class AprilCorrection extends LinearOpMode {
         double  turn            = 0;        // Desired turning power/speed (-1 to +1)
 
 
-        blueFarPropThreshold = new BlueFarPropThreshold();
+        yellowDetector = new YellowPreload();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(blueFarPropThreshold)
+                .addProcessor(yellowDetector)
+                .addProcessor(aprilTag)
                 .build();
 
 
 
         drive = new MecanumDrive(hardwareMap);
-//        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new LM2class(hardwareMap);
 
         Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
 
-//        TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // left
-//                .splineToSplineHeading(new Pose2d(-31, 34, Math.toRadians(-30)), Math.toRadians(0))
-//                .build();
-//        TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-//                .splineToSplineHeading(new Pose2d(-40, 25, Math.toRadians(-10)), Math.toRadians(-10))
-//                .build();
-//        TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // right
-//                .splineTo(new Vector2d(-36, 32), Math.toRadians(-150))
-//                .build();
-//        TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
-//                //.splineTo(new Vector2d(-41, -32), Math.toRadians(150))
-//                .setTangent(Math.toRadians(180))
-//                .splineToSplineHeading(new Pose2d(-38, 34, Math.toRadians(0)), Math.toRadians(-180))
-//                .setTangent(Math.toRadians(-90))
-//                .splineToConstantHeading(new Vector2d(-31, 11), Math.toRadians(0))
-//                .splineToSplineHeading(new Pose2d(22, 11, Math.toRadians(0)), Math.toRadians(0))
-//                .splineToSplineHeading(new Pose2d(57, 37, Math.toRadians(0)), Math.toRadians(0))
-//                .build();
-//        TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
-//                .splineToConstantHeading(new Vector2d(-48, 22), Math.toRadians(-180))
-//                .setTangent(Math.toRadians(-90))
-//                .splineToConstantHeading(new Vector2d(-31, 9), Math.toRadians(0))
-//                .splineToSplineHeading(new Pose2d(22, 9, Math.toRadians(0)), Math.toRadians(0))
-//                .splineToSplineHeading(new Pose2d(57, 28.5, Math.toRadians(0)), Math.toRadians(0)) // 59
-//                .build();
-//        TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
-//                .lineToLinearHeading(new Pose2d(-34, 32, Math.toRadians(-120)))
-//                .lineToLinearHeading(new Pose2d(-34, 11, Math.toRadians(-90)))
-//                .setTangent(0)
-//                .splineTo(new Vector2d(22, 11), Math.toRadians(0))
-//                .splineToSplineHeading(new Pose2d(57, 25, Math.toRadians(0)), Math.toRadians(0))
-//                .build();
-//
-//        TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
-//                .back(8)
-//                .build();
-//        TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
-//                .back(8)
-//                .build();
-//        TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
-//                .back(8)
-//                .build();
 
-        //robot.closeClaw();
         robot.closeClaw();
         while (opModeInInit()) {
-            loc = blueFarPropThreshold.getPropPosition();
-            telemetry.addData("Prop Position", blueFarPropThreshold.getPropPosition());
-            telemetry.addData("Avg Left Value", blueFarPropThreshold.getAvergageLeft());
-            telemetry.addData("Avg Right Value", blueFarPropThreshold.getAvergageRight());
+            telemetry.addData("Yellow X", yellowDetector.getCentroidX());
+            telemetry.addData("Yellow Y", yellowDetector.getCentroidY());
+
+
+
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            telemetry.addData("# AprilTags Detected", currentDetections.size());
+
+            // Step through the list of detections and display info for each one.
+            for (AprilTagDetection detection : currentDetections) {
+                if (detection.metadata != null) {
+                    telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+                } else {
+                    telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                    telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+                }
+            }   // end for() loop
+
+            // Add "key" information to telemetry
+            telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+            telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+            telemetry.addLine("RBE = Range, Bearing & Elevation");
+
             telemetry.update();
         }
         portal.close();
 
         waitForStart();
-//        sleep(1000);
-//        switch (loc) {
-//            case "none":
-//                drive.followTrajectorySequence(traj11);
-//                break;
-//            case "left":
-//                drive.followTrajectorySequence(traj12);
-//                break;
-//            case "right":
-//                drive.followTrajectorySequence(traj13);
-//                break;
-//        }
-//
-//        robot.openRight();
-//        sleep(3000);
-//        robot.setArm(420); // 390
-//
-//        //outtake
-//        switch (loc) {
-//            case "none":
-//                drive.followTrajectorySequence(traj21);
-//                break;
-//            case "left":
-//                drive.followTrajectorySequence(traj22);
-//                break;
-//            case "right":
-//                drive.followTrajectorySequence(traj23);
-//                break;
-//        }
-
-        robot.setArm(0); // 390
-//        sleep(2000);
 
         // Approach the target with apriltag
         switch (loc) {
@@ -186,7 +137,6 @@ public class AprilCorrection extends LinearOpMode {
                 break;
         }
 
-        initAprilTag();
         aprilTimer.reset();
         while (aprilTimer.milliseconds() < 2000 && opModeIsActive()) {
 
@@ -278,29 +228,6 @@ public class AprilCorrection extends LinearOpMode {
         robot.setArm(0); // 700
 
     }
-
-
-
-
-
-
-    // Functions
-
-
-    /**
-     * Initialize the AprilTag processor.
-     */
-    private void initAprilTag() {
-
-        // Create the AprilTag processor the easy way.
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-
-        // Create the vision portal the easy way.
-
-        aprilPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
-
-
-    }   // end method initAprilTag()
 
 }
 
