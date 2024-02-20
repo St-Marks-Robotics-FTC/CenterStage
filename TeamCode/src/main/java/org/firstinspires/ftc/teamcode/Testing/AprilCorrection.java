@@ -123,109 +123,97 @@ public class AprilCorrection extends LinearOpMode {
         portal.close();
 
         waitForStart();
-
-        // Approach the target with apriltag
-        switch (loc) {
-            case "none":
-                DESIRED_TAG_ID = 4;
-                break;
-            case "left":
-                DESIRED_TAG_ID = 5;
-                break;
-            case "right":
-                DESIRED_TAG_ID = 6;
-                break;
-        }
-
-        aprilTimer.reset();
-        while (aprilTimer.milliseconds() < 2000 && opModeIsActive()) {
-
-            targetFound = false;
-            desiredTag  = null;
-
-            // Step through the list of detected tags and look for a matching tag
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-            for (AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if (detection.id == DESIRED_TAG_ID) {
-                        // Yes, we want to use this tag.
-                        targetFound = true;
-                        desiredTag = detection;
-                        break;  // don't look any further.
-                    }
-                }
-            }
-
-            // Tell the driver what we see, and what to do.
-            if (targetFound) {
-
-                forwardDist = desiredTag.ftcPose.range;
-                strafe = desiredTag.ftcPose.x - 1; // negative when left
-
-                telemetry.addData("Strafe value" , strafe);
-                telemetry.addData("Strafe Correction" , 1 * strafe);
-
-                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-                telemetry.update();
-            } else {
-                telemetry.addLine("Nothing found");
-                telemetry.addData("Looking for", desiredTag);
-                telemetry.update();
-            }
-
-        }
-
-
-
-        if (strafe != 0) {
-            TrajectorySequence strafeRight = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .strafeRight(1 * strafe)
-                    .build();
-            drive.followTrajectorySequence(strafeRight);
-        }
-
-
-
-
-
-
-        robot.setArm(420); // 390
-        sleep(1000);
-
-        TrajectorySequence forward = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .forward(forwardDist, MecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        MecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .build();
-        drive.followTrajectorySequence(forward);
-
-
-
-
-
-        robot.openClaw();
-        sleep(500);
+//
+//        // Approach the target with apriltag
 //        switch (loc) {
 //            case "none":
-//                drive.followTrajectorySequence(park1);
+//                DESIRED_TAG_ID = 4;
 //                break;
 //            case "left":
-//                drive.followTrajectorySequence(park2);
+//                DESIRED_TAG_ID = 5;
 //                break;
 //            case "right":
-//                drive.followTrajectorySequence(park3);
+//                DESIRED_TAG_ID = 6;
 //                break;
 //        }
-
-        TrajectorySequence backwards = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .back(10)
-                .build();
-        drive.followTrajectorySequence(backwards);
-        robot.setArm(0); // 700
+//
+//        aprilTimer.reset();
+//        while (aprilTimer.milliseconds() < 2000 && opModeIsActive()) {
+//
+//            targetFound = false;
+//            desiredTag  = null;
+//
+//            // Step through the list of detected tags and look for a matching tag
+//            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+//            for (AprilTagDetection detection : currentDetections) {
+//                // Look to see if we have size info on this tag.
+//                if (detection.metadata != null) {
+//                    //  Check to see if we want to track towards this tag.
+//                    if (detection.id == DESIRED_TAG_ID) {
+//                        // Yes, we want to use this tag.
+//                        targetFound = true;
+//                        desiredTag = detection;
+//                        break;  // don't look any further.
+//                    }
+//                }
+//            }
+//
+//            // Tell the driver what we see, and what to do.
+//            if (targetFound) {
+//
+//                forwardDist = desiredTag.ftcPose.range;
+//                strafe = desiredTag.ftcPose.x - 1; // negative when left
+//
+//                telemetry.addData("Strafe value" , strafe);
+//                telemetry.addData("Strafe Correction" , 1 * strafe);
+//
+//                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+//                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
+//                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
+//                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+//                telemetry.update();
+//            } else {
+//                telemetry.addLine("Nothing found");
+//                telemetry.addData("Looking for", desiredTag);
+//                telemetry.update();
+//            }
+//
+//        }
+//
+//
+//
+//        if (strafe != 0) {
+//            TrajectorySequence strafeRight = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+//                    .strafeRight(1 * strafe)
+//                    .build();
+//            drive.followTrajectorySequence(strafeRight);
+//        }
+//
+//
+//
+//
+//
+//
+//        robot.setArm(420); // 390
+//        sleep(1000);
+//
+//        TrajectorySequence forward = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+//                .forward(forwardDist, MecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                        MecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+//                .build();
+//        drive.followTrajectorySequence(forward);
+//
+//
+//
+//
+//
+//        robot.openClaw();
+//        sleep(500);
+//        TrajectorySequence backwards = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+//                .back(10)
+//                .build();
+//        drive.followTrajectorySequence(backwards);
+//        robot.setArm(0); // 700
 
     }
 
