@@ -56,20 +56,18 @@ public class HeadingLock extends LinearOpMode {
 
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontleft");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("backleft");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontright");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("backright");
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeft");
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRight");
+        DcMotor backRightMotor = hardwareMap.dcMotor.get("backRight");
 
-        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // Reverse the right side motors
-        // Reverse left motors if you are using NeveRests
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
 
@@ -94,10 +92,9 @@ public class HeadingLock extends LinearOpMode {
 
         while (opModeIsActive()) {
             previousGamepad1.copy(currentGamepad1);
-            previousGamepad2.copy(currentGamepad2);
 
             currentGamepad1.copy(gamepad1);
-            currentGamepad2.copy(gamepad2);
+
 
 
 
@@ -146,10 +143,10 @@ public class HeadingLock extends LinearOpMode {
                 double frontRightPower = (y - x - rx + power) / denominator;
                 double backRightPower = (y + x - rx + power) / denominator;
 
-                motorFrontLeft.setPower(frontLeftPower); // positive power = clockwise
-                motorBackLeft.setPower(backLeftPower);
-                motorFrontRight.setPower(frontRightPower);
-                motorBackRight.setPower(backRightPower);
+                frontLeftMotor.setPower(frontLeftPower); // positive power = clockwise
+                backLeftMotor.setPower(backLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                backRightMotor.setPower(backRightPower);
             }
             else { // normal
                 double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
@@ -158,10 +155,10 @@ public class HeadingLock extends LinearOpMode {
                 double frontRightPower = (y - x - rx) / denominator;
                 double backRightPower = (y + x - rx) / denominator;
 
-                motorFrontLeft.setPower(frontLeftPower); // positive power = clockwise
-                motorBackLeft.setPower(backLeftPower);
-                motorFrontRight.setPower(frontRightPower);
-                motorBackRight.setPower(backRightPower);
+                frontLeftMotor.setPower(frontLeftPower); // positive power = clockwise
+                backLeftMotor.setPower(backLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                backRightMotor.setPower(backRightPower);
             }
 
 
