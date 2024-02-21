@@ -27,7 +27,7 @@ public class HeadingLock extends LinearOpMode {
     private IMU imu;
 
 
-    public static double p = 0, i = 0, d = 0;
+    public static double p = 1, i = 0, d = 0;
     public static double f = 0;
 
     public static double targetAngle;
@@ -98,9 +98,30 @@ public class HeadingLock extends LinearOpMode {
 
 
 
-            double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
+            double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 0.9;
+
+            final double DEADZONE = 0.1;
+
+            double y = -gamepad1.left_stick_y;
+            double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
+
+            // Apply deadzones
+            if (Math.abs(y) < DEADZONE) {
+                y = 0.0;
+            }
+            if (Math.abs(x) < DEADZONE) {
+                x = 0.0;
+            }
+            if (Math.abs(rx) < DEADZONE) {
+                rx = 0.0;
+            }
+
+            // Apply scaling factors
+            y *= tranScaleFactor;
+            x *= tranScaleFactor;
+            rx *= rotScaleFactor;
 
 
 
@@ -112,9 +133,8 @@ public class HeadingLock extends LinearOpMode {
 
 
 
-            if (currentGamepad1.right_stick_x != 0) {
+            if (Math.abs(gamepad1.right_stick_x) < 0.1) {
                 lock = false;
-            } else if (currentGamepad1.right_stick_x == 0 && previousGamepad1.right_stick_x != 0) { // falling edge
                 lockTimer.reset();
             } else if (lockTimer.seconds() > lockTime && !lock) {
                 targetAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
