@@ -254,9 +254,27 @@ public class AravControls extends LinearOpMode {
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
             double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 0.9;
 
-            double y = -gamepad1.left_stick_y * tranScaleFactor;
-            double x = gamepad1.left_stick_x * tranScaleFactor;
-            double rx = gamepad1.right_stick_x * rotScaleFactor;
+            final double DEADZONE = 0.075;
+
+            double y = gamepad1.left_stick_y;
+            double x = gamepad1.left_stick_x;
+            double rx = gamepad1.right_stick_x;
+
+            // Apply deadzones
+            if (Math.abs(y) < DEADZONE) {
+                y = 0.0;
+            }
+            if (Math.abs(x) < DEADZONE) {
+                x = 0.0;
+            }
+            if (Math.abs(rx) < DEADZONE) {
+                rx = 0.0;
+            }
+
+            // Apply scaling factors
+            y *= tranScaleFactor;
+            x *= tranScaleFactor;
+            rx *= rotScaleFactor;
 
 
 
