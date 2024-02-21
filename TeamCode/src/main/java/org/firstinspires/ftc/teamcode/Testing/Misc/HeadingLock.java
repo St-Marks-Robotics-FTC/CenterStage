@@ -33,7 +33,7 @@ public class HeadingLock extends LinearOpMode {
     public static double targetAngle;
     double currAngle;
 
-    boolean lock = true;
+    boolean lock = false;
 
 
     ElapsedTime lockTimer = new ElapsedTime();
@@ -43,13 +43,14 @@ public class HeadingLock extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+
         // By setting these values to new Gamepad(), they will default to all
         // boolean values as false and all float values as 0
         Gamepad currentGamepad1 = new Gamepad();
-        Gamepad currentGamepad2 = new Gamepad();
 
         Gamepad previousGamepad1 = new Gamepad();
-        Gamepad previousGamepad2 = new Gamepad();
 
 
 
@@ -74,7 +75,6 @@ public class HeadingLock extends LinearOpMode {
 
         // PID
         controller = new PIDController(p, i , d);
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // TODO: adjust the names of the following hardware devices to match your configuration
         imu = hardwareMap.get(IMU.class, "imu");
