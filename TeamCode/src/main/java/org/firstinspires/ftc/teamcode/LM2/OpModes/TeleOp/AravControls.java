@@ -198,6 +198,7 @@ public class AravControls extends LinearOpMode {
                 })
 
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !leftClosed && !rightClosed, LinearStates.DOWN) // right bumper and both sides open
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.X), LinearStates.DOWN) // Drop arm to ground with pixels in claw
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP), SpecialStates.HANG) // Hang
 
 
@@ -332,6 +333,7 @@ public class AravControls extends LinearOpMode {
             telemetry.addData("Left Y", gamepad1.left_stick_y);
             telemetry.addData("Left X", gamepad1.left_stick_x);
             telemetry.addData("Right X", gamepad1.right_stick_x);
+
             telemetry.addData("State", machine.getState());
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Target", robot.arm.getTargetPosition());
