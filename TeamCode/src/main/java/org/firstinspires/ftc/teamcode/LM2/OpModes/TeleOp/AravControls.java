@@ -311,6 +311,9 @@ public class AravControls extends LinearOpMode {
             rightTrigger.readValue();
 
 
+            telemetry.addData("Left Y", gamepad1.left_stick_y);
+            telemetry.addData("Left X", gamepad1.left_stick_x);
+            telemetry.addData("Right X", gamepad1.right_stick_x);
             telemetry.addData("State", machine.getState());
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Target", robot.arm.getTargetPosition());
