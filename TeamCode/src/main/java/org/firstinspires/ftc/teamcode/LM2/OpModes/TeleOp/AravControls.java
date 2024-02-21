@@ -228,7 +228,7 @@ public class AravControls extends LinearOpMode {
                     leftClosed = false;
                     rightClosed = false;
                 })
-                .transitionTimed(0.5, LinearStates.DOWN)
+                .transitionTimed(0.75, LinearStates.DOWN)
 
 
                 .build();
