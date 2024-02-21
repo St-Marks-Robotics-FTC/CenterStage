@@ -53,6 +53,7 @@ public class AprilCorrection extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static String loc = "middle";
+    public static String tagPlacement = "middle";
     MecanumDrive drive;
     LM2class robot;
     ElapsedTime aprilTimer = new ElapsedTime();
@@ -73,6 +74,9 @@ public class AprilCorrection extends LinearOpMode {
 
 
         yellowDetector = new YellowPreload();
+
+        // Create the AprilTag processor.
+        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
@@ -86,8 +90,7 @@ public class AprilCorrection extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap);
         robot = new LM2class(hardwareMap);
 
-        Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
-        drive.setPoseEstimate(startPose);
+
 
 
         robot.closeClaw();
@@ -103,10 +106,24 @@ public class AprilCorrection extends LinearOpMode {
             // Step through the list of detections and display info for each one.
             for (AprilTagDetection detection : currentDetections) {
                 if (detection.metadata != null) {
-                    telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
-                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+                    if (detection.id == DESIRED_TAG_ID) {
+                        telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                        telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                        strafe = detection.ftcPose.x;
+
+                        telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                        telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+
+                        telemetry.addData("Tag Center X", detection.center.x);
+
+                        if (yellowDetector.getCentroidX() >= detection.center.x) {
+                            telemetry.addLine("Pixel Right of Tag!");
+                            tagPlacement = "left";
+                        } else if (yellowDetector.getCentroidX() < detection.center.x) {
+                            telemetry.addLine("Pixel Left of Tag!");
+                            tagPlacement = "right";
+                        }
+                    }
                 } else {
                     telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                     telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
@@ -114,15 +131,38 @@ public class AprilCorrection extends LinearOpMode {
             }   // end for() loop
 
             // Add "key" information to telemetry
-            telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-            telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-            telemetry.addLine("RBE = Range, Bearing & Elevation");
+//            telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+//            telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+//            telemetry.addLine("RBE = Range, Bearing & Elevation");
+
 
             telemetry.update();
         }
         portal.close();
 
         waitForStart();
+
+        robot.setArm(100);
+        Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
+        drive.setPoseEstimate(startPose);
+
+        if (strafe != 0) {
+            if (tagPlacement == "left") {
+                TrajectorySequence strafeRight = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .strafeRight(1.5 * strafe)
+                        .build();
+                drive.followTrajectorySequence(strafeRight);
+            } else if (tagPlacement == "right") {
+                TrajectorySequence strafeRight = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .strafeRight(1.5 * strafe)
+                        .build();
+                drive.followTrajectorySequence(strafeRight);
+            }
+        }
+
+
+
+
 //
 //        // Approach the target with apriltag
 //        switch (loc) {
