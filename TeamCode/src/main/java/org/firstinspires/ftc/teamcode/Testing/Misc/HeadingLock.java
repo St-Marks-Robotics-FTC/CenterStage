@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
 
 //@Disabled
 @Config
-@TeleOp
+@TeleOp(group = "Testing")
 public class HeadingLock extends LinearOpMode {
     private PIDController controller;
 

@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 @Config
-@TeleOp
+@TeleOp(group = "Testing")
 public class TwoDistanceTest extends LinearOpMode {
 
 

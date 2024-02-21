@@ -85,7 +85,7 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
-@TeleOp
+@TeleOp(group = "Testing")
 //@Disabled
 public class AprilPID extends LinearOpMode
 {

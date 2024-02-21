@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @Disabled
 
 @Config
-@TeleOp
+@TeleOp(group = "Testing")
 public class LiftTest extends LinearOpMode {
 
 //    public static int motorPos = 0;

@@ -1,17 +1,20 @@
-package org.firstinspires.ftc.teamcode.Fallback.Opmodes.Testing;
+package org.firstinspires.ftc.teamcode.Testing.General;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 
+@Disabled
 @Config
-@TeleOp
+@TeleOp(group = "General")
+
 public class ServoSync extends LinearOpMode {
 
 

@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Vision.Misc.YellowPreload;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 //@Disabled
-@Autonomous
+@Autonomous(group = "General")
 public class VisionPortalTest extends LinearOpMode {
 
     private VisionPortal portal;

@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @Config
-@TeleOp
+@TeleOp(group = "General")
 public class MotorTest extends LinearOpMode {
 
 //    public static int motorPos = 0;

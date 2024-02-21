@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 @Disabled
 @Config
-@TeleOp
+@TeleOp(group = "General")
 public class CRServoTest extends LinearOpMode {
 
 //    public static int motorPos = 0;

@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Config
-@TeleOp
+@TeleOp(group = "General")
 public class ServoTest extends LinearOpMode {
 
 //    public static int motorPos = 0;
