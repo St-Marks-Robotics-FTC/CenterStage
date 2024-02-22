@@ -187,26 +187,26 @@ public class LinkageTele extends LinearOpMode {
                     if (level == 1) {
                         robot.setArm(405);
                         robot.setWrist(0.2);
-                        robot.setLinkage(0);
+                        robot.setLinkage(0.26);
                     } else if (level == 2) {
                         robot.setArm(490);
                         robot.setWrist(0.25);
-                        robot.setLinkage(0);
+                        robot.setLinkage(0.26);
                     }  else if (level == 3) {
                         robot.setArm(600);
                         robot.setWrist(0.3);
-                        robot.setLinkage(0);
+                        robot.setLinkage(0.26);
                     } else if (level == 4) {
                         robot.setArm(700);
                         robot.setWrist(0.35);
-                        robot.setLinkage(0.2);
+                        robot.setLinkage(0.46);
                     } else if (level == 5) {
                         robot.setArm(800);
                         robot.setWrist(0.4);
-                        robot.setLinkage(0.4);
+                        robot.setLinkage(0.66);
                     } else if (level == 6) {
                         robot.setArm(900);
-                        robot.setWrist(0.45);
+                        robot.setWrist(0.65);
                         robot.setLinkage(0.6);
                     }
 

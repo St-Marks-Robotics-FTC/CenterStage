@@ -11,15 +11,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 
-@Disabled
+//@Disabled
 @Config
 @TeleOp(group = "General")
 
 public class ServoSync extends LinearOpMode {
 
 
-    public static String servo1Name = "clawLeft";
-    public static String servo2Name = "clawRight";
+    public static String servo1Name = "linkageLeft";
+    public static String servo2Name = "linkageRight";
 
     public static Double pos = 0.5;
 
@@ -33,7 +33,7 @@ public class ServoSync extends LinearOpMode {
         ServoImplEx servo1 = hardwareMap.get(ServoImplEx.class, servo1Name);
         ServoImplEx servo2 = hardwareMap.get(ServoImplEx.class, servo2Name);
 
-        servo1.setDirection(Servo.Direction.REVERSE);
+        servo2.setDirection(Servo.Direction.REVERSE);
 
 
 
