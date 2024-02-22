@@ -13,7 +13,7 @@ public class Linkageclass {
     public Servo clawLeft;
     public Servo clawRight;
 
-    public Servo wrist;
+    public Servo wrist; //0.35 for default 0 is flat
     public Servo linkageLeft;
     public Servo linkageRight;
 
@@ -60,10 +60,10 @@ public class Linkageclass {
         clawLeft.setPosition(0.45);
     }
     public void scoreLeft() {
-        clawLeft.setPosition(0.5);
+        clawLeft.setPosition(0.65);
     }
     public void closeLeft() {
-        clawLeft.setPosition(0.6);
+        clawLeft.setPosition(0.72);
     }
 
     public void openRight() {
@@ -127,6 +127,7 @@ public class Linkageclass {
     public void setLinkage(double pos) {
         linkageLeft.setPosition(pos);
         linkageRight.setPosition(pos);
+        //0.25 is retract 1.0 is extend
     }
 
 }
