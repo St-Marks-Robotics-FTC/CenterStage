@@ -14,8 +14,8 @@ public class Linkageclass {
     public Servo clawRight;
 
     public Servo wrist;
-    public Servo leftLinkage;
-    public Servo rightLinkage;
+    public Servo linkageLeft;
+    public Servo linkageRight;
 
     public Servo drone;
 
@@ -32,10 +32,10 @@ public class Linkageclass {
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
         wrist = hardwareMap.get(Servo.class, "wrist");
-        leftLinkage = hardwareMap.get(Servo.class, "leftLinkage");
-        rightLinkage = hardwareMap.get(Servo.class, "rightLinkage");
+        linkageLeft = hardwareMap.get(Servo.class, "linkageLeft");
+        linkageRight = hardwareMap.get(Servo.class, "linkageRight");
 
-        leftLinkage.setDirection(Servo.Direction.REVERSE);
+        linkageRight.setDirection(Servo.Direction.REVERSE);
 
         drone = hardwareMap.get(Servo.class, "drone");
 
@@ -125,8 +125,8 @@ public class Linkageclass {
     }
 
     public void setLinkage(double pos) {
-        leftLinkage.setPosition(pos);
-        rightLinkage.setPosition(pos);
+        linkageLeft.setPosition(pos);
+        linkageRight.setPosition(pos);
     }
 
 }
