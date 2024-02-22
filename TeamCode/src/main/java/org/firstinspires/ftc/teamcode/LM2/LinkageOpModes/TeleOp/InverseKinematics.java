@@ -71,6 +71,17 @@ public class InverseKinematics extends LinearOpMode {
             telemetry.addData("Servo Angle", servoAngle);
 
 
+            // Parallel to ground
+//            double desiredAngle = motorAngle + 90 - servoAngleOffset;
+//            double desiredPosition = map(desiredAngle, 0, 180, 0, 1);
+//            servo.setPosition(desiredPosition);
+
+            // Parallel to board
+//            double desiredAngle = motorAngle + 30 - servoAngleOffset;
+//            double desiredPosition = map(desiredAngle, 0, 180, 0, 1);
+//            servo.setPosition(desiredPosition);
+
+
 
 
             telemetry.update();
