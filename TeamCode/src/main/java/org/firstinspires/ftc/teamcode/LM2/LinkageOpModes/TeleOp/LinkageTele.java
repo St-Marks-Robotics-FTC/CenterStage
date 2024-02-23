@@ -37,6 +37,8 @@ public class LinkageTele extends LinearOpMode {
     public static int level = 0;
     public static int prevLevel = 0;
 
+    public static boolean preExtend = false;
+
     public static boolean dpadupPressed = false;
     public static int[] hangPos = {970,2200}; //CHANGE
 
@@ -127,6 +129,20 @@ public class LinkageTele extends LinearOpMode {
                         leftClosed = true;
                         rightClosed = true;
                         robot.setArm(50);
+                    }
+
+                    if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
+                        if (!preExtend) {
+                            preExtend = true;
+                            robot.setArm(100);
+                            robot.setLinkage(0.8);
+                            robot.setWrist(0.15);
+                        } else {
+                            preExtend = false;
+                            robot.setArm(50); // 29
+                            robot.retractLinkage();
+                            robot.wristPickup();
+                        }
                     }
 
                     if (robot.detectLeft()) {
