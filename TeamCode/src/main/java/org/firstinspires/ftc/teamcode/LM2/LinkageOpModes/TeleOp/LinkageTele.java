@@ -118,17 +118,16 @@ public class LinkageTele extends LinearOpMode {
                 })
                 .loop( () -> {
                     if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
-                        if (!preExtend) {
-                            preExtend = true;
-                            robot.setArm(100);
-                            robot.setLinkage(0.8);
-                            robot.setWrist(0.15);
-                        } else {
-                            preExtend = false;
-                            robot.setArm(50); // 29
-                            robot.retractLinkage();
-                            robot.wristPickup();
-                        }
+                        preExtend = true;
+                        robot.setArm(100);
+                        robot.setLinkage(0.8);
+                        robot.setWrist(0.15);
+
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
+                        preExtend = false;
+                        robot.setArm(50); // 29
+                        robot.retractLinkage();
+                        robot.wristPickup();
                     }
 
                     if (!preExtend) {
