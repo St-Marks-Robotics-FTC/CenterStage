@@ -355,6 +355,13 @@ public class LinkageTele extends LinearOpMode {
             leftTrigger.readValue();
             rightTrigger.readValue();
 
+            telemetry.addData("Left Y", -gamepad1.left_stick_y);
+            telemetry.addData("Left X", gamepad1.left_stick_x);
+            telemetry.addData("Right X", gamepad1.right_stick_x);
+
+            telemetry.addData("Drive", y);
+            telemetry.addData("Strafe", x);
+            telemetry.addData("Turn", rx);
 
             telemetry.addData("State", machine.getState());
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
