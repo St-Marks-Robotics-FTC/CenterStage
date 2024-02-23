@@ -57,23 +57,23 @@ public class Linkageclass {
     }
 
     public void openLeft() {
-        clawLeft.setPosition(0.76);
+        clawLeft.setPosition(0.45);
     } // .79
     public void scoreLeft() {
-        clawLeft.setPosition(0.65);
+        clawLeft.setPosition(0.45);
     }
     public void closeLeft() {
-        clawLeft.setPosition(0.45);
+        clawLeft.setPosition(0.76);
     }
 
     public void openRight() {
-        clawRight.setPosition(0.38);
+        clawRight.setPosition(0.3);
     } // .35
     public void scoreRight() {
-        clawRight.setPosition(0.45);
+        clawRight.setPosition(0.3);
     }
     public void closeRight() {
-        clawRight.setPosition(0.67);
+        clawRight.setPosition(0.6);
     }
 
 
