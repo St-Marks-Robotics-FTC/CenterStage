@@ -43,8 +43,8 @@ public class Linkageclass {
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        sensorLeft = hardwareMap.get(TouchSensor.class, "sensorLeft");
-        sensorRight = hardwareMap.get(TouchSensor.class, "sensorRight");
+        //sensorLeft = hardwareMap.get(TouchSensor.class, "sensorLeft");
+        //sensorRight = hardwareMap.get(TouchSensor.class, "sensorRight");
     }
 
     public boolean clawState() {
@@ -114,10 +114,12 @@ public class Linkageclass {
     }
 
     public boolean detectLeft() {
-        return sensorLeft.isPressed();
+        return false;
+        //return sensorLeft.isPressed();
     }
     public boolean detectRight() {
-        return sensorRight.isPressed();
+        return false;
+        //return sensorRight.isPressed();
     }
 
     public void setWrist(double pos) {

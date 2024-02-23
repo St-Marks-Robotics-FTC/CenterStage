@@ -97,9 +97,11 @@ public class LM2class {
     }
 
     public boolean detectLeft() {
+        //return false;
         return leftSensor.isPressed();
     }
     public boolean detectRight() {
+        //return false;
         return rightSensor.isPressed();
     }
 
