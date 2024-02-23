@@ -117,20 +117,6 @@ public class LinkageTele extends LinearOpMode {
                     rightClosed = false;
                 })
                 .loop( () -> {
-                    if (gamepad1.left_trigger >= 0.3) {
-                        robot.openClaw();
-                        leftClosed = false;
-                        rightClosed = false;
-                    } else if (rightTrigger.wasJustPressed()) {
-                        robot.setArm(25); // 29
-                        robot.openClaw();
-                    } else if (rightTrigger.wasJustReleased()) {
-                        robot.closeClaw();
-                        leftClosed = true;
-                        rightClosed = true;
-                        robot.setArm(50);
-                    }
-
                     if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
                         if (!preExtend) {
                             preExtend = true;
@@ -144,6 +130,37 @@ public class LinkageTele extends LinearOpMode {
                             robot.wristPickup();
                         }
                     }
+
+                    if (!preExtend) {
+                        if (gamepad1.left_trigger >= 0.3) {
+                            robot.openClaw();
+                            leftClosed = false;
+                            rightClosed = false;
+                        } else if (rightTrigger.wasJustPressed()) {
+                            robot.setArm(25); // 29
+                            robot.openClaw();
+                        } else if (rightTrigger.wasJustReleased()) {
+                            robot.closeClaw();
+                            leftClosed = true;
+                            rightClosed = true;
+                            robot.setArm(50);
+                        }
+                    } else {
+                        if (gamepad1.left_trigger >= 0.3) {
+                            robot.openClaw();
+                            leftClosed = false;
+                            rightClosed = false;
+                        } else if (rightTrigger.wasJustPressed()) {
+                            robot.setArm(50); // 29
+                            robot.closeClaw();
+                            robot.retractLinkage();
+                            robot.wristPickup();
+                            leftClosed = true;
+                            rightClosed = true;
+                        }
+                    }
+
+
 
                     if (robot.detectLeft()) {
                         if (!leftClosed)
