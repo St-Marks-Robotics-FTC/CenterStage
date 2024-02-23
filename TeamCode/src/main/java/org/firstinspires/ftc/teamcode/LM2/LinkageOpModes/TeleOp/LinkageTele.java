@@ -38,6 +38,7 @@ public class LinkageTele extends LinearOpMode {
     public static int prevLevel = 0;
 
     public static boolean preExtend = false;
+    public static boolean rumble = false;
 
     public static boolean dpadupPressed = false;
     public static int[] hangPos = {970,2200}; //CHANGE
@@ -115,6 +116,7 @@ public class LinkageTele extends LinearOpMode {
                     robot.wristPickup();
                     leftClosed = false;
                     rightClosed = false;
+                    rumble = false;
                 })
                 .loop( () -> {
                     if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
@@ -162,16 +164,20 @@ public class LinkageTele extends LinearOpMode {
 
 
                     if (robot.detectLeft()) {
-                        if (!leftClosed)
-                            gamepad1.rumble(0.5, 0.0, 1000);
+//                        if (!leftClosed)
+//                            gamepad1.rumble(0.5, 0.0, 500);
                         robot.closeLeft();
                         leftClosed = true;
                     }
                     if (robot.detectRight()) {
-                        if (!rightClosed)
-                            gamepad1.rumble(0.0, 0.5, 1000);
+//                        if (!rightClosed)
+//                            gamepad1.rumble(0.0, 0.5, 500);
                         robot.closeRight();
                         rightClosed = true;
+                    }
+                    if (robot.detectLeft() && robot.detectRight() && !rumble) {
+                        gamepad1.rumble(0.5, 0.5, 500);
+                        rumble = true;
                     }
                 })
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) ) // Raise arm
