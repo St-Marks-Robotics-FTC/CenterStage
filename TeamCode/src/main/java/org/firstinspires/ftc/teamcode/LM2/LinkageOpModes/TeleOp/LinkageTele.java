@@ -35,6 +35,7 @@ public class LinkageTele extends LinearOpMode {
 
     // Arm
     public static int level = 0;
+    public static int prevLevel = 0;
 
     public static boolean dpadupPressed = false;
     public static int[] hangPos = {970,2200}; //CHANGE
@@ -106,7 +107,7 @@ public class LinkageTele extends LinearOpMode {
                 .state(LinearStates.DOWN)                 // Driving to wing to pick up
                 .onEnter( () -> { // Happens on Init as well
                     level = 0;
-                    robot.setArm(29);
+                    robot.setArm(50); // 29
                     robot.openClaw();
                     robot.retractLinkage();
                     robot.wristPickup();
@@ -118,10 +119,14 @@ public class LinkageTele extends LinearOpMode {
                         robot.openClaw();
                         leftClosed = false;
                         rightClosed = false;
-                    } else if (gamepad1.right_trigger >= 0.3) {
+                    } else if (rightTrigger.wasJustPressed()) {
+                        robot.setArm(25); // 29
+                        robot.openClaw();
+                    } else if (rightTrigger.wasJustReleased()) {
                         robot.closeClaw();
                         leftClosed = true;
                         rightClosed = true;
+                        robot.setArm(50);
                     }
 
                     if (robot.detectLeft()) {
@@ -186,26 +191,28 @@ public class LinkageTele extends LinearOpMode {
                         level = Math.max(2, level-1);
                     }
 
-                    if (level == 2) {
-                        robot.setArm(405);
-                        robot.setWrist(0.35);
-                        robot.retractLinkage();
-                    } else if (level == 3) {
-                        robot.setArm(490);
-                        robot.setWrist(0.30);
-                        robot.retractLinkage();
-                    }  else if (level == 4) {
-                        robot.setArm(550);
-                        robot.setWrist(0.23);
-                        robot.setLinkage(0.6);
-                    } else if (level == 5) {
-                        robot.setArm(650);
-                        robot.setWrist(0.17);
-                        robot.setLinkage(0.7);
-                    } else if (level == 6) {
-                        robot.setArm(690);
-                        robot.setWrist(0.15);
-                        robot.setLinkage(1);
+                    if (level != prevLevel) { // level changed
+                        if (level == 2) {
+                            robot.setArm(405);
+                            robot.setWrist(0.35);
+                            robot.retractLinkage();
+                        } else if (level == 3) {
+                            robot.setArm(490);
+                            robot.setWrist(0.30);
+                            robot.retractLinkage();
+                        }  else if (level == 4) {
+                            robot.setArm(550);
+                            robot.setWrist(0.23);
+                            robot.setLinkage(0.6);
+                        } else if (level == 5) {
+                            robot.setArm(650);
+                            robot.setWrist(0.17);
+                            robot.setLinkage(0.7);
+                        } else if (level == 6) {
+                            robot.setArm(690);
+                            robot.setWrist(0.15);
+                            robot.setLinkage(1);
+                        }
                     }
 
                 })
@@ -226,7 +233,7 @@ public class LinkageTele extends LinearOpMode {
                             robot.setArm(hangPos[0]);
                             dpadupPressed = true;
                         } else {
-                            robot.hang(hangPos[1]);
+                            robot.setArm(25);
                             dpadupPressed=false;
                         }
                     }
@@ -281,6 +288,7 @@ public class LinkageTele extends LinearOpMode {
 
 
 
+            prevLevel = level;
             machine.update();
 
 
