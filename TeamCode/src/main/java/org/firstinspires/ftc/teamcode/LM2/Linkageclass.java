@@ -19,8 +19,8 @@ public class Linkageclass {
 
     public Servo drone;
 
-    public TouchSensor leftSensor;
-    public TouchSensor rightSensor;
+    public TouchSensor sensorLeft;
+    public TouchSensor sensorRight;
 
     private double target = 0.0;
     private int prev;
@@ -43,8 +43,8 @@ public class Linkageclass {
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftSensor = hardwareMap.get(TouchSensor.class, "leftSensor");
-        rightSensor = hardwareMap.get(TouchSensor.class, "rightSensor");
+        sensorLeft = hardwareMap.get(TouchSensor.class, "sensorLeft");
+        sensorRight = hardwareMap.get(TouchSensor.class, "sensorRight");
     }
 
     public boolean clawState() {
@@ -57,23 +57,23 @@ public class Linkageclass {
     }
 
     public void openLeft() {
-        clawLeft.setPosition(0.45);
+        clawLeft.setPosition(0.79);
     }
     public void scoreLeft() {
         clawLeft.setPosition(0.65);
     }
     public void closeLeft() {
-        clawLeft.setPosition(0.72);
+        clawLeft.setPosition(0.45);
     }
 
     public void openRight() {
-        clawRight.setPosition(0.44);
+        clawRight.setPosition(0.35);
     }
     public void scoreRight() {
-        clawRight.setPosition(0.36);
+        clawRight.setPosition(0.45);
     }
     public void closeRight() {
-        clawRight.setPosition(0.3);
+        clawRight.setPosition(0.67);
     }
 
 
@@ -114,20 +114,28 @@ public class Linkageclass {
     }
 
     public boolean detectLeft() {
-        return leftSensor.isPressed();
+        return sensorLeft.isPressed();
     }
     public boolean detectRight() {
-        return rightSensor.isPressed();
+        return sensorRight.isPressed();
     }
 
     public void setWrist(double pos) {
         wrist.setPosition(pos);
+    } //0.35 for default 0 is flat
+
+    public void wristPickup(){
+        setWrist(0.35);
     }
 
     public void setLinkage(double pos) {
         linkageLeft.setPosition(pos);
         linkageRight.setPosition(pos);
         //0.25 is retract 1.0 is extend
+    }
+
+    public void retractLinkage() {
+        setLinkage(0.25);
     }
 
 }

@@ -106,8 +106,10 @@ public class LinkageTele extends LinearOpMode {
                 .state(LinearStates.DOWN)                 // Driving to wing to pick up
                 .onEnter( () -> { // Happens on Init as well
                     level = 0;
-                    robot.setArm(0);
+                    robot.setArm(29);
                     robot.openClaw();
+                    robot.retractLinkage();
+                    robot.wristPickup();
                     leftClosed = false;
                     rightClosed = false;
                 })
@@ -144,7 +146,7 @@ public class LinkageTele extends LinearOpMode {
 
                 .state(LinearStates.UP)
                 .onEnter( () -> {
-                    level = 1;
+                    level = 2;
                 })
                 .loop( () -> {
                     // Claw
@@ -181,33 +183,29 @@ public class LinkageTele extends LinearOpMode {
                     if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
                         level = Math.min(6, level+1);
                     } else if (pad1.wasJustPressed(GamepadKeys.Button.B)){
-                        level = Math.max(1, level-1);
+                        level = Math.max(2, level-1);
                     }
 
-                    if (level == 1) {
+                    if (level == 2) {
                         robot.setArm(405);
-                        robot.setWrist(0.2);
-                        robot.setLinkage(0.26);
-                    } else if (level == 2) {
-                        robot.setArm(490);
-                        robot.setWrist(0.25);
-                        robot.setLinkage(0.26);
-                    }  else if (level == 3) {
-                        robot.setArm(600);
-                        robot.setWrist(0.3);
-                        robot.setLinkage(0.26);
-                    } else if (level == 4) {
-                        robot.setArm(700);
                         robot.setWrist(0.35);
-                        robot.setLinkage(0.46);
-                    } else if (level == 5) {
-                        robot.setArm(800);
-                        robot.setWrist(0.4);
-                        robot.setLinkage(0.66);
-                    } else if (level == 6) {
-                        robot.setArm(900);
-                        robot.setWrist(0.65);
+                        robot.retractLinkage();
+                    } else if (level == 3) {
+                        robot.setArm(490);
+                        robot.setWrist(0.30);
+                        robot.retractLinkage();
+                    }  else if (level == 4) {
+                        robot.setArm(550);
+                        robot.setWrist(0.23);
                         robot.setLinkage(0.6);
+                    } else if (level == 5) {
+                        robot.setArm(650);
+                        robot.setWrist(0.17);
+                        robot.setLinkage(0.7);
+                    } else if (level == 6) {
+                        robot.setArm(690);
+                        robot.setWrist(0.15);
+                        robot.setLinkage(1);
                     }
 
                 })
@@ -243,8 +241,9 @@ public class LinkageTele extends LinearOpMode {
         robot.openClaw();
         robot.holdDrone();
         waitForStart();
-        machine.start();
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        machine.start();
+
 
         if (isStopRequested()) return;
 
