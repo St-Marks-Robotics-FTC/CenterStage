@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
+import org.firstinspires.ftc.teamcode.LM2.Linkageclass;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
@@ -26,7 +27,7 @@ public class RedFarLinkage extends LinearOpMode {
 
     public static String loc = "left";
     MecanumDrive drive;
-    LM2class robot;
+    Linkageclass robot;
 
     private VisionPortal portal;
     private RedFarPropThreshold redFarPropThreshold;
@@ -50,7 +51,7 @@ public class RedFarLinkage extends LinearOpMode {
 
         drive = new MecanumDrive(hardwareMap);
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
-        robot = new LM2class(hardwareMap);
+        robot = new Linkageclass(hardwareMap);
 
         Pose2d startPose = new Pose2d(-38, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
@@ -110,6 +111,11 @@ public class RedFarLinkage extends LinearOpMode {
         }
 
         waitForStart();
+
+        robot.setArm(45);
+        robot.retractLinkage();
+        robot.wristPickup();
+
         sleep(12000);
         switch (loc) {
             case "none":
