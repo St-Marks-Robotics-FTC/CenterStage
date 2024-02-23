@@ -41,7 +41,7 @@ public class LinkageTele extends LinearOpMode {
     public static boolean rumble = false;
 
     public static boolean dpadupPressed = false;
-    public static int[] hangPos = {970,2200}; //CHANGE
+    public static int[] hangPos = {940,2200}; //CHANGE
 
     // Drone
     public static boolean droneLaunch = false;
