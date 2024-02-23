@@ -43,8 +43,8 @@ public class Linkageclass {
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        sensorLeft = hardwareMap.get(TouchSensor.class, "sensorLeft");
-        sensorRight = hardwareMap.get(TouchSensor.class, "sensorRight");
+        //sensorLeft = hardwareMap.get(TouchSensor.class, "sensorLeft");
+        //sensorRight = hardwareMap.get(TouchSensor.class, "sensorRight");
     }
 
     public boolean clawState() {
@@ -57,23 +57,23 @@ public class Linkageclass {
     }
 
     public void openLeft() {
-        clawLeft.setPosition(0.76);
+        clawLeft.setPosition(0.45);
     } // .79
     public void scoreLeft() {
-        clawLeft.setPosition(0.65);
+        clawLeft.setPosition(0.45);
     }
     public void closeLeft() {
-        clawLeft.setPosition(0.45);
+        clawLeft.setPosition(0.76);
     }
 
     public void openRight() {
-        clawRight.setPosition(0.38);
+        clawRight.setPosition(0.3);
     } // .35
     public void scoreRight() {
-        clawRight.setPosition(0.45);
+        clawRight.setPosition(0.3);
     }
     public void closeRight() {
-        clawRight.setPosition(0.67);
+        clawRight.setPosition(0.6);
     }
 
 
@@ -114,10 +114,12 @@ public class Linkageclass {
     }
 
     public boolean detectLeft() {
-        return sensorLeft.isPressed();
+        return false;
+        //return sensorLeft.isPressed();
     }
     public boolean detectRight() {
-        return sensorRight.isPressed();
+        return false;
+        //return sensorRight.isPressed();
     }
 
     public void setWrist(double pos) {
