@@ -57,8 +57,8 @@ public class Linkageclass {
     }
 
     public void openLeft() {
-        clawLeft.setPosition(0.79);
-    }
+        clawLeft.setPosition(0.76);
+    } // .79
     public void scoreLeft() {
         clawLeft.setPosition(0.65);
     }
@@ -67,8 +67,8 @@ public class Linkageclass {
     }
 
     public void openRight() {
-        clawRight.setPosition(0.35);
-    }
+        clawRight.setPosition(0.38);
+    } // .35
     public void scoreRight() {
         clawRight.setPosition(0.45);
     }
