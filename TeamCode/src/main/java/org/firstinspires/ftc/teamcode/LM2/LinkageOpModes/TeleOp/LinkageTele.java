@@ -363,14 +363,21 @@ public class LinkageTele extends LinearOpMode {
             telemetry.addData("Strafe", x);
             telemetry.addData("Turn", rx);
 
+            telemetry.addLine("-----------------------------------");
+
             telemetry.addData("State", machine.getState());
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Target", robot.arm.getTargetPosition());
             telemetry.addData("Arm Power", robot.arm.getPower());
 
+            telemetry.addLine("-----------------------------------");
+
             telemetry.addData("Claw Closed", closed);
             telemetry.addData("Left Claw closed", leftClosed);
             telemetry.addData("Right Claw closed", rightClosed);
+
+            telemetry.addData("Left sensor", robot.detectLeft());
+            telemetry.addData("Right sensor", robot.detectRight());
 
             // in da loop
             double loop = System.nanoTime();
