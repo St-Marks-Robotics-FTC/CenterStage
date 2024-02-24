@@ -120,7 +120,7 @@ public class RedCloseLinkage extends LinearOpMode {
 
         //robot.openAutoClaw();
         robot.openLeft();
-        sleep(3000);
+        sleep(150);
         robot.setArm(365); // 390
 
         //outtake
@@ -138,7 +138,7 @@ public class RedCloseLinkage extends LinearOpMode {
 
         robot.openClaw();
 
-        sleep(1000);
+        sleep(150);
         // 700
 
         switch (loc) {
