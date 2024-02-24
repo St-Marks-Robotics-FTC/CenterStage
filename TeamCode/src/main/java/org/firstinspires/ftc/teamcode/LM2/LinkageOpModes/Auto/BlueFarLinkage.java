@@ -72,6 +72,7 @@ public class BlueFarLinkage extends LinearOpMode {
                 .setTangent(Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(-31, 9.5), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, 9.5, Math.toRadians(0)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(390);})
                 .splineToSplineHeading(new Pose2d(53, 34, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
@@ -79,6 +80,7 @@ public class BlueFarLinkage extends LinearOpMode {
                 .setTangent(Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(-31, 8), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, 8, Math.toRadians(0)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(390);})
                 .splineToSplineHeading(new Pose2d(54, 27.5, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
@@ -86,7 +88,8 @@ public class BlueFarLinkage extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-34, 11, Math.toRadians(0)))
                 .setTangent(0)
                 .splineTo(new Vector2d(22, 11), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(53, 23, Math.toRadians(0)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(390);})
+                .splineToSplineHeading(new Pose2d(53, 21.2, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
@@ -110,7 +113,7 @@ public class BlueFarLinkage extends LinearOpMode {
         }
 
         waitForStart();
-        robot.setArm(80);
+        robot.setArm(20);
         robot.retractLinkage();
         robot.wristPickup();
 
@@ -129,7 +132,7 @@ public class BlueFarLinkage extends LinearOpMode {
 
         robot.openRight();
         sleep(3000);
-        robot.setArm(390); // 390
+        robot.setArm(95); // 390
 
         //outtake
         switch (loc) {
