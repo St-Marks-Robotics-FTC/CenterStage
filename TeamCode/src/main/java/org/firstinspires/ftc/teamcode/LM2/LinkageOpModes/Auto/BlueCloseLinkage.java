@@ -59,7 +59,7 @@ public class BlueCloseLinkage extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(11, 29, Math.toRadians(-160)), Math.toRadians(-130))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(15, 32, Math.toRadians(-90)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(15, 31, Math.toRadians(-90)), Math.toRadians(-90))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // left
                 .splineToSplineHeading(new Pose2d(14, 34, Math.toRadians(-45)), Math.toRadians(-90))
@@ -79,18 +79,18 @@ public class BlueCloseLinkage extends LinearOpMode {
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
 //                .strafeRight(18)
-                .back(4)
+                .back(5)
                 .strafeLeft(28)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
 //                .strafeRight(22)
-                .back(4)
+                .back(5)
                 .strafeLeft(22)
 
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
 //                .strafeRight(28)
-                .back(4)
+                .back(5)
                 .strafeLeft(18)
                 .build();
 
@@ -105,7 +105,7 @@ public class BlueCloseLinkage extends LinearOpMode {
         }
 
         waitForStart();
-        robot.setArm(35);
+        robot.setArm(55);
         robot.retractLinkage();
         robot.wristPickup();
         //robot.setArm(-700);
