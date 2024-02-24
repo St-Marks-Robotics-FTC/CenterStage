@@ -56,7 +56,7 @@ public class RedCycleLinkage extends LinearOpMode {
 //        drive.setPoseEstimate(new Pose2d(12, -60, Math.toRadians(90)));
         robot = new Linkageclass(hardwareMap);
 
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
