@@ -6,14 +6,11 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.LM2.LM2class;
 import org.firstinspires.ftc.teamcode.LM2.Linkageclass;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.TrajectorySequence;
@@ -24,7 +21,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Autonomous
-public class BlueCycleLinkage extends LinearOpMode {
+public class BlueTrussCycleLinkage extends LinearOpMode {
 
     FtcDashboard dashboard;
 
@@ -67,39 +64,31 @@ public class BlueCycleLinkage extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
 
 
-                .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(52, 24, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(15))
+                .splineToSplineHeading(new Pose2d(52, 30, Math.toRadians(0)), Math.toRadians(15))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
-                .waitSeconds(1.5)
-
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(80);})
-                .setTangent(Math.toRadians(-180))
-                .splineToSplineHeading(new Pose2d(11.5, 8, Math.toRadians(-180)), Math.toRadians(-180)) // going to stack
-                .splineToSplineHeading(new Pose2d(-11.5, 8, Math.toRadians(-180)), Math.toRadians(-180))
-
-                .splineToSplineHeading(new Pose2d(-60, 5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .waitSeconds(1)
+                .back(4)
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(70);})
+                .setTangent(Math.toRadians(135))
+                .splineToSplineHeading(new Pose2d(15, 60,Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-24, 60,Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-61, 36, Math.toRadians(180)), Math.toRadians(180))//stack
+                //close claw
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(0.3)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
                 .waitSeconds(0.3)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
-                .waitSeconds(1.5)
-
-
-                // stack to board
+                .waitSeconds(1)
                 .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-20, 9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(11.5, 9.5, Math.toRadians(0)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(390);})
-                .splineToConstantHeading(new Vector2d(52.5, 26), Math.toRadians(0))
-
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.scoreRight();})
+                .splineToSplineHeading(new Pose2d(-24, 60,Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(15, 60,Math.toRadians(180)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
+                .splineToSplineHeading(new Pose2d(51.5, 42,Math.toRadians(0)), Math.toRadians(-45))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score pixels
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d( 53, 32, Math.toRadians(0)))
-                .waitSeconds(1)
-
-                .back(4)
 
                 .build();
 
@@ -107,88 +96,69 @@ public class BlueCycleLinkage extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(15, 31, Math.toRadians(-90)), Math.toRadians(-90))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openRight();}) // score purple Preload
-                .waitSeconds(1.5)
+                .waitSeconds(1)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
 
 
                 .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(51.5, 32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(51.5, 36, Math.toRadians(0)), Math.toRadians(30))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
-                .waitSeconds(1.5)
-
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(80);})
-                .setTangent(Math.toRadians(-160))
-                .splineToSplineHeading(new Pose2d(11.5, 8, Math.toRadians(-180)), Math.toRadians(-180)) // going to stack
-                .splineToSplineHeading(new Pose2d(-11.5, 8, Math.toRadians(-180)), Math.toRadians(-180))
-
-                .splineToSplineHeading(new Pose2d(-60.5, 10, Math.toRadians(-180)), Math.toRadians(-180)) // stack
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
-                .waitSeconds(0.3)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
-                .waitSeconds(0.3)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
-                .waitSeconds(1.5)
-
-
-                // stack to board
-                .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-20, 9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(11.5, 7, Math.toRadians(0)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(360);})
-                .splineToConstantHeading(new Vector2d(52.5, 26), Math.toRadians(0))
-
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
-                .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d( 51, 34, Math.toRadians(0)))
                 .waitSeconds(1)
                 .back(4)
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(70);})
+                .setTangent(Math.toRadians(135))
+                .splineToSplineHeading(new Pose2d(15, 60,Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-24, 60,Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-61, 36, Math.toRadians(180)), Math.toRadians(180))//stack
+                //close claw
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-24, 60,Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(15, 60,Math.toRadians(180)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
+                .splineToSplineHeading(new Pose2d(51.5, 42,Math.toRadians(0)), Math.toRadians(-45))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score pixels
+                .waitSeconds(1)
 
                 .build();
 
         TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(15, 35, Math.toRadians(-45)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(23, 42, Math.toRadians(-90)), Math.toRadians(-90))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.openRight();}) // score purple Preload
-                .waitSeconds(1.5)
+                .waitSeconds(1)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
-
-
-                .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(51.5, 37, Math.toRadians(0)), Math.toRadians(0))
-
-
+                .setTangent(Math.toRadians(15))
+                //.splineToConstantHeading(new Vector2d(11, 32), Math.toRadians(-80))
+                .splineToSplineHeading(new Pose2d(51.5, 42, Math.toRadians(0)), Math.toRadians(-30))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
-                .waitSeconds(1.5)
-
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(70);})
-                .setTangent(Math.toRadians(-140))
-                .splineToSplineHeading(new Pose2d(11.5, 8, Math.toRadians(-180)), Math.toRadians(-180)) // going to stack
-                .splineToSplineHeading(new Pose2d(-11.5, 8, Math.toRadians(-180)), Math.toRadians(-180))
-
-                .splineToSplineHeading(new Pose2d(-62, 7, Math.toRadians(-180)), Math.toRadians(-180)) // stack
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
-                .waitSeconds(0.3)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
-                .waitSeconds(0.3)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
-                .waitSeconds(1.5)
-
-
-                // stack to board
-                .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-20, 9, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(11.5, 9, Math.toRadians(0)), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
-                .splineToConstantHeading(new Vector2d(51.5, 24), Math.toRadians(0))
-
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d( 50, 32, Math.toRadians(0)))
-                .waitSeconds(1)
-
                 .back(4)
-
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {robot.setArm(70);})
+                .setTangent(Math.toRadians(135))
+                .splineToSplineHeading(new Pose2d(15, 60,Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-24, 60,Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-61, 36, Math.toRadians(180)), Math.toRadians(180))//stack
+                //close claw
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-24, 60,Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(15, 60,Math.toRadians(180)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(350);})
+                .splineToSplineHeading(new Pose2d(51.5, 38,Math.toRadians(0)), Math.toRadians(-45))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score pixels
+                .waitSeconds(1)
                 .build();
 
 
