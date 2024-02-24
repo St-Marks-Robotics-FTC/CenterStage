@@ -101,7 +101,7 @@ public class RedCloseLinkage extends LinearOpMode {
         }
 
         waitForStart();
-        robot.setArm(80);
+        robot.setArm(125);
         robot.retractLinkage();
         robot.wristPickup();
         //robot.setArm(-700);
@@ -152,7 +152,8 @@ public class RedCloseLinkage extends LinearOpMode {
                 drive.followTrajectorySequence(park3);
                 break;
         }
-        robot.setArm(25);
+        robot.setLinkage(0.25);
+        robot.setArm(5);
         sleep(2000);
 
     }

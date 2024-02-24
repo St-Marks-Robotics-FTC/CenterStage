@@ -59,22 +59,22 @@ public class BlueCloseLinkage extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(11, 29, Math.toRadians(-160)), Math.toRadians(-130))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(15, 31, Math.toRadians(-90)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(15, 32, Math.toRadians(-90)), Math.toRadians(-90))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // left
-                .splineToSplineHeading(new Pose2d(16, 34, Math.toRadians(-45)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(14, 34, Math.toRadians(-45)), Math.toRadians(-90))
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
                 .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(53, 24, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(51, 24, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(53, 32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(51, 32, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .setTangent(Math.toRadians(45))
-                .splineToSplineHeading(new Pose2d(53, 37, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(51, 37, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
@@ -105,7 +105,7 @@ public class BlueCloseLinkage extends LinearOpMode {
         }
 
         waitForStart();
-        robot.setArm(80);
+        robot.setArm(35);
         robot.retractLinkage();
         robot.wristPickup();
         //robot.setArm(-700);
@@ -154,7 +154,8 @@ public class BlueCloseLinkage extends LinearOpMode {
                 drive.followTrajectorySequence(park3);
                 break;
         }
-        robot.setArm(25);
+        robot.setLinkage(0.25);
+        robot.setArm(5);
         sleep(2000);
 
     }

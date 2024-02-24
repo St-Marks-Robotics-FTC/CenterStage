@@ -164,6 +164,7 @@ public class RedFarLinkage extends LinearOpMode {
                 drive.followTrajectorySequence(park2);
                 break;
         }
+        robot.setLinkage(0.25);
         robot.setArm(5);
         sleep(2000);
     }
