@@ -60,7 +60,7 @@ public class BlueFarLinkage extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-31, 34, Math.toRadians(-30)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(-40, 26.5, Math.toRadians(-10)), Math.toRadians(-10))
+                .splineToSplineHeading(new Pose2d(-40, 27, Math.toRadians(-10)), Math.toRadians(-10))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // right
                 .splineTo(new Vector2d(-38, 32), Math.toRadians(-130))
