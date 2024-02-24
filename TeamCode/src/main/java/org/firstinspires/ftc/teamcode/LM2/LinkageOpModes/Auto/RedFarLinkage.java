@@ -60,7 +60,7 @@ public class RedFarLinkage extends LinearOpMode {
                 .splineTo(new Vector2d(-36.6, -32), Math.toRadians(130))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(-40, -25, Math.toRadians(10)), Math.toRadians(10))
+                .splineToSplineHeading(new Pose2d(-42, -25, Math.toRadians(10)), Math.toRadians(10))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // right
                 .splineToSplineHeading(new Pose2d(-31, -34, Math.toRadians(30)), Math.toRadians(0))
@@ -71,13 +71,15 @@ public class RedFarLinkage extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-34, -9, Math.toRadians(0)))
                 .setTangent(0)
                 .splineTo(new Vector2d(22, -9), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(55, -22, Math.toRadians(0)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(390);})
+                .splineToSplineHeading(new Pose2d(55.5, -22, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .splineToConstantHeading(new Vector2d(-48, -22), Math.toRadians(180))
                 .setTangent(Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-31, -9), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, -9, Math.toRadians(0)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(390);})
                 .splineToSplineHeading(new Pose2d(55, -27.5, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
@@ -87,7 +89,8 @@ public class RedFarLinkage extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-31, -9.5), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, -9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(51, -31.5, Math.toRadians(0)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(390);})
+                .splineToSplineHeading(new Pose2d(54, -33, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
@@ -112,7 +115,7 @@ public class RedFarLinkage extends LinearOpMode {
 
         waitForStart();
 
-        robot.setArm(45);
+        robot.setArm(20);
         robot.retractLinkage();
         robot.wristPickup();
 
@@ -131,7 +134,7 @@ public class RedFarLinkage extends LinearOpMode {
 
         robot.openLeft();
         sleep(3000);
-        robot.setArm(390); // 390
+        robot.setArm(95); // 390
 
         //outtake
         switch (loc) {
@@ -161,7 +164,7 @@ public class RedFarLinkage extends LinearOpMode {
                 drive.followTrajectorySequence(park2);
                 break;
         }
-        robot.setArm(0); // 700
-
+        robot.setArm(5);
+        sleep(2000);
     }
 }

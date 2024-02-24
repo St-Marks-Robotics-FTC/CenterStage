@@ -110,7 +110,7 @@ public class BlueFarLinkage extends LinearOpMode {
         }
 
         waitForStart();
-        robot.setArm(45);
+        robot.setArm(80);
         robot.retractLinkage();
         robot.wristPickup();
 
@@ -158,7 +158,7 @@ public class BlueFarLinkage extends LinearOpMode {
                 drive.followTrajectorySequence(park3);
                 break;
         }
-        robot.setArm(0); // 700
-
+        robot.setArm(25);
+        sleep(2000);
     }
 }

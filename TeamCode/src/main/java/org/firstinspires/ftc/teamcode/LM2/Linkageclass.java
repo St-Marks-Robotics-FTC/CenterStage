@@ -43,8 +43,8 @@ public class Linkageclass {
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //sensorLeft = hardwareMap.get(TouchSensor.class, "sensorLeft");
-        //sensorRight = hardwareMap.get(TouchSensor.class, "sensorRight");
+        sensorLeft = hardwareMap.get(TouchSensor.class, "sensorLeft");
+        sensorRight = hardwareMap.get(TouchSensor.class, "sensorRight");
     }
 
     public boolean clawState() {
@@ -57,23 +57,23 @@ public class Linkageclass {
     }
 
     public void openLeft() {
-        clawLeft.setPosition(0.45);
+        clawLeft.setPosition(0.76);
     } // .79
     public void scoreLeft() {
-        clawLeft.setPosition(0.45);
+        clawLeft.setPosition(0.65);
     }
     public void closeLeft() {
-        clawLeft.setPosition(0.76);
+        clawLeft.setPosition(0.45);
     }
 
     public void openRight() {
         clawRight.setPosition(0.3);
     } // .35
     public void scoreRight() {
-        clawRight.setPosition(0.3);
+        clawRight.setPosition(0.43);
     }
     public void closeRight() {
-        clawRight.setPosition(0.6);
+        clawRight.setPosition(0.63);
     }
 
 
@@ -100,7 +100,7 @@ public class Linkageclass {
     }
     public void hang(int pos){
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        arm.setPower(1);
+        arm.setPower(-1);
     }
     public void setArm(int pos) {
         arm.setTargetPosition(pos);
@@ -114,20 +114,20 @@ public class Linkageclass {
     }
 
     public boolean detectLeft() {
-        return false;
-        //return sensorLeft.isPressed();
+//        return false;
+        return sensorLeft.isPressed();
     }
     public boolean detectRight() {
-        return false;
-        //return sensorRight.isPressed();
+//        return false;
+        return sensorRight.isPressed();
     }
 
     public void setWrist(double pos) {
         wrist.setPosition(pos);
-    } //0.35 for default 0 is flat
+    } //0.9 for pickup 0 is flat
 
     public void wristPickup(){
-        setWrist(0.35);
+        setWrist(0.90);
     }
 
     public void setLinkage(double pos) {
@@ -137,7 +137,7 @@ public class Linkageclass {
     }
 
     public void retractLinkage() {
-        setLinkage(0.25);
+        setLinkage(0.34);
     }
 
 }

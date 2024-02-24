@@ -105,7 +105,7 @@ public class BlueCloseLinkage extends LinearOpMode {
         }
 
         waitForStart();
-        robot.setArm(45);
+        robot.setArm(80);
         robot.retractLinkage();
         robot.wristPickup();
         //robot.setArm(-700);
@@ -154,7 +154,8 @@ public class BlueCloseLinkage extends LinearOpMode {
                 drive.followTrajectorySequence(park3);
                 break;
         }
-        robot.setArm(0);
+        robot.setArm(25);
+        sleep(2000);
 
     }
 }
