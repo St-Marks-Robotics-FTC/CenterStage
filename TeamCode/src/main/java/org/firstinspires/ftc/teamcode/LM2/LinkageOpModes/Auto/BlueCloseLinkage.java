@@ -124,7 +124,7 @@ public class BlueCloseLinkage extends LinearOpMode {
 
         robot.openRight();
         sleep(3000);
-        robot.setArm(350); // 390
+        robot.setArm(370); // 390
 
         //outtake
         switch (loc) {

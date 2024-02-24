@@ -73,7 +73,7 @@ public class BlueFarLinkage extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-31, 9.5), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, 9.5, Math.toRadians(0)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {robot.setArm(390);})
-                .splineToSplineHeading(new Pose2d(53, 34, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53, 33.8, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .splineToConstantHeading(new Vector2d(-48, 22), Math.toRadians(-180))
