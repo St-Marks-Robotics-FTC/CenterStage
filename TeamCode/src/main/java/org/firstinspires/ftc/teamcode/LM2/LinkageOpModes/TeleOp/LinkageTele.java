@@ -165,13 +165,13 @@ public class LinkageTele extends LinearOpMode {
 
                     if (robot.detectLeft()) {
                         if (!leftClosed)
-                            gamepad1.rumble(0.5, 0.0, 500);
+                            gamepad1.rumble(1, 1, 500);
                         robot.closeLeft();
                         leftClosed = true;
                     }
                     if (robot.detectRight()) {
                         if (!rightClosed)
-                            gamepad1.rumble(0.0, 0.5, 500);
+                            gamepad1.rumble(0.0, 1, 500);
                         robot.closeRight();
                         rightClosed = true;
                     }
