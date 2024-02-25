@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Disabled
+//@Disabled
 @Config
 @Autonomous
 public class BlueAutoToolbox extends LinearOpMode {
@@ -81,18 +81,18 @@ public class BlueAutoToolbox extends LinearOpMode {
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
 //                .strafeRight(18)
                 .back(4)
-                .strafeLeft(28)
+                .strafeLeft(29)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
 //                .strafeRight(22)
                 .back(4)
-                .strafeLeft(22)
+                .strafeLeft(23)
 
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
 //                .strafeRight(28)
                 .back(4)
-                .strafeLeft(18)
+                .strafeLeft(20)
                 .build();
 
         robot.holdDrone();

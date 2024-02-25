@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
 import java.util.List;
 
+@Disabled
 @Config
 @TeleOp
 public class LinkageTele extends LinearOpMode {
@@ -308,8 +310,8 @@ public class LinkageTele extends LinearOpMode {
                 hub.clearBulkCache();
             }
 
-            double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
-            double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 0.9;
+            double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 0.8;
+            double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 0.7;
 
             double y = -gamepad1.left_stick_y * tranScaleFactor;
             double x = gamepad1.left_stick_x * tranScaleFactor;

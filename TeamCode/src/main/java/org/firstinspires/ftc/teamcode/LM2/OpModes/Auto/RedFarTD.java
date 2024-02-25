@@ -8,22 +8,21 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
 import org.firstinspires.ftc.teamcode.LM2.LM2class;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 //@Disabled
 
 @Config
 @Autonomous
-public class RedFarAutoToolbox extends LinearOpMode {
+public class RedFarTD extends LinearOpMode {
 
     FtcDashboard dashboard;
 
@@ -68,28 +67,43 @@ public class RedFarAutoToolbox extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-31, -34, Math.toRadians(30)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
+
+
+                .splineToSplineHeading(new Pose2d(-33, -45, Math.toRadians(90)), Math.toRadians(-90))
+//                .setTangent(Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-33, -54, Math.toRadians(180)), Math.toRadians(-90))
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(30, -54, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(51, -31.5, Math.toRadians(180)), Math.toRadians(0))
+
                 //.splineTo(new Vector2d(-41, -32), Math.toRadians(150))
-                .lineToLinearHeading(new Pose2d(-34, -32, Math.toRadians(120)))
-                .lineToLinearHeading(new Pose2d(-34, -9, Math.toRadians(0)))
-                .setTangent(0)
-                .splineTo(new Vector2d(22, -9), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(55, -22, Math.toRadians(0)), Math.toRadians(0))
+//                .lineToLinearHeading(new Pose2d(-34, -32, Math.toRadians(120)))
+//                .lineToLinearHeading(new Pose2d(-34, -9, Math.toRadians(0)))
+//                .setTangent(0)
+//                .splineTo(new Vector2d(22, -9), Math.toRadians(0))
+//                .splineToSplineHeading(new Pose2d(55, -22, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
-                .splineToConstantHeading(new Vector2d(-48, -22), Math.toRadians(180))
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-31, -9), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(22, -9, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(55, -27.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-43, -55, Math.toRadians(0)), Math.toRadians(-90))
+//                .splineToConstantHeading(new Vector2d(-48, -22), Math.toRadians(180))
+//                .setTangent(Math.toRadians(90))
+//                .splineToConstantHeading(new Vector2d(-31, -9), Math.toRadians(0))
+//                .splineToSplineHeading(new Pose2d(22, -9, Math.toRadians(0)), Math.toRadians(0))
+//                .splineToSplineHeading(new Pose2d(55, -27.5, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 //.splineTo(new Vector2d(-41, -32), Math.toRadians(150))
-                .setTangent(Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(-180))
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-31, -9.5), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(22, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-43, -55, Math.toRadians(0)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(30, -55, Math.toRadians(0)), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(51, -31.5, Math.toRadians(0)), Math.toRadians(0))
+
+
+//                .setTangent(Math.toRadians(180))
+//                .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(-180))
+//                .setTangent(Math.toRadians(90))
+//                .splineToConstantHeading(new Vector2d(-31, -9.5), Math.toRadians(0))
+//                .splineToSplineHeading(new Pose2d(22, -9.5, Math.toRadians(0)), Math.toRadians(0))
+//                .splineToSplineHeading(new Pose2d(51, -31.5, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
@@ -113,7 +127,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
         }
 
         waitForStart();
-        sleep(12000);
+//        sleep(12000);
         switch (loc) {
             case "none":
                 drive.followTrajectorySequence(traj13);
@@ -128,7 +142,7 @@ public class RedFarAutoToolbox extends LinearOpMode {
 
         robot.openLeft();
         sleep(3000);
-        robot.setArm(390); // 390
+        robot.setArm(75); // 390
 
         //outtake
         switch (loc) {

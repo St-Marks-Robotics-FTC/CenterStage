@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
 import java.util.List;
 
-@Disabled
+//@Disabled
 @Config
 @TeleOp
 public class AravControls extends LinearOpMode {
@@ -39,7 +39,7 @@ public class AravControls extends LinearOpMode {
 
 
     // Arm
-    public static int armDown = 0;
+    public static int armDown = 10;
     public static int armUp = 350;
     public static int armUp2 = 405; //CHANGE
     public static int armUp3 = 490; //CHANGE

@@ -21,7 +21,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 
 @Config
-@Disabled
+//@Disabled
 @Autonomous
 public class RedCycle extends LinearOpMode {
 
@@ -76,15 +76,15 @@ public class RedCycle extends LinearOpMode {
                 .setTangent(Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
 
-                .splineToSplineHeading(new Pose2d(-58, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .splineToSplineHeading(new Pose2d(-60, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(1.5)
 
 
                 // stack to board
                 .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-20, -8   , Math.toRadians(0.0001)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(16, -8, Math.toRadians(0.0001)), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
@@ -104,7 +104,7 @@ public class RedCycle extends LinearOpMode {
 
 
                 .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(52, -32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(52, -30, Math.toRadians(0)), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload
                 .waitSeconds(1.5)
@@ -113,15 +113,15 @@ public class RedCycle extends LinearOpMode {
                 .setTangent(Math.toRadians(160))
                 .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
 
-                .splineToSplineHeading(new Pose2d(-58, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .splineToSplineHeading(new Pose2d(-60, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(1.5)
 
 
                 // stack to board
                 .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0.0001)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0.0001)), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(51.5, -31), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();})
@@ -152,15 +152,15 @@ public class RedCycle extends LinearOpMode {
                 .setTangent(Math.toRadians(140))
                 .splineToSplineHeading(new Pose2d(11.5, -9.5, Math.toRadians(-180)), Math.toRadians(-180))
 
-                .splineToSplineHeading(new Pose2d(-58, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
+                .splineToSplineHeading(new Pose2d(-60, -9.5, Math.toRadians(-180)), Math.toRadians(-180)) // stack
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.closeClaw();})
                 .waitSeconds(1.5)
 
 
                 // stack to board
                 .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-20, -9.5, Math.toRadians(0.0001)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(16, -9.5, Math.toRadians(0.0001)), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(51.5, -32), Math.toRadians(0))
 
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.openClaw();}) // score yellow Preload

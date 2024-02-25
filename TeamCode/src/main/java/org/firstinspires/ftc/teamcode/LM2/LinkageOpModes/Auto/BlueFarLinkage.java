@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.Trajecto
 import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
+@Disabled
 @Config
 @Autonomous
 public class BlueFarLinkage extends LinearOpMode {
@@ -60,7 +62,7 @@ public class BlueFarLinkage extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-31, 34, Math.toRadians(-30)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(-41, 26.5, Math.toRadians(-8)), Math.toRadians(-8))
+                .splineToSplineHeading(new Pose2d(-41, 25.5, Math.toRadians(-8)), Math.toRadians(-8))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // right
                 .splineTo(new Vector2d(-38, 32), Math.toRadians(-130))

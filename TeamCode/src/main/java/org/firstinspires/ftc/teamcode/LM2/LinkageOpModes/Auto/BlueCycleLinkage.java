@@ -22,6 +22,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 //@Disabled
 
+@Disabled
 @Config
 @Autonomous
 public class BlueCycleLinkage extends LinearOpMode {

@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.Vision.Prop.RedPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Disabled
-
 @Config
 @Autonomous
 public class RedCycleLinkage extends LinearOpMode {
