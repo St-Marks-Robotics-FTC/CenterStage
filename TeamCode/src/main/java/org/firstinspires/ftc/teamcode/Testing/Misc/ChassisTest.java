@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.Testing.Misc;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(group = "Testing")
-public class DrivetrainTest extends OpMode {
+public class ChassisTest extends OpMode {
 
 
     DistanceSensor leftDist;
@@ -18,6 +18,11 @@ public class DrivetrainTest extends OpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
+
+    DcMotor intake;
+    DcMotor slide;
+
+    Servo intakeAngle;
 
     @Override
     public void init() {
@@ -33,8 +38,19 @@ public class DrivetrainTest extends OpMode {
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-//        leftDist = hardwareMap.get(DistanceSensor.class, "leftDist");
-//        rightDist = hardwareMap.get(DistanceSensor.class, "rightDist");
+
+        intake = hardwareMap.dcMotor.get("intake");
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        slide = hardwareMap.dcMotor.get("slide");
+
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        intakeAngle = hardwareMap.servo.get("pivot");
+
     }
 
     @Override
@@ -62,5 +78,32 @@ public class DrivetrainTest extends OpMode {
         frontRightMotor.setPower(maxPow*frontRightPower);
         backRightMotor.setPower(maxPow* backRightPower);
 
+        intake.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+
+
+
+        if (gamepad1.a) {
+            intakeAngle.setPosition(0.51);
+        } else if (gamepad1.y) {
+            intakeAngle.setPosition(0.2);
+        } else if (gamepad1.b) {
+            intakeAngle.setPosition(0.445);
+        }
+
+        if (gamepad1.dpad_up) {
+            slide.setTargetPosition(485);
+            slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slide.setPower(1);
+        } else if (gamepad1.dpad_down) {
+            slide.setTargetPosition(5);
+            slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slide.setPower(1);
+        }
+
+
+
+
+        telemetry.addData("slide pos", slide.getCurrentPosition());
+        telemetry.update();
     }
 }
