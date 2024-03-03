@@ -1,15 +1,27 @@
 package org.firstinspires.ftc.teamcode.Testing.Misc;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 @TeleOp(group = "Testing")
 public class ChassisTest extends OpMode {
 
+
+    String pivot = "ground";
+
+    GamepadEx pad1;
+    TriggerReader leftTrigger;
+    TriggerReader rightTrigger;
 
     DistanceSensor leftDist;
     DistanceSensor rightDist;
@@ -19,7 +31,7 @@ public class ChassisTest extends OpMode {
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
 
-    DcMotor intake;
+    DcMotorEx intake;
     DcMotor slide;
 
     Servo intakeAngle;
@@ -39,7 +51,7 @@ public class ChassisTest extends OpMode {
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        intake = hardwareMap.dcMotor.get("intake");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         slide = hardwareMap.dcMotor.get("slide");
@@ -50,6 +62,14 @@ public class ChassisTest extends OpMode {
         slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intakeAngle = hardwareMap.servo.get("pivot");
+
+        pad1 = new GamepadEx(gamepad1);
+        leftTrigger = new TriggerReader(
+                pad1, GamepadKeys.Trigger.LEFT_TRIGGER
+        );
+        rightTrigger = new TriggerReader(
+                pad1, GamepadKeys.Trigger.RIGHT_TRIGGER
+        );
 
     }
 
@@ -78,17 +98,29 @@ public class ChassisTest extends OpMode {
         frontRightMotor.setPower(maxPow*frontRightPower);
         backRightMotor.setPower(maxPow* backRightPower);
 
-        intake.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+//        intake.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
 
 
-
-        if (gamepad1.a) {
-            intakeAngle.setPosition(0.51);
-        } else if (gamepad1.y) {
-            intakeAngle.setPosition(0.2);
-        } else if (gamepad1.b) {
-            intakeAngle.setPosition(0.445);
+        if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
+            pivot = "ground";
+        } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
+            pivot = "stack";
         }
+
+        if (gamepad1.right_trigger > 0.1) {
+            intake.setPower(gamepad1.right_trigger);
+            if (pivot.equals("ground")) {
+                intakeAngle.setPosition(0.78);
+            } else if (pivot.equals("stack")) {
+                intakeAngle.setPosition(0.73);
+            }
+        } else if (gamepad1.left_trigger > 0.1) {
+            intake.setPower(-gamepad1.left_trigger);
+        } else {
+            intake.setPower(0);
+            intakeAngle.setPosition(0.23); // up
+        }
+
 
         if (gamepad1.dpad_up) {
             slide.setTargetPosition(485);
@@ -102,8 +134,13 @@ public class ChassisTest extends OpMode {
 
 
 
+        pad1.readButtons();
+        leftTrigger.readValue();
+        rightTrigger.readValue();
+
 
         telemetry.addData("slide pos", slide.getCurrentPosition());
+        telemetry.addData("Intake Current", intake.getCurrent(CurrentUnit.AMPS));
         telemetry.update();
     }
 }
