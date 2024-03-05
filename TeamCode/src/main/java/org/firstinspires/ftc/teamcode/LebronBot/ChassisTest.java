@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Testing.Misc;
+package org.firstinspires.ftc.teamcode.LebronBot;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 public class ChassisTest extends OpMode {
 
 
+    boolean up = false;
     String pivot = "ground";
 
     GamepadEx pad1;
@@ -52,6 +53,7 @@ public class ChassisTest extends OpMode {
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         slide = hardwareMap.dcMotor.get("slide");
@@ -110,7 +112,7 @@ public class ChassisTest extends OpMode {
         if (gamepad1.right_trigger > 0.1) {
             intake.setPower(gamepad1.right_trigger);
             if (pivot.equals("ground")) {
-                intakeAngle.setPosition(0.78);
+                intakeAngle.setPosition(0.8);
             } else if (pivot.equals("stack")) {
                 intakeAngle.setPosition(0.73);
             }
@@ -118,15 +120,18 @@ public class ChassisTest extends OpMode {
             intake.setPower(-gamepad1.left_trigger);
         } else {
             intake.setPower(0);
-            intakeAngle.setPosition(0.23); // up
+            intakeAngle.setPosition(0.45); // up
         }
 
 
-        if (gamepad1.dpad_up) {
+        if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+            up = !up;
+        }
+        if (up) {
             slide.setTargetPosition(485);
             slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slide.setPower(1);
-        } else if (gamepad1.dpad_down) {
+        } else {
             slide.setTargetPosition(5);
             slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slide.setPower(1);
@@ -140,6 +145,7 @@ public class ChassisTest extends OpMode {
 
 
         telemetry.addData("slide pos", slide.getCurrentPosition());
+        telemetry.addData("Intake Power", intake.getPower());
         telemetry.addData("Intake Current", intake.getCurrent(CurrentUnit.AMPS));
         telemetry.update();
     }
