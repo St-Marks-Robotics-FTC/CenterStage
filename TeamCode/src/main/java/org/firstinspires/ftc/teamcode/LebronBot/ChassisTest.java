@@ -104,7 +104,7 @@ public class ChassisTest extends LinearOpMode {
                 .transition(() -> gamepad1.right_trigger < 0.05) // Picks up when trigger let go
                 .state(LinearStates.UP)
                 .onEnter(() -> {
-                    intake.setPower(0.45);
+                    intake.setPower(0.75);
                     intakeAngle.setPosition(0.45); // up
                 })
                 .transitionTimed(1, LinearStates.IDLE)
