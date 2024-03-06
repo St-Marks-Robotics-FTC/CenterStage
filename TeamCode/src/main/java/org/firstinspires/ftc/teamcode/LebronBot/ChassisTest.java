@@ -35,6 +35,7 @@ public class ChassisTest extends LinearOpMode {
         OUTTAKE
     }
 
+    int level = 1;
     boolean up = false;
     String pivot = "ground";
 
@@ -156,6 +157,25 @@ public class ChassisTest extends LinearOpMode {
                 .transitionTimed(1.5)
 
                 .state(LinearStates.IDLE2)
+                .loop(() -> {
+                    if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                        level = Math.min(level + 1, 4);
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                        level = Math.max(level - 1, 1);
+                    }
+
+                    if (level == 1) {
+                        slide.setTargetPosition(200);
+                        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        slide.setPower(1);
+                    } else if (level == 2) {
+                        slide.setTargetPosition(300);
+                    } else if (level == 3) {
+                        slide.setTargetPosition(400);
+                    } else if (level == 4) {
+                        slide.setTargetPosition(480);
+                    }
+                })
                 .transition(() -> gamepad1.x) // score
 
                 .state(LinearStates.SCORE)
@@ -167,6 +187,10 @@ public class ChassisTest extends LinearOpMode {
                 .state(LinearStates.RESET)
                 .onEnter(() -> {
                     arm.setPosition(0.09); // Reset arm
+
+                    slide.setTargetPosition(5);
+                    slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    slide.setPower(1);
                 })
                 .transitionTimed(1.5, LinearStates.IDLE)
 
@@ -226,18 +250,18 @@ public class ChassisTest extends LinearOpMode {
 
             machine.update();
 
-            if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                up = !up;
-            }
-            if (up) {
-                slide.setTargetPosition(485);
-                slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slide.setPower(1);
-            } else {
-                slide.setTargetPosition(5);
-                slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slide.setPower(1);
-            }
+//            if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+//                up = !up;
+//            }
+//            if (up) {
+//                slide.setTargetPosition(485);
+//                slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                slide.setPower(1);
+//            } else {
+//                slide.setTargetPosition(5);
+//                slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                slide.setPower(1);
+//            }
 
             pad1.readButtons();
             leftTrigger.readValue();
