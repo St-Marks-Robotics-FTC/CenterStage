@@ -23,6 +23,15 @@ public class ChassisTest extends LinearOpMode {
         IDLE,
         DOWN,
         UP,
+        TRANSFER,
+        GRAB,
+        DROP,
+        FLIP,
+        IDLE2,
+        SCORE,
+        RESET,
+
+
         OUTTAKE
     }
 
@@ -46,6 +55,9 @@ public class ChassisTest extends LinearOpMode {
 
     Servo intakeAngle;
 
+    Servo arm;
+    Servo claw;
+
     @Override
     public void runOpMode() throws InterruptedException {
         frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
@@ -64,6 +76,9 @@ public class ChassisTest extends LinearOpMode {
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        claw = hardwareMap.servo.get("claw");
+        arm = hardwareMap.servo.get("arm");
 
         slide = hardwareMap.dcMotor.get("slide");
 
@@ -86,11 +101,15 @@ public class ChassisTest extends LinearOpMode {
         StateMachine machine = new StateMachineBuilder()
                 .state(LinearStates.IDLE)                 // Driving to wing to pick up
                 .onEnter(() -> { // Happens on Init as well
+                    arm.setPosition(0.09); // Reset arm
+                    claw.setPosition(1); // ready for pixel
+
                     intake.setPower(0);
-                    intakeAngle.setPosition(0.45); // up
+                    intakeAngle.setPosition(0.6); // Idle pos
                 })
                 .transition(() -> gamepad1.right_trigger >= 0.05) // Drop intake down
                 .transition(() -> gamepad1.left_trigger >= 0.05, LinearStates.OUTTAKE) // Drop intake down
+                .transition(() -> gamepad1.y, LinearStates.TRANSFER) // Transfer pixel
 
                 .state(LinearStates.DOWN)
                 .loop(() -> {
@@ -105,12 +124,56 @@ public class ChassisTest extends LinearOpMode {
                 .state(LinearStates.UP)
                 .onEnter(() -> {
                     intake.setPower(0.75);
-                    intakeAngle.setPosition(0.45); // up
+                    intakeAngle.setPosition(0.6); // 0.45
                 })
-                .transitionTimed(1, LinearStates.IDLE)
+                .transitionTimed(0.75, LinearStates.IDLE) // Residual power
+                .transition(() -> gamepad1.y, LinearStates.TRANSFER) // Transfer pixel
+
+                .state(LinearStates.TRANSFER)
+                .onEnter(() -> {
+                    intake.setPower(0);
+                    intakeAngle.setPosition(0.25); // transfer position
+                })
+                .transitionTimed(1.5)
+
+                .state(LinearStates.GRAB)
+                .onEnter(() -> {
+                    claw.setPosition(0.3); // grab pixel
+                })
+                .transitionTimed(1.5)
+
+                .state(LinearStates.DROP)
+                .onEnter(() -> {
+                    intakeAngle.setPosition(0.65); // flip away from claw
+                })
+
+                .state(LinearStates.FLIP)
+                .onEnter(() -> {
+//                    intakeAngle.setPosition(0.65); // moves to idle pos
+                    arm.setPosition(0.8); // score pos
+                })
+                .transitionTimed(1.5)
+
+                .state(LinearStates.IDLE2)
+                .transition(() -> gamepad1.x)
+
+                .state(LinearStates.SCORE)
+                .onEnter(() -> {
+                    claw.setPosition(1); // let go
+                })
+                .transitionTimed(1.5)
+
+                .state(LinearStates.RESET)
+                .onEnter(() -> {
+                    arm.setPosition(0.09); // Reset arm
+                })
+                .transitionTimed(1.5, LinearStates.IDLE)
 
 
-                .state(LinearStates.OUTTAKE)
+
+
+                ///////////////////////////////////////////////////////
+                .state(LinearStates.OUTTAKE) // shoot out pixels, failsafe
                 .onEnter(() -> {
                     intake.setPower(-0.5);
                     intakeAngle.setPosition(0.8);
