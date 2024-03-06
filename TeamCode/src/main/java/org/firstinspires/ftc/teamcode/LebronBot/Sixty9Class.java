@@ -124,7 +124,8 @@ public class Sixty9Class {
     public void intakeTransfer() {
         intakePivot.setPosition(intakeTransfer);
     }
-
+    //0.09 armPivot transfer
+    //0.8 armPivot score
     // V4Bar
     public void v4bTransfer() {
         setV4bar(v4bPickup);
