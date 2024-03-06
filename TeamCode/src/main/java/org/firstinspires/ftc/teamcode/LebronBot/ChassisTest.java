@@ -242,12 +242,14 @@ public class ChassisTest extends LinearOpMode {
             frontRightMotor.setPower(maxPow * frontRightPower);
             backRightMotor.setPower(maxPow * backRightPower);
 
+            // Intake height mode
             if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
                 pivot = "ground";
             } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
                 pivot = "stack";
             }
 
+            // Slide level adjust
             if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
                 level = Math.min(level + 1, 4);
             } else if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
