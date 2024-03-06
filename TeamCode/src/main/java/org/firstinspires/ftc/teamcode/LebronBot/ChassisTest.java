@@ -158,22 +158,22 @@ public class ChassisTest extends LinearOpMode {
 
                 .state(LinearStates.IDLE2)
                 .loop(() -> {
-                    if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                        level = Math.min(level + 1, 4);
-                    } else if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                        level = Math.max(level - 1, 1);
-                    }
-
                     if (level == 1) {
                         slide.setTargetPosition(200);
                         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         slide.setPower(1);
                     } else if (level == 2) {
                         slide.setTargetPosition(300);
+                        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        slide.setPower(1);
                     } else if (level == 3) {
                         slide.setTargetPosition(400);
+                        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        slide.setPower(1);
                     } else if (level == 4) {
                         slide.setTargetPosition(480);
+                        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        slide.setPower(1);
                     }
                 })
                 .transition(() -> gamepad1.x) // score
@@ -246,6 +246,12 @@ public class ChassisTest extends LinearOpMode {
                 pivot = "ground";
             } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
                 pivot = "stack";
+            }
+
+            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                level = Math.min(level + 1, 4);
+            } else if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                level = Math.max(level - 1, 1);
             }
 
             machine.update();
