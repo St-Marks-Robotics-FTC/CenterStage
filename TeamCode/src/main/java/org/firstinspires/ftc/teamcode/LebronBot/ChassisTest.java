@@ -146,6 +146,7 @@ public class ChassisTest extends LinearOpMode {
                 .onEnter(() -> {
                     intakeAngle.setPosition(0.65); // flip away from claw
                 })
+                .transitionTimed(1.5)
 
                 .state(LinearStates.FLIP)
                 .onEnter(() -> {
@@ -155,7 +156,7 @@ public class ChassisTest extends LinearOpMode {
                 .transitionTimed(1.5)
 
                 .state(LinearStates.IDLE2)
-                .transition(() -> gamepad1.x)
+                .transition(() -> gamepad1.x) // score
 
                 .state(LinearStates.SCORE)
                 .onEnter(() -> {
