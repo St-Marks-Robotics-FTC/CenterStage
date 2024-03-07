@@ -102,7 +102,7 @@ public class ChassisTest extends LinearOpMode {
         StateMachine machine = new StateMachineBuilder()
                 .state(LinearStates.IDLE)                 // Driving to wing to pick up
                 .onEnter(() -> { // Happens on Init as well
-                    arm.setPosition(0.09); // Reset arm
+                    arm.setPosition(0.083); // Reset arm
                     claw.setPosition(1); // ready for pixel
 
                     intake.setPower(0);
@@ -125,36 +125,38 @@ public class ChassisTest extends LinearOpMode {
                 .state(LinearStates.UP)
                 .onEnter(() -> {
                     intake.setPower(0.75);
-                    intakeAngle.setPosition(0.6); // 0.45
+                    intakeAngle.setPosition(0.5); // 0.45
                 })
                 .transitionTimed(0.75, LinearStates.IDLE) // Residual power
                 .transition(() -> gamepad1.y, LinearStates.TRANSFER) // Transfer pixel
 
                 .state(LinearStates.TRANSFER)
                 .onEnter(() -> {
+                    claw.setPosition(1); // let go
                     intake.setPower(0);
-                    intakeAngle.setPosition(0.25); // transfer position
+                    intakeAngle.setPosition(0.17); // transfer position
                 })
-                .transitionTimed(1.5)
+                .transitionTimed(0.75)
 
                 .state(LinearStates.GRAB)
                 .onEnter(() -> {
                     claw.setPosition(0.3); // grab pixel
                 })
-                .transitionTimed(1.5)
+                .transitionTimed(0.75)
 
                 .state(LinearStates.DROP)
                 .onEnter(() -> {
                     intakeAngle.setPosition(0.65); // flip away from claw
                 })
-                .transitionTimed(1.5)
+                .transition(()-> gamepad1.y, LinearStates.TRANSFER)
+                .transition(()-> gamepad1.dpad_up)
 
                 .state(LinearStates.FLIP)
                 .onEnter(() -> {
 //                    intakeAngle.setPosition(0.65); // moves to idle pos
                     arm.setPosition(0.8); // score pos
                 })
-                .transitionTimed(1.5)
+                .transitionTimed(0.3)
 
                 .state(LinearStates.IDLE2)
                 .loop(() -> {
@@ -186,9 +188,9 @@ public class ChassisTest extends LinearOpMode {
 
                 .state(LinearStates.RESET)
                 .onEnter(() -> {
-                    arm.setPosition(0.09); // Reset arm
+                    arm.setPosition(0.115); // Reset arm
 
-                    slide.setTargetPosition(5);
+                    slide.setTargetPosition(-30);
                     slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     slide.setPower(1);
                 })
