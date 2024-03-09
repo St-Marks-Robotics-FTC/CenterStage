@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
 //@Disabled
 
-
+@Disabled
 @Autonomous(group = "drive")
 public class SplineTest extends LinearOpMode {
     @Override
