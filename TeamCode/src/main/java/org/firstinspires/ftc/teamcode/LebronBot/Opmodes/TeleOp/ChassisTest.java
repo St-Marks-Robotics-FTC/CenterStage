@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.LebronBot;
+package org.firstinspires.ftc.teamcode.LebronBot.Opmodes.TeleOp;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
