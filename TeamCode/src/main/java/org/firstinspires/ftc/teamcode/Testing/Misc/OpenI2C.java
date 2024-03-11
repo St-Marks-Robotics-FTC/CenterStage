@@ -33,6 +33,14 @@ public class OpenI2C extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> {
         writeI2C(Commands.WRITE_OSCILLATOR, new byte[]{0x01});
     }
 
+    public void allOn() {
+        int[] array = new int[8];
+        for (int i = 0; i < 8; i++) {
+            array[i] = 1;
+        }
+        sendSegment(Commands.WRITE_LED, array);
+    }
+
     /**
      * Send a segment of the LED array
      *
@@ -40,12 +48,10 @@ public class OpenI2C extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> {
      * @param array  the values (limited from 0..255)
      */
     private void sendSegment(Commands cmd, int[] array) {
-        byte[] data = new byte[10]; // 8 bytes of data + 2 bytes for length and offset
-        data[0] = 8; // Length is fixed at 8 bytes
-        data[1] = 0; // No offset since it's a fixed-size segment
+        byte[] data = new byte[8];
 
         for (int i = 0; i < 8; i++) { // Iterate only 8 times
-            data[2 + i] = (byte) array[i];
+            data[i] = (byte) array[i];
         }
         writeI2C(cmd, data);
     }
