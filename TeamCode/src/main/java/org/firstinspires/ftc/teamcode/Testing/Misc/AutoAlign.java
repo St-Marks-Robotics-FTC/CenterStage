@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
+import org.opencv.core.Mat;
 
 //@Disabled
 @Config
@@ -25,7 +26,7 @@ public class AutoAlign extends LinearOpMode {
     private IMU imu;
 
 
-    public static double p = 0.6, i = 0, d = 0;
+    public static double p = 0.7, i = 0, d = 0.05;
     public static double f = 0;
 
     public static double targetAngle = Math.toRadians(0);
@@ -35,6 +36,8 @@ public class AutoAlign extends LinearOpMode {
 
     double pidPower = 0;
     double correctionPower = 0;
+
+    boolean stickZero = false;
 
 
 
@@ -110,8 +113,9 @@ public class AutoAlign extends LinearOpMode {
             y *= tranScaleFactor;
             x *= tranScaleFactor;
 
-            if (gamepad1.y) {
+            if (gamepad1.right_stick_button || gamepad1.y) {
                 PID = true;
+                stickZero = false;
             } else if (gamepad1.a) {
                 PID = false;
             }
@@ -119,8 +123,16 @@ public class AutoAlign extends LinearOpMode {
             double rx;
 
             if (PID) {
+                if (Math.abs(gamepad1.right_stick_x) < 0.01) {
+                    stickZero = true;
+                }
+                if (Math.abs(gamepad1.right_stick_x) > 0.1 && stickZero) {
+                    PID = false;
+                }
+
+
                 controller.setPID(p, i, d);
-                pidPower = controller.calculate(currAngle, targetAngle);
+                pidPower = controller.calculate(AngleUnit.normalizeRadians(currAngle - targetAngle), 0);
 
                 correctionPower = pidPower + f;
 //                if (controller.getPositionError() < Math.toRadians(5)) { // 5 degree tolerace
@@ -160,7 +172,7 @@ public class AutoAlign extends LinearOpMode {
             telemetry.addLine("////////////////////////////");
 
             telemetry.addData("Current Angle: ", Math.toDegrees(currAngle));
-            telemetry.addData("target angle: ", targetAngle);
+            telemetry.addData("target angle: ", Math.toDegrees(targetAngle));
 
             telemetry.addLine("////////////////////////////");
 
