@@ -4,12 +4,15 @@ package org.firstinspires.ftc.teamcode.Testing.General;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+
+import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
 
 
 @Config
@@ -24,6 +27,8 @@ public class IntakeTest extends LinearOpMode {
     public static String servo2Name = "linkageRight";
 
     public static Double pos = 0.5;
+    public static Double up = 0.4;
+    public static Double down = 0.6;
 
 
     @Override
@@ -54,15 +59,14 @@ public class IntakeTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-
-            motor.setPower(-gamepad1.left_stick_y);
+            motor.setPower(-gamepad1.right_stick_y);
 
             if (gamepad1.a) {
-                pos = 0.45;
+                pos = up;
             }
 
             if (gamepad1.b) {
-                pos = 0.18;
+                pos = down;
             }
             pos+=gamepad1.right_stick_y/1000;
 
