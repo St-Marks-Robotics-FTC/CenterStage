@@ -29,6 +29,7 @@ public class LebronTele extends LinearOpMode {
     enum LinearStates {
         IDLE,
         DOWN,
+        OUTTAKE,
         GRAB,
         STOW,
 
@@ -107,13 +108,13 @@ public class LebronTele extends LinearOpMode {
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Drop intake down
                 .state(LinearStates.DOWN)
                 .onEnter( () -> {
-                    robot.armPickup(); // V4b Transfer Position
+                    robot.intakeDown();
                 })
+                .transition( () -> gamepad1.left_trigger > 0.5, LinearStates.OUTTAKE)
                 .transition( () ->  gamepad1.right_trigger <= 0.5 ) // Picks up when trigger let go
-
                 .state(LinearStates.GRAB)
                 .onEnter( () -> {
-                    robot.closeClaw(); // Claw Grab
+                    robot.intakeUp(); // Intake goes up for transfer pos
                 })
                 .transitionTimed(0.25)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.DOWN) // Intake Again if we missed
@@ -170,7 +171,11 @@ public class LebronTele extends LinearOpMode {
                 })
                 .transition( () ->  robot.getSlidePos() < 15, LinearStates.IDLE) // Checks if slides are down, goes back to IDLE1
 
-
+                .state(LinearStates.OUTTAKE)
+                .onEnter( () -> {
+                    robot.setIntake(1);
+                })
+                .transition( () -> gamepad1.left_trigger <= 0.5, LinearStates.IDLE)
                 .build();
 
 

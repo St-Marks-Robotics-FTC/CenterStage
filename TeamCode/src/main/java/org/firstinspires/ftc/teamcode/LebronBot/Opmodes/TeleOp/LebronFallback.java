@@ -43,7 +43,7 @@ public class LebronFallback extends OpMode {
         if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
             robot.pivot.setPosition(robot.angleStow);
         }
-        robot.setSlides(slidePos, robot.getActuatorPosition());
+        robot.setSlides(slidePos);
 
         telemetry.addData("Slide Left: ", robot.slideLeft.getCurrentPosition());
         telemetry.addData("Slide Right: ", robot.slideRight.getCurrentPosition());
