@@ -22,7 +22,7 @@ import java.util.Arrays;
 // Both driver classes cannot register the sensor at the same time. One driver should have the
 // sensor registered, and the other should be commented out
 @I2cDeviceType
-@DeviceProperties(name = "MCP9808 Temperature Sensor", description = "an MCP9808 temperature sensor", xmlTag = "MCP9808")
+@DeviceProperties(name = "LEDBackpack", description = "an MCP9808 temperature sensor", xmlTag = "LEDBackpack")
 public class AdafruitLEDBackpack extends I2cDeviceSynchDevice<I2cDeviceSynch>
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////

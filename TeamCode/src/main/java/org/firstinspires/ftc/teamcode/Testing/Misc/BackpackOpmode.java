@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Testing.Misc;
 
+import android.graphics.Path;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,11 +13,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "MCP9808", group = "Tests")
 public class BackpackOpmode extends LinearOpMode
 {
-    private AdafruitLEDBackpack adafruitLEDBackpack;
+    private OpenI2C adafruitLEDBackpack;
 
     public void runOpMode() throws InterruptedException
     {
-        adafruitLEDBackpack = hardwareMap.get(AdafruitLEDBackpack.class, "backpack");
+        adafruitLEDBackpack = hardwareMap.get(OpenI2C.class, "backpack");
 
         // Uncomment to use parameter version of driver class. This will require you to respecify
         // the sensor type from MCP9808 to MCP9808Params
@@ -24,6 +26,7 @@ public class BackpackOpmode extends LinearOpMode
 //        parameters.alertControl = MCP9808Params.AlertControl.ALERT_ENABLE;
 //        tempSensor.initialize(parameters);
 
+        adafruitLEDBackpack.initialize();
         adafruitLEDBackpack.allOn();
         waitForStart();
 
@@ -44,7 +47,7 @@ public class BackpackOpmode extends LinearOpMode
 //            telemetry.addData("Manufacturer ID", adafruitLEDBackpack.getManufacturerIDRaw());
 
             telemetry.update();
-            idle();
+//            idle();
         }
     }
 }

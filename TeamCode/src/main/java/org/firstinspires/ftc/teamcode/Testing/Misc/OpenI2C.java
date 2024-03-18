@@ -15,7 +15,8 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 public class OpenI2C extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> {
 
     private enum Commands {
-        WRITE_OSCILLATOR(0x21),
+        WRITE_OSCILLATOR(0x01),
+        LED_MODE(0x03),
         WRITE_LED(0X00);
 
         int bVal;
@@ -29,16 +30,18 @@ public class OpenI2C extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> {
 //        writeI2C(Commands.WRITE_LED, new byte[]{(byte) index});
 //    }
 
-    private void setOscillator() {
+    private void intialized() {
         writeI2C(Commands.WRITE_OSCILLATOR, new byte[]{0x01});
+        writeI2C(Commands.LED_MODE, new byte[]{0x00});
     }
 
     public void allOn() {
-        int[] array = new int[8];
-        for (int i = 0; i < 8; i++) {
-            array[i] = 1;
-        }
-        sendSegment(Commands.WRITE_LED, array);
+        byte[] data = new byte[4];
+        data[0] = (byte) 0xFF;
+        data[1] = (byte) 0xFF;
+        data[2] = (byte) 0xFF;
+        data[3] = (byte) 0xFF;
+        writeI2C(Commands.WRITE_LED, data);
     }
 
     /**
@@ -69,7 +72,6 @@ public class OpenI2C extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> {
 
     @Override
     protected synchronized boolean doInitialize() {
-        setOscillator();
         return true;
     }
 
