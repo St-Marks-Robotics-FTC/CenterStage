@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Opmodes.TeleOp;
 
+import static com.arcrobotics.ftclib.util.MathUtils.clamp;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -16,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
 
@@ -27,24 +30,31 @@ import java.util.List;
 public class LebronTele extends LinearOpMode {
 
     enum LinearStates {
-        IDLE,
-        DOWN,
-        OUTTAKE,
-        GRAB,
-        STOW,
+        IDLE1,
+        INTAKE,
+        CHECK,
+        TILT,
+        TRANSFER,
 
         IDLE2,
+        EXTEND,
+
+        IDLE3,
         SCORE,
         RETRACT
     }
 
-    
+    enum JamStates {
+        MAIN,
+        EJECT,
+        INTAKE
+    }
+
     int slideLevel = 1;
+    int turretLevel = 0;
     boolean manualSlides = false;
 
     boolean hangReady = false;
-    boolean leftScored = false;
-    boolean rightScored = false;
     double loopTime = 0;
 
     LebronClass robot;
@@ -93,89 +103,169 @@ public class LebronTele extends LinearOpMode {
         // Automatically handles overflow
         headingController.setInputBounds(-Math.PI, Math.PI);
 
-        
+
+
+        // JAM State Machine
+        StateMachine jamMachine = new StateMachineBuilder()
+                .state(JamStates.EJECT)
+                .onEnter( () -> {
+                    robot.intake.setIntake(-0.15);
+                    robot.intake.tiltDown();
+                })
+                .transitionTimed(.25)
+
+
+                .state(JamStates.INTAKE)
+                .onEnter( () -> {
+                    robot.intake.setIntake(0.8);
+                    robot.intake.tiltUp();
+                })
+                .transitionTimed(.3)
+
+                .build();
+
 
 
         // MAIN State Machine
         StateMachine machine = new StateMachineBuilder()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                .state(LinearStates.IDLE)                 // Driving to wing to pick up
+                .state(LinearStates.IDLE1)                 // Driving to wing to pick up
                 .onEnter( () -> { // Happens on Init as well
-                    robot.openClaw(); // Claw Open
-                    robot.armStow(); // V4b ready for transfer
-                    robot.retractSlides(); // Retract Slide
+                    robot.intake.setIntake(0); // Stop Intake
+                    robot.intake.tiltStow(); // Intake Stow
+
+                    robot.outtake.openBothClaws(); // Claw Open
+                    robot.outtake.v4barTransfer(); // V4b ready for transfer
+                    robot.outtake.turretTransfer(); // Turret Vertical
+                    robot.outtake.retractSlides(); // Retract Slide
                 })
-                .transition( () ->  gamepad1.right_trigger > 0.5 ) // Drop intake down
-                .state(LinearStates.DOWN)
+                .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer if 1 pixel
+                .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button Main one
+
+                .state(LinearStates.INTAKE)
                 .onEnter( () -> {
-                    robot.intakeDown();
+                    robot.intake.tiltDown(); // Drop Intake
+                    robot.intake.setIntake(0.8); // Spin Intake
                 })
-                .transition( () -> gamepad1.left_trigger > 0.5, LinearStates.OUTTAKE)
-                .transition( () ->  gamepad1.right_trigger <= 0.5 ) // Picks up when trigger let go
-                .state(LinearStates.GRAB)
+                .transition( () -> (gamepad1.right_trigger < 0.5) && (!robot.intake.getPixel1() || !robot.intake.getPixel2()) , LinearStates.IDLE1) // if let go and not both pixels
+                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
+
+
+
+                .state(LinearStates.CHECK) // Accounts for delay between distance sensor and touch sensors
+                .transition( () ->  robot.intake.is2Aligned(), () -> gamepad1.rumble(500))
+                .transitionTimed(0.20)
+
+
+                .state(LinearStates.TILT)
                 .onEnter( () -> {
-                    robot.intakeUp(); // Intake goes up for transfer pos
+                    robot.intake.setIntake(0); // Stop Intake
+                    robot.intake.tiltUp(); // Intake tilts up
                 })
-                .transitionTimed(0.25)
-                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.DOWN) // Intake Again if we missed
+                .transition( () ->  robot.intake.is2NotAligned(), JamStates.MAIN) // JAM failsafe
+                .transitionTimed(0.75)
+                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
+
+
+                .state(LinearStates.TRANSFER)
+                .onEnter( () -> {
+                    robot.outtake.closeBothClaws(); // Claw Grab
+                })
+                .transitionTimed(0.5)
+                .onExit( () -> {
+                    robot.intake.tiltStow(); // Intake Stow
+                    robot.outtake.v4barStow(); // V4b Stow Position
+                })
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                .state(LinearStates.STOW)
+
+
+                .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
+                .transition( () ->  gamepad1.y) // Outtake Button
+
+                .state(LinearStates.EXTEND)
                 .onEnter( () -> {
-                    robot.armStow(); // V4b Stow Position
-                    robot.retractSlides();
-                })
-                .transition( () ->  gamepad1.y ) // outtake Button Main one
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                .state(LinearStates.IDLE2)
-                .onEnter( () -> {
-                    robot.slidesToLevel(slideLevel); // Extend Slide
-                    robot.armScore(); // V4b Score Position
+                    robot.outtake.slidesToLevel(slideLevel); // Extend Slide
+                    robot.outtake.v4barScore(); // V4b Score Position
                 })
                 .loop( () -> {
-                    robot.slidesToLevel(slideLevel); // Extend Slide
+                    robot.outtake.turretTo(turretLevel); // Spin Turret
+                    robot.outtake.slidesToLevel(slideLevel); // Extend Slide
+                })
+                .transition( () ->  robot.outtake.getSlidePos() > 100) // Checks if slides are out
 
-                    if (gamepad1.left_trigger > 0.5) {
-                        robot.openLeftClaw();
-                        leftScored = true;
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+                .state(LinearStates.IDLE3)                               // Slides out, ready to place
+                .loop( () -> {
+                    if (pad2.wasJustPressed(GamepadKeys.Button.X)) {
+                        robot.outtake.openLeft(); // Open Left Claw
+                    } else if (pad2.wasJustPressed(GamepadKeys.Button.B)) {
+                        robot.outtake.openRight(); // Open Right Claw
                     }
-                    if (gamepad1.right_trigger > 0.5) {
-                        robot.openRightClaw();
-                        rightScored = true;
+
+                    robot.outtake.turretTo(turretLevel); // Spin Turret
+                    // Manual Control
+                    if (Math.abs(pad2.getLeftY()) >= 0.1) {
+                        manualSlides = true;
+                        robot.outtake.manualSlides(pad2.getLeftY());
+                    } else if (!manualSlides) {
+                        robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
                     }
 
                 })
-                .transition( () ->  leftScored && rightScored)
-                .transition( () ->  gamepad1.a, LinearStates.STOW)
+                .transition( () ->  gamepad1.b) // Score Button
+                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
+                .transition(() -> gamepad1.a,  // Retract Button Failsafe
+                        LinearStates.IDLE2,
+                        () -> {
+                            robot.outtake.v4barStow(); // V4b Stow Position
+                            robot.outtake.turretTransfer(); // Turret Vertical
+                            robot.outtake.retractSlides(); // Retract Slide
+                        })
+
+
 
                 .state(LinearStates.SCORE)
                 .onEnter( () -> {
-                    robot.openClaw(); // Open Claw
-                    leftScored = false;
-                    rightScored = false;
+                    robot.outtake.openBothClaws(); // Open Claw
                 })
                 .transitionTimed(0.3)
 
 
                 .state(LinearStates.RETRACT)
                 .onEnter( () -> {
-                    robot.armStow(); // V4b Stow Position
-                    robot.retractSlides(); // Retract Slide
+                    robot.outtake.v4barStow(); // V4b Stow Position
+                    robot.outtake.turretTransfer(); // Turret Vertical
+                    robot.outtake.retractSlides(); // Retract Slide
 
                     slideLevel = 1;
+                    turretLevel = 0;
                     manualSlides = false;
                 })
-                .transition( () ->  robot.getSlidePos() < 15, LinearStates.IDLE) // Checks if slides are down, goes back to IDLE1
+                .transition( () ->  robot.outtake.getSlidePos() < 15, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
-                .state(LinearStates.OUTTAKE)
-                .onEnter( () -> {
-                    robot.setIntake(1);
+
+                // NESTED STATE MACHINE
+                .state(JamStates.MAIN)
+                .onEnter(jamMachine::start) // Starting the machine
+                .loop(jamMachine::update) // Updating the machine in the loop
+                .onExit( () -> {
+                    jamMachine.reset(); // Stopping the machine when we exit the state
+                    jamMachine.stop(); // Stopping the machine when we exit the state
                 })
-                .transition( () -> gamepad1.left_trigger <= 0.5, LinearStates.IDLE)
+
+                .transition( () -> !jamMachine.isRunning(), LinearStates.TILT) // Transition when the transfer is done
+
+
                 .build();
 
 
@@ -185,7 +275,7 @@ public class LebronTele extends LinearOpMode {
 
         waitForStart();
 
-        robot.droneHold();
+        robot.special.holdDrone();
         machine.start();
 
         if (isStopRequested()) return;
@@ -206,22 +296,22 @@ public class LebronTele extends LinearOpMode {
 
             double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
             double rotScaleFactor = gamepad1.left_bumper ? 0.3 : 1.0;
-//            if (gamepad1.left_trigger >= 0.5) {
-//                headingController.setTargetPosition(Math.toRadians(imuSetpoint));
-//
-//                // Set desired angular velocity to the heading controller output + angular
-//                // velocity feedforward
-//                double headingInput = clamp(headingController.update(poseEstimate.getHeading()), -0.3, 0.3);
-//
-//                robot.drive.setWeightedDrivePower(
-//                        new Pose2d(tranScaleFactor * y, tranScaleFactor * x, headingInput)
-//                );
-//
-//            } else {
+            if (gamepad1.left_trigger >= 0.5) {
+                headingController.setTargetPosition(Math.toRadians(imuSetpoint));
+
+                // Set desired angular velocity to the heading controller output + angular
+                // velocity feedforward
+                double headingInput = clamp(headingController.update(poseEstimate.getHeading()), -0.3, 0.3);
+
+                robot.drive.setWeightedDrivePower(
+                        new Pose2d(tranScaleFactor * y, tranScaleFactor * x, headingInput)
+                );
+
+            } else {
                 robot.drive.setWeightedDrivePower(
                         new Pose2d(tranScaleFactor * y, tranScaleFactor * x, rotScaleFactor * rx)
                 );
-//            }
+            }
 
             // Heading PID Adjustments
             if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
@@ -237,25 +327,33 @@ public class LebronTele extends LinearOpMode {
 
 
             // Slide Level Adjustments
-            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                slideLevel = Math.min(6, slideLevel + 1);
+            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                slideLevel = Math.min(9, slideLevel + 1);
             } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                 slideLevel = Math.max(0, slideLevel - 1);
             }
+
+            // Turret Angle Adjustments
+            if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                turretLevel = Math.min(4, turretLevel+1);
+            } else if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                turretLevel = Math.max(-4, turretLevel-1);
+            }
+
 
 
 
             // Special Teams
             if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                robot.droneRelease();
+                robot.special.shootDrone();
             }
 
-//            if (hangToggle.getState()) { // Dpad Right
-//                robot.special.hangReady();
-//                hangReady = true;
-//            } else if (hangReady){
-//                robot.special.hangClimb();
-//            }
+            if (hangToggle.getState()) { // Dpad Right
+                robot.special.hangReady();
+                hangReady = true;
+            } else if (hangReady){
+                robot.special.hangClimb();
+            }
 
 
 
@@ -268,12 +366,11 @@ public class LebronTele extends LinearOpMode {
 
             // Telemetry
             telemetry.addData("State", machine.getState());
-
-            telemetry.addData("Left scored", leftScored);
-            telemetry.addData("Right scored", rightScored);
+            telemetry.addData("Jam State", jamMachine.getState());
 
             telemetry.addData("Slide Level", slideLevel);
-//            telemetry.addData("Manual Slides", manualSlides);
+            telemetry.addData("Turret Pos", turretLevel);
+            telemetry.addData("Manual Slides", manualSlides);
             telemetry.addData("Heading Setpoint", imuSetpoint);
 
 
