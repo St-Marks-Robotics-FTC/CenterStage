@@ -99,6 +99,9 @@ public class LebronTele extends LinearOpMode {
         ToggleButtonReader hangToggle = new ToggleButtonReader(
                 pad1, GamepadKeys.Button.DPAD_RIGHT
         );
+        ToggleButtonReader droneToggle = new ToggleButtonReader(
+                pad1, GamepadKeys.Button.BACK
+        );
         pad2 = new GamepadEx(gamepad2);
 
 
@@ -359,17 +362,13 @@ public class LebronTele extends LinearOpMode {
 
 
 
-            // Special Teams
-            if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+            // Drone
+            if (droneToggle.getState()) {
                 robot.special.shootDrone();
+            } else {
+                robot.special.holdDrone();
             }
 
-            if (hangToggle.getState()) { // Dpad Right
-                robot.special.hangReady();
-                hangReady = true;
-            } else if (hangReady){
-                robot.special.hangClimb();
-            }
 
 
 
@@ -388,18 +387,19 @@ public class LebronTele extends LinearOpMode {
             telemetry.addData("Manual Slides", manualSlides);
 
 
+
+
+            machine.update();
+
+            pad1.readButtons();
+            droneToggle.readValue();
+            pad2.readButtons();
+
+
             // in da loop
             double loop = System.nanoTime();
             telemetry.addData("hz ", 1000000000 / (loop - loopTime));
             loopTime = loop;
-
-            robot.drive.update();
-            machine.update();
-
-            pad1.readButtons();
-            hangToggle.readValue();
-//            headingToggle.readValue();
-            pad2.readButtons();
 
             telemetry.update();
 
