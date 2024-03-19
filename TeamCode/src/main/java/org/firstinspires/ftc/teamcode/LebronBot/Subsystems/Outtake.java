@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Outtake {
 
     public DcMotorEx leftSlide;
+    public DcMotorEx midSlide;
     public DcMotorEx rightSlide;
 
     public Servo v4barLeft;
@@ -58,11 +59,14 @@ public class Outtake {
     public Outtake (HardwareMap hardwareMap) {
         // Slides
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
+        midSlide = hardwareMap.get(DcMotorEx.class, "midSlide");
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        midSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -106,11 +110,14 @@ public class Outtake {
     }
 
     public void setSlides(int pos) {
-        rightSlide.setTargetPosition(pos);
         leftSlide.setTargetPosition(pos);
-        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        midSlide.setTargetPosition(pos);
+        rightSlide.setTargetPosition(pos);
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        midSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
+        midSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
     }
 
