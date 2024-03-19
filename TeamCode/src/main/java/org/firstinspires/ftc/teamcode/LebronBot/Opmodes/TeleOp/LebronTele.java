@@ -44,11 +44,6 @@ public class LebronTele extends LinearOpMode {
         RETRACT
     }
 
-    enum JamStates {
-        MAIN,
-        EJECT,
-        INTAKE
-    }
 
     int slideLevel = 1;
     int turretLevel = 0;
@@ -103,26 +98,6 @@ public class LebronTele extends LinearOpMode {
         // Automatically handles overflow
         headingController.setInputBounds(-Math.PI, Math.PI);
 
-
-
-        // JAM State Machine
-        StateMachine jamMachine = new StateMachineBuilder()
-                .state(JamStates.EJECT)
-                .onEnter( () -> {
-                    robot.intake.setIntake(-0.15);
-                    robot.intake.tiltDown();
-                })
-                .transitionTimed(.25)
-
-
-                .state(JamStates.INTAKE)
-                .onEnter( () -> {
-                    robot.intake.setIntake(0.8);
-                    robot.intake.tiltUp();
-                })
-                .transitionTimed(.3)
-
-                .build();
 
 
 
@@ -254,18 +229,6 @@ public class LebronTele extends LinearOpMode {
                 .transition( () ->  robot.outtake.getSlidePos() < 15, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
 
-                // NESTED STATE MACHINE
-                .state(JamStates.MAIN)
-                .onEnter(jamMachine::start) // Starting the machine
-                .loop(jamMachine::update) // Updating the machine in the loop
-                .onExit( () -> {
-                    jamMachine.reset(); // Stopping the machine when we exit the state
-                    jamMachine.stop(); // Stopping the machine when we exit the state
-                })
-
-                .transition( () -> !jamMachine.isRunning(), LinearStates.TILT) // Transition when the transfer is done
-
-
                 .build();
 
 
@@ -366,7 +329,6 @@ public class LebronTele extends LinearOpMode {
 
             // Telemetry
             telemetry.addData("State", machine.getState());
-            telemetry.addData("Jam State", jamMachine.getState());
 
             telemetry.addData("Slide Level", slideLevel);
             telemetry.addData("Turret Pos", turretLevel);
