@@ -37,9 +37,10 @@ public class LebronTele extends LinearOpMode {
     enum LinearStates {
         IDLE1,
         INTAKE,
-        CHECK,
+        SPIT,
         TILT,
         TRANSFER,
+        STOW,
 
         IDLE2,
         EXTEND,
@@ -145,32 +146,40 @@ public class LebronTele extends LinearOpMode {
                 .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
 
 
-
-                .state(LinearStates.CHECK) // Accounts for delay between distance sensor and touch sensors
-                .transition( () ->  robot.intake.is2Aligned(), () -> gamepad1.rumble(500))
-                .transitionTimed(0.20)
-
+                .state(LinearStates.SPIT)
+                .onEnter( () -> {
+                    robot.intake.setIntake(-0.08); // Spit Intake
+                    robot.intake.tiltUp(); // Intake tilts up
+                })
+                .transitionTimed(0.2)
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
-                    robot.intake.setIntake(0); // Stop Intake
+                    robot.intake.setIntake(0.08); // suck in
                     robot.intake.tiltUp(); // Intake tilts up
                 })
-                .transitionTimed(0.75)
+                .transitionTimed(0.5)
                 .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
 
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
+                    robot.intake.setIntake(0); // Stop Intake
                     robot.outtake.closeBothClaws(); // Claw Grab
                 })
                 .transitionTimed(0.5)
-                .onExit( () -> {
-                    robot.intake.tiltStow(); // Intake Stow
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
+
+                .state(LinearStates.STOW)
+                .onEnter( () -> {
                     robot.outtake.v4barStow(); // V4b Stow Position
                 })
-                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
+                .onExit( () -> {
+                    robot.intake.tiltStow(); // Intake Stow
+                })
+                .transitionTimed(0.25)
+
 
 
 
