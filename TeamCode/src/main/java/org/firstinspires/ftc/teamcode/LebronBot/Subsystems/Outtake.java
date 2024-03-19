@@ -68,6 +68,7 @@ public class Outtake {
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         midSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // V4Bar
