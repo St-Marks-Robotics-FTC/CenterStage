@@ -16,7 +16,7 @@ public class ServoTest extends LinearOpMode {
 //    public static int motorPos = 0;
 //    public static double motorSpeed = 0.7;
 
-    public static String servoName = "pivot";
+    public static String servoName = "drone";
 
     public static Double pos = 0.5;
 
@@ -32,6 +32,14 @@ public class ServoTest extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+
+            if (gamepad1.x) {
+                pos = 0.0;
+            }
+
+            if (gamepad1.b) {
+                pos = 0.5;
+            }
 
 
             servo.setPosition(pos);
