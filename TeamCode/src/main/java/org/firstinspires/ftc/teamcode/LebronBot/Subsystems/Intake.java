@@ -44,12 +44,12 @@ public class Intake {
         tilt2 = hardwareMap.get(Servo.class, "tilt2");
         tilt2.setDirection(Servo.Direction.REVERSE);
 
-        tiltAngle = hardwareMap.get(AnalogInput.class, "tiltAngle");
-
-
-        pixel1 = hardwareMap.get(TouchSensor.class, "pixel1");
-        pixel2 = hardwareMap.get(TouchSensor.class, "pixel2");
-        alignSwitch = hardwareMap.get(TouchSensor.class, "alignSwitch");
+//        tiltAngle = hardwareMap.get(AnalogInput.class, "tiltAngle");
+//
+//
+//        pixel1 = hardwareMap.get(TouchSensor.class, "pixel1");
+//        pixel2 = hardwareMap.get(TouchSensor.class, "pixel2");
+//        alignSwitch = hardwareMap.get(TouchSensor.class, "alignSwitch");
     }
 
 

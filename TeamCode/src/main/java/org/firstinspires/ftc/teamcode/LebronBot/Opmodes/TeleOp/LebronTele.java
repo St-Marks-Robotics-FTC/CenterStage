@@ -142,8 +142,8 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.tiltDown(); // Drop Intake
                     robot.intake.setIntake(0.8); // Spin Intake
                 })
-                .transition( () -> (gamepad1.right_trigger < 0.5) && (!robot.intake.getPixel1() || !robot.intake.getPixel2()) , LinearStates.IDLE1) // if let go and not both pixels
-                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
+                .transition( () -> (gamepad1.right_trigger < 0.5), LinearStates.IDLE1) // if let go and not both pixels
+//                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
 
 
                 .state(LinearStates.SPIT)
@@ -159,7 +159,7 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.tiltUp(); // Intake tilts up
                 })
                 .transitionTimed(0.5)
-                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
+//                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
 
 
@@ -253,7 +253,7 @@ public class LebronTele extends LinearOpMode {
                     turretLevel = 0;
                     manualSlides = false;
                 })
-                .transition( () ->  robot.outtake.getSlidePos() < 15, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
+                .transition( () ->  robot.outtake.getSlidePos() < 20, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
 
                 .build();
