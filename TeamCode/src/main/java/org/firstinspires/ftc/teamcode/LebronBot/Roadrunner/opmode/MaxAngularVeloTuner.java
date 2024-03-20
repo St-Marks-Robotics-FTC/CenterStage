@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.LM2.Roadrunner.opmode;
+package org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
 
 import java.util.Objects;
 

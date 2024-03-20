@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.LM2.Roadrunner.opmode;
+package org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.opmode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
 
 /*
  * This is an example of a more complex path to really test the tuning.

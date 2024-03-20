@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Roadrunner;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -38,13 +37,14 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double WHEEL_RADIUS = 1; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = -5.5; // X is the up and down direction
-    public static double PARALLEL_Y = -2.5; // Y is the strafe direction
+    public static double PARALLEL_X = -0.8; // X is the up and down direction
+    public static double PARALLEL_Y = -6.9; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = -7;
-    public static double PERPENDICULAR_Y = -0.25;
-    public static double X_MULTIPLIER = 0.687; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 0.682; // Multiplier in the Y direction
+    public static double PERPENDICULAR_X = -1.5;
+    public static double PERPENDICULAR_Y = -1.3;
+    public static double X_MULTIPLIER = 0.6975; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 0.6975; // Multiplier in the Y direction
+
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -60,13 +60,11 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         ));
 
         this.drive = drive;
-        //port 1
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
-        //port 0
+
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
-        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {
@@ -87,8 +85,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @Override
     public List<Double> getWheelPositions() {
         return Arrays.asList(
-                encoderTicksToInches(parallelEncoder.getCurrentPosition())*X_MULTIPLIER,
-                encoderTicksToInches(perpendicularEncoder.getCurrentPosition())*Y_MULTIPLIER
+                encoderTicksToInches(parallelEncoder.getCurrentPosition()) * X_MULTIPLIER,
+                encoderTicksToInches(perpendicularEncoder.getCurrentPosition()) * Y_MULTIPLIER
         );
     }
 
@@ -100,8 +98,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         //  compensation method
 
         return Arrays.asList(
-                encoderTicksToInches(parallelEncoder.getRawVelocity())*X_MULTIPLIER,
-                encoderTicksToInches(perpendicularEncoder.getRawVelocity())*Y_MULTIPLIER
+                encoderTicksToInches(parallelEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
+                encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity()) * Y_MULTIPLIER
         );
     }
 }

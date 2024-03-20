@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.LM2.Roadrunner.opmode;
+package org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.opmode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.LM2.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.LM2.Roadrunner.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.StandardTrackingWheelLocalizer;
 
 /**
  * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s

@@ -7,8 +7,10 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 
 @Config
@@ -27,9 +29,9 @@ public class Threemotorsync extends LinearOpMode {
 
         waitForStart();
 
-        DcMotor left = hardwareMap.dcMotor.get("leftLift");
-        DcMotor mid = hardwareMap.dcMotor.get("midLift");
-        DcMotor right = hardwareMap.dcMotor.get("rightLift");
+        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftLift");
+        DcMotorEx mid = hardwareMap.get(DcMotorEx.class, "midLift");
+        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightLift");
 
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mid.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -55,10 +57,14 @@ public class Threemotorsync extends LinearOpMode {
 
             telemetry.addData("Left Motor Position: ", left.getCurrentPosition());
             telemetry.addData("Left Power: ", left.getPower());
+            telemetry.addData("Left Current: ", left.getCurrent(CurrentUnit.MILLIAMPS));
             telemetry.addData("Mid Motor Position: ", mid.getCurrentPosition());
             telemetry.addData("Mid Power: ", mid.getPower());
+            telemetry.addData("Mid Current: ", mid.getCurrent(CurrentUnit.MILLIAMPS));
             telemetry.addData("Right Motor Position: ", right.getCurrentPosition());
             telemetry.addData("Right Power: ", right.getPower());
+            telemetry.addData("Right Current: ", right.getCurrent(CurrentUnit.MILLIAMPS));
+
 
             telemetry.update();
         }
