@@ -94,7 +94,7 @@ public class ImuTest extends LinearOpMode
 
         // Retrieve and initialize the IMU.
         // This sample expects the IMU to be in a REV Hub and named "imu".
-        imu = hardwareMap.get(IMU.class, "adafruit_imu");
+        imu = hardwareMap.get(IMU.class, "imu");
 
         /* Define how the hub is mounted on the robot to get the correct Yaw, Pitch and Roll values.
          *
