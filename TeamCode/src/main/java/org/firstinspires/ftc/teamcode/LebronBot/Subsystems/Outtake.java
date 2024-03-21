@@ -33,13 +33,13 @@ public class Outtake {
     public static double slideUpPower=0.5;
 
     // V4Bar
-    public static double v4barTransfer = 0.2;
-    public static double v4barStow = 0.4;
-    public static double v4barScore = 0.7;
+    public static double v4barTransfer = 0.9;
+    public static double v4barStow = 0.75;
+    public static double v4barScore = 0.1;
 
-    public static double angleTransfer = 0.2;
-    public static double angleStow = 0.5;
-    public static double angleScore = 0.7;
+    public static double angleTransfer = 1;
+    public static double angleStow = 0.8;
+    public static double angleScore = 0.21;
 
     // Claw
     public static double clawLeftOpen = 0.25;
@@ -59,9 +59,9 @@ public class Outtake {
 
     public Outtake (HardwareMap hardwareMap) {
         // Slides
-        leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
-        midSlide = hardwareMap.get(DcMotorEx.class, "midSlide");
-        rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
+        leftSlide = hardwareMap.get(DcMotorEx.class, "liftLeft");
+        midSlide = hardwareMap.get(DcMotorEx.class, "liftMid");
+        rightSlide = hardwareMap.get(DcMotorEx.class, "liftRight");
 
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -73,16 +73,15 @@ public class Outtake {
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // V4Bar
-        v4barLeft = hardwareMap.get(Servo.class, "v4barLeft");
-        v4barRight = hardwareMap.get(Servo.class, "v4barRight");
-        v4barAngle = hardwareMap.get(Servo.class, "v4barPivot");
+        v4barLeft = hardwareMap.get(Servo.class, "leftV4B");
+        v4barRight = hardwareMap.get(Servo.class, "rightV4B");
+        v4barAngle = hardwareMap.get(Servo.class, "wrist");
 
         v4barRight.setDirection(Servo.Direction.REVERSE);
 
         // Claw
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
-
         clawLeft.setDirection(Servo.Direction.REVERSE);
 
         // Turret

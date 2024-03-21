@@ -29,9 +29,9 @@ public class Threemotorsync extends LinearOpMode {
 
         waitForStart();
 
-        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "leftLift");
-        DcMotorEx mid = hardwareMap.get(DcMotorEx.class, "midLift");
-        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightLift");
+        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "liftLeft");
+        DcMotorEx mid = hardwareMap.get(DcMotorEx.class, "liftMid");
+        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "liftRight");
 
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mid.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
