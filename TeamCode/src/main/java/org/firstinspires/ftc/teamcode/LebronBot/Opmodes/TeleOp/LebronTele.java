@@ -146,12 +146,12 @@ public class LebronTele extends LinearOpMode {
 //                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
 
 
-                .state(LinearStates.SPIT)
-                .onEnter( () -> {
-                    robot.intake.setIntake(-0.08); // Spit Intake
-                    robot.intake.tiltUp(); // Intake tilts up
-                })
-                .transitionTimed(0.2)
+//                .state(LinearStates.SPIT)
+//                .onEnter( () -> {
+//                    robot.intake.setIntake(-0.08); // Spit Intake
+//                    robot.intake.tiltUp(); // Intake tilts up
+//                })
+//                .transitionTimed(0.2)
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
