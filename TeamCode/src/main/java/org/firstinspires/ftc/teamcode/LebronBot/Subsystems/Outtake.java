@@ -42,14 +42,15 @@ public class Outtake {
     public static double angleScore = 0.7;
 
     // Claw
-    public static double clawLeftClosed = 0.0;
-    public static double clawRightClosed = 0.0;
-    public static double clawLeftOpen = 0.3;
+    public static double clawLeftOpen = 0.25;
+    public static double clawLeftClosed = 0.75;
+
     public static double clawRightOpen = 0.3;
+    public static double clawRightClosed = 0.66;
 
     // Turret
-    public static double turretTransfer = 0.5;
-    public static double turret60 = 0.2;
+    public static double turretTransfer = 0.41;
+    public static double turret60 = 0.04;
 
 
 
