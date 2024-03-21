@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -37,7 +38,7 @@ public class LebronTele extends LinearOpMode {
     enum LinearStates {
         IDLE1,
         INTAKE,
-        SPIT,
+        SUCK,
         TILT,
         TRANSFER,
         STOW,
@@ -54,6 +55,9 @@ public class LebronTele extends LinearOpMode {
     int slideLevel = 1;
     int turretLevel = 0;
     boolean manualSlides = false;
+
+    boolean leftClosed = false;
+    boolean rightClosed = false;
 
     boolean hangReady = false;
     double loopTime = 0;
@@ -103,6 +107,12 @@ public class LebronTele extends LinearOpMode {
         ToggleButtonReader droneToggle = new ToggleButtonReader(
                 pad1, GamepadKeys.Button.BACK
         );
+        TriggerReader leftTrigger = new TriggerReader(
+                pad1, GamepadKeys.Trigger.LEFT_TRIGGER
+        );
+        TriggerReader rightTrigger = new TriggerReader(
+                pad1, GamepadKeys.Trigger.RIGHT_TRIGGER
+        );
         pad2 = new GamepadEx(gamepad2);
 
 
@@ -146,19 +156,19 @@ public class LebronTele extends LinearOpMode {
 //                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
 
 
-//                .state(LinearStates.SPIT)
-//                .onEnter( () -> {
-//                    robot.intake.setIntake(-0.08); // Spit Intake
-//                    robot.intake.tiltUp(); // Intake tilts up
-//                })
-//                .transitionTimed(0.2)
-
-                .state(LinearStates.TILT)
+                .state(LinearStates.SUCK)
                 .onEnter( () -> {
-                    robot.intake.setIntake(0.08); // suck in
+                    robot.intake.setIntake(0.25); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                 })
                 .transitionTimed(0.5)
+
+                .state(LinearStates.TILT)
+                .onEnter( () -> {
+                    robot.intake.setIntake(0); // suck in
+                    robot.intake.tiltUp(); // Intake tilts up
+                })
+                .transitionTimed(0.2)
 //                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
 
@@ -189,6 +199,8 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
                 .transition( () ->  gamepad1.y) // Outtake Button
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
+
 
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
@@ -196,22 +208,40 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.v4barScore(); // V4b Score Position
                 })
                 .loop( () -> {
-                    robot.outtake.turretTo(turretLevel); // Spin Turret
                     robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                 })
-                .transition( () ->  robot.outtake.getSlidePos() > 100) // Checks if slides are out
-
+                .transitionTimed(0.8)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
                 .state(LinearStates.IDLE3)                               // Slides out, ready to place
+                .onEnter( () -> {
+                    leftClosed = true;
+                    rightClosed = true;
+                })
                 .loop( () -> {
-                    if (pad2.wasJustPressed(GamepadKeys.Button.X)) {
-                        robot.outtake.openLeft(); // Open Left Claw
-                    } else if (pad2.wasJustPressed(GamepadKeys.Button.B)) {
-                        robot.outtake.openRight(); // Open Right Claw
+                    if (leftTrigger.wasJustPressed()) {
+                        leftClosed = !leftClosed;
+                    }
+                    if (rightTrigger.wasJustPressed()) {
+                        rightClosed = !rightClosed;
+                    }
+
+                    if (leftClosed) {
+                        robot.outtake.closeLeft();
+                        leftClosed = true;
+                    } else {
+                        robot.outtake.openLeft();
+                        leftClosed = false;
+                    }
+                    if (rightClosed) {
+                        robot.outtake.closeRight();
+                        rightClosed = true;
+                    } else {
+                        robot.outtake.openRight();
+                        rightClosed = false;
                     }
 
                     robot.outtake.turretTo(turretLevel); // Spin Turret
@@ -224,8 +254,8 @@ public class LebronTele extends LinearOpMode {
                     }
 
                 })
-                .transition( () ->  gamepad1.b) // Score Button
-                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
+                .transition( () ->  gamepad1.right_bumper && !leftClosed && !rightClosed) // Both open
+//                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
                 .transition(() -> gamepad1.a,  // Retract Button Failsafe
                         LinearStates.IDLE2,
                         () -> {
@@ -253,7 +283,7 @@ public class LebronTele extends LinearOpMode {
                     turretLevel = 0;
                     manualSlides = false;
                 })
-                .transition( () ->  robot.outtake.getSlidePos() < 20, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
+                .transition( () ->  robot.outtake.getSlidePos() < 25, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
 
                 .build();
@@ -362,9 +392,9 @@ public class LebronTele extends LinearOpMode {
             }
 
             // Turret Angle Adjustments
-            if (pad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
                 turretLevel = Math.min(4, turretLevel+1);
-            } else if (pad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
                 turretLevel = Math.max(-4, turretLevel-1);
             }
 
@@ -402,6 +432,8 @@ public class LebronTele extends LinearOpMode {
 
             pad1.readButtons();
             droneToggle.readValue();
+            leftTrigger.readValue();
+            rightTrigger.readValue();
             pad2.readButtons();
 
 
