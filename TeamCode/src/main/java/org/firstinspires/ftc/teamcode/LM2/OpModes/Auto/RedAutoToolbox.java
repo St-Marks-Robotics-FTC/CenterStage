@@ -72,7 +72,7 @@ public class RedAutoToolbox extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(53, -30, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
-                .setTangent(Math.toRadians(-20))
+                .setTangent(Math.toRadians(-90))
                 .splineToSplineHeading(new Pose2d(54, -33, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
@@ -127,7 +127,7 @@ public class RedAutoToolbox extends LinearOpMode {
 
         //robot.openAutoClaw();
         robot.openLeft();
-        sleep(250);
+        sleep(200);
         robot.setArm(330); // 390
 
         //outtake
@@ -145,7 +145,7 @@ public class RedAutoToolbox extends LinearOpMode {
 
         robot.openClaw();
 
-        sleep(500);
+        sleep(250);
         // 700
 
         switch (loc) {
