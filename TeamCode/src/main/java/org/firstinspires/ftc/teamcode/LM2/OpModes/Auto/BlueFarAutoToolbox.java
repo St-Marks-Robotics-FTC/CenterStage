@@ -85,7 +85,7 @@ public class BlueFarAutoToolbox extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-34, 8, Math.toRadians(-90)))
                 .setTangent(0)
                 .splineTo(new Vector2d(22, 8), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(59, 23, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, 22, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())

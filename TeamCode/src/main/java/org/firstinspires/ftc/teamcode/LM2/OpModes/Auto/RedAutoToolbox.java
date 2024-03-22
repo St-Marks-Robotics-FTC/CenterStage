@@ -58,35 +58,46 @@ public class RedAutoToolbox extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(9, -25, Math.toRadians(160)), Math.toRadians(130))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) //mid
-                .splineToSplineHeading(new Pose2d(15, -25, Math.toRadians(90)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(15, -30, Math.toRadians(90)), Math.toRadians(90))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) //right
                 .splineToSplineHeading(new Pose2d(15, -29, Math.toRadians(45)), Math.toRadians(90))
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
                 .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(51.5, -17, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(51.5, -21, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(53, -24, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53, -30, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .setTangent(Math.toRadians(-20))
-                .splineToSplineHeading(new Pose2d(54, -30, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(54, -33, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
                 .back(4)
-                .strafeRight(28)
+                .strafeRight(34)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
+
+                .forward(10)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
                 .back(4)
-                .strafeRight(22)
+                .strafeRight(28)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
+
+                .forward(10)
+
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
                 .back(4)
-                .strafeRight(18)
+                .strafeRight(24)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
+
+                .forward(10)
+
                 .build();
 
         robot.closeDrone();
@@ -116,7 +127,7 @@ public class RedAutoToolbox extends LinearOpMode {
 
         //robot.openAutoClaw();
         robot.openLeft();
-        sleep(3000);
+        sleep(250);
         robot.setArm(330); // 390
 
         //outtake
@@ -134,7 +145,7 @@ public class RedAutoToolbox extends LinearOpMode {
 
         robot.openClaw();
 
-        sleep(1000);
+        sleep(500);
         // 700
 
         switch (loc) {
