@@ -17,6 +17,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachine;
@@ -24,6 +25,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
@@ -200,7 +202,7 @@ public class LebronTele extends LinearOpMode {
                 })
                 .onExit( () -> {
                     robot.intake.tiltStow(); // Intake Stow
-                    robot.outtake.moreClose();
+//                    robot.outtake.moreClose();
                 })
                 .transitionTimed(1)
 
@@ -244,14 +246,14 @@ public class LebronTele extends LinearOpMode {
                     }
 
                     if (leftClosed) {
-                        robot.outtake.closeLeft();
+                        robot.outtake.closeLeftMore();
                         leftClosed = true;
                     } else {
                         robot.outtake.openLeft();
                         leftClosed = false;
                     }
                     if (rightClosed) {
-                        robot.outtake.closeRight();
+                        robot.outtake.closeRightMore();
                         rightClosed = true;
                     } else {
                         robot.outtake.openRight();
@@ -424,6 +426,16 @@ public class LebronTele extends LinearOpMode {
 
 
 
+            if (robot.outtake.leftSlide.getVelocity() < 1 && robot.outtake.leftSlide.getCurrent(CurrentUnit.AMPS) > 1 && robot.outtake.leftSlide.getCurrentPosition() < 25) {
+                robot.outtake.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+            if (robot.outtake.midSlide.getVelocity() < 1 && robot.outtake.midSlide.getCurrent(CurrentUnit.AMPS) > 1 && robot.outtake.midSlide.getCurrentPosition() < 25 ) {
+                robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+            if (robot.outtake.rightSlide.getVelocity() < 1 && robot.outtake.rightSlide.getCurrent(CurrentUnit.AMPS) > 1 && robot.outtake.rightSlide.getCurrentPosition() < 25 ) {
+                robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
 
 
 
@@ -438,6 +450,17 @@ public class LebronTele extends LinearOpMode {
             telemetry.addData("Slide Level", slideLevel);
             telemetry.addData("Turret Pos", turretLevel);
             telemetry.addData("Manual Slides", manualSlides);
+
+
+            telemetry.addData("Left Slide Position", robot.outtake.leftSlide.getCurrentPosition());
+            telemetry.addData("Mid Slide Position", robot.outtake.midSlide.getCurrentPosition());
+            telemetry.addData("Right Slide Position", robot.outtake.rightSlide.getCurrentPosition());
+
+            telemetry.addData("Left Slide Current", robot.outtake.leftSlide.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Mid Slide Current", robot.outtake.midSlide.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Right Slide Current", robot.outtake.rightSlide.getCurrent(CurrentUnit.AMPS));
+
+//            telemetry.addData("Servo Current", robot.outtake.v4barLeft.get)
 
 
 

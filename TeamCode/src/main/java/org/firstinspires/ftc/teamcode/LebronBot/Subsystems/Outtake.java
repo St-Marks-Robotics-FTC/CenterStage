@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Config
 public class Outtake {
@@ -14,23 +17,23 @@ public class Outtake {
     public DcMotorEx midSlide;
     public DcMotorEx rightSlide;
 
-    public Servo v4barLeft;
-    public Servo v4barRight;
-    public Servo v4barAngle;
+    public ServoImplEx v4barLeft;
+    public ServoImplEx v4barRight;
+    public ServoImplEx v4barAngle;
 
-    public Servo clawLeft;
-    public Servo clawRight;
+    public ServoImplEx clawLeft;
+    public ServoImplEx clawRight;
 
-    public Servo turret;
+    public ServoImplEx turret;
 
 
     // Slides
-    public static int slidesDown = 0;
+    public static int slidesDown = 2;
     public static int level1 = 300;
     public static int levelIncrement = 60;
 
-    public static double slideDownPower=0.2;
-    public static double slideUpPower=0.5;
+    public static double slideDownPower=0.15;
+    public static double slideUpPower=0.4;
 
     // V4Bar
     public static double v4barTransfer = 0.87; // 0.9
@@ -73,21 +76,28 @@ public class Outtake {
         midSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        leftSlide.setTargetPositionTolerance(15);
+        midSlide.setTargetPositionTolerance(15);
+        rightSlide.setTargetPositionTolerance(15);
+
+
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // V4Bar
-        v4barLeft = hardwareMap.get(Servo.class, "leftV4B");
-        v4barRight = hardwareMap.get(Servo.class, "rightV4B");
-        v4barAngle = hardwareMap.get(Servo.class, "wrist");
+        v4barLeft = hardwareMap.get(ServoImplEx.class, "leftV4B");
+        v4barRight = hardwareMap.get(ServoImplEx.class, "rightV4B");
+        v4barAngle = hardwareMap.get(ServoImplEx.class, "wrist");
 
         v4barRight.setDirection(Servo.Direction.REVERSE);
 
         // Claw
-        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
-        clawRight = hardwareMap.get(Servo.class, "clawRight");
+        clawLeft = hardwareMap.get(ServoImplEx.class, "clawLeft");
+        clawRight = hardwareMap.get(ServoImplEx.class, "clawRight");
 
         // Turret
-        turret = hardwareMap.get(Servo.class, "turret");
+        turret = hardwareMap.get(ServoImplEx.class, "turret");
+
+        turret.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
     }
 
@@ -119,7 +129,7 @@ public class Outtake {
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         midSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
+        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.1 : slideDownPower);
         midSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
     }
@@ -169,8 +179,8 @@ public class Outtake {
         closeRight();
     }
     public void moreClose() {
-        clawLeft.setPosition(clawLeftMoreClosed);
-        clawRight.setPosition(clawRightMoreClosed);
+        closeLeftMore();
+        closeLeftMore();
     }
     public void openBothClaws() {
         openLeft();
@@ -184,8 +194,14 @@ public class Outtake {
     public void closeLeft() {
         clawLeft.setPosition(clawLeftClosed);
     }
+    public void closeLeftMore() {
+        clawLeft.setPosition(clawLeftMoreClosed);
+    }
     public void closeRight() {
         clawRight.setPosition(clawRightClosed);
+    }
+    public void closeRightMore() {
+        clawRight.setPosition(clawRightMoreClosed);
     }
     public void openLeft() {
         clawLeft.setPosition(clawLeftOpen);
