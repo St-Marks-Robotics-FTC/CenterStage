@@ -55,13 +55,13 @@ public class LM2class {
     }
 
     public void openRight() {
-        clawRight.setPosition(0.5);
+        clawRight.setPosition(0.41);
     }
     public void scoreRight() {
-        clawRight.setPosition(0.57);
+        clawRight.setPosition(0.36);
     }
     public void closeRight() {
-        clawRight.setPosition(0.7);
+        clawRight.setPosition(0.3);
     }
 
 

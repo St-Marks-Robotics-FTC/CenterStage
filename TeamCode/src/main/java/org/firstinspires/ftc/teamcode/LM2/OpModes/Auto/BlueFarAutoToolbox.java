@@ -59,33 +59,33 @@ public class BlueFarAutoToolbox extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-31, 34, Math.toRadians(-30)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(-40, 25, Math.toRadians(-10)), Math.toRadians(-10))
+                .splineToSplineHeading(new Pose2d(-40, 23, Math.toRadians(-10)), Math.toRadians(-10))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // right
-                .splineTo(new Vector2d(-36, 32), Math.toRadians(-150))
+                .splineTo(new Vector2d(-37, 32), Math.toRadians(-135))
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
                 //.splineTo(new Vector2d(-41, -32), Math.toRadians(150))
                 .setTangent(Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(-38, 34, Math.toRadians(0)), Math.toRadians(-180))
                 .setTangent(Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(-31, 11), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(22, 11, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(59, 37, Math.toRadians(0)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-31, 8), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(22, 8, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, 35, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .splineToConstantHeading(new Vector2d(-48, 22), Math.toRadians(-180))
                 .setTangent(Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(-31, 9), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(22, 9, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(59, 28.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-31, 8), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(22, 8, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, 28, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .lineToLinearHeading(new Pose2d(-34, 32, Math.toRadians(-120)))
-                .lineToLinearHeading(new Pose2d(-34, 11, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-34, 8, Math.toRadians(-90)))
                 .setTangent(0)
-                .splineTo(new Vector2d(22, 11), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(59, 25, Math.toRadians(0)), Math.toRadians(0))
+                .splineTo(new Vector2d(22, 8), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, 23, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())

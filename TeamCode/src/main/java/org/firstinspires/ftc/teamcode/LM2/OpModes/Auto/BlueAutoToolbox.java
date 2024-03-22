@@ -55,25 +55,25 @@ public class BlueAutoToolbox extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence traj11 = drive.trajectorySequenceBuilder(startPose) // right side
-                .splineToSplineHeading(new Pose2d(11, 29, Math.toRadians(-160)), Math.toRadians(-130))
+                .splineToSplineHeading(new Pose2d(9, 27, Math.toRadians(-160)), Math.toRadians(-130))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(15, 31, Math.toRadians(-90)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(15, 27, Math.toRadians(-90)), Math.toRadians(-90))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // left
                 .splineToSplineHeading(new Pose2d(16, 34, Math.toRadians(-45)), Math.toRadians(-90))
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
                 .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(53, 24, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53, 21, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
                 .setTangent(Math.toRadians(20))
-                .splineToSplineHeading(new Pose2d(53, 32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53, 28, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .setTangent(Math.toRadians(45))
-                .splineToSplineHeading(new Pose2d(53, 37, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53, 33, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
@@ -84,7 +84,7 @@ public class BlueAutoToolbox extends LinearOpMode {
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
 //                .strafeRight(22)
                 .back(4)
-                .strafeLeft(22)
+                .strafeLeft(24)
 
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())

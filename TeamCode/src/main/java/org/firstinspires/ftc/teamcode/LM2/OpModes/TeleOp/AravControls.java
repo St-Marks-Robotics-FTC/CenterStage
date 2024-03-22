@@ -30,7 +30,7 @@ public class AravControls extends LinearOpMode {
 
 
     // Arm
-    public static int armDown = 0;
+    public static int armDown = 5;
     public static int armUp = 350;
     public static int armUp2 = 405; //CHANGE
     public static int armUp3 = 480; //CHANGE
@@ -102,6 +102,8 @@ public class AravControls extends LinearOpMode {
                 .loop( () -> {
                     if (gamepad1.left_trigger >= 0.3) {
                         robot.openClaw();
+                        leftClosed = false;
+                        rightClosed = false;
                     } else if (gamepad1.right_trigger >= 0.3) {
                         robot.closeClaw();
                         leftClosed = true;
@@ -115,6 +117,12 @@ public class AravControls extends LinearOpMode {
                     if (robot.detectRight()) {
                         robot.closeRight();
                         rightClosed = true;
+                    }
+
+                    if (leftClosed && rightClosed) {
+                        robot.setArm(25);
+                    } else {
+                        robot.setArm(5);
                     }
                 })
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) ) // Raise arm
@@ -289,6 +297,11 @@ public class AravControls extends LinearOpMode {
             telemetry.addData("Claw Closed", closed);
             telemetry.addData("Left Claw closed", leftClosed);
             telemetry.addData("Right Claw closed", rightClosed);
+
+            telemetry.addData("Left Y", gamepad1.left_stick_y);
+            telemetry.addData("Left X", gamepad1.left_stick_x);
+            telemetry.addData("Right X", gamepad1.right_stick_x);
+
             telemetry.update();
 
 
