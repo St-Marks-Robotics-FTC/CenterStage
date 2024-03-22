@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
 import java.util.List;
 
 @Config
-@Disabled
+//@Disabled
 @TeleOp
 public class LebronTele extends LinearOpMode {
 
@@ -40,6 +40,7 @@ public class LebronTele extends LinearOpMode {
         INTAKE,
         SUCK,
         TILT,
+        DROP_OUTTAKE,
         TRANSFER,
         STOW,
 
@@ -140,9 +141,10 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.tiltStow(); // Intake Stow
 
                     robot.outtake.openBothClaws(); // Claw Open
-                    robot.outtake.v4barTransfer(); // V4b ready for transfer
+                    robot.outtake.v4barStow(); // V4b ready for transfer
+                    robot.outtake.v4barAngleTransfer();
                     robot.outtake.turretTransfer(); // Turret Vertical
-                    robot.outtake.retractSlides(); // Retract Slide
+//                    robot.outtake.retractSlides(); // Retract Slide
                 })
                 .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer if 1 pixel
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button Main one
@@ -151,8 +153,10 @@ public class LebronTele extends LinearOpMode {
                 .onEnter( () -> {
                     robot.intake.tiltDown(); // Drop Intake
                     robot.intake.setIntake(0.8); // Spin Intake
+                    robot.outtake.openBothClaws(); // Claw Open
+
                 })
-                .transition( () -> (gamepad1.right_trigger < 0.5), LinearStates.IDLE1) // if let go and not both pixels
+                .transition( () -> (gamepad1.right_trigger < 0.5)) // if let go and not both pixels
 //                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
 
 
@@ -161,34 +165,44 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.setIntake(0.25); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                 })
-                .transitionTimed(0.5)
+                .transitionTimed(1)
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
                     robot.intake.setIntake(0); // suck in
                     robot.intake.tiltUp(); // Intake tilts up
                 })
-                .transitionTimed(0.2)
+                .transitionTimed(1)
 //                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
-                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
+                .state(LinearStates.DROP_OUTTAKE)
+                .onEnter( () -> {
+                    robot.intake.setIntake(0); // Stop Intake
+                    robot.outtake.v4barTransfer();
+                })
+                .transitionTimed(1)
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
                     robot.intake.setIntake(0); // Stop Intake
                     robot.outtake.closeBothClaws(); // Claw Grab
                 })
-                .transitionTimed(0.5)
-                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
+                .transitionTimed(1)
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
                 .state(LinearStates.STOW)
                 .onEnter( () -> {
-                    robot.outtake.v4barStow(); // V4b Stow Position
+                    robot.outtake.v4barOut(); // V4b Stow Position
+                    robot.outtake.v4barAngleTransfer();
+
+                    robot.intake.tiltUp();
                 })
                 .onExit( () -> {
                     robot.intake.tiltStow(); // Intake Stow
+                    robot.outtake.moreClose();
                 })
-                .transitionTimed(0.25)
+                .transitionTimed(1)
 
 
 
@@ -199,7 +213,7 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
                 .transition( () ->  gamepad1.y) // Outtake Button
-                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE) // Intake Again if we missed
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
 
                 .state(LinearStates.EXTEND)
@@ -210,7 +224,7 @@ public class LebronTele extends LinearOpMode {
                 .loop( () -> {
                     robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                 })
-                .transitionTimed(0.8)
+                .transitionTimed(1)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -297,7 +311,7 @@ public class LebronTele extends LinearOpMode {
 
         targetAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        robot.special.holdDrone();
+//        robot.special.holdDrone();
         machine.start();
 
         if (isStopRequested()) return;
@@ -373,7 +387,7 @@ public class LebronTele extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            robot.drive.setMotorPowers(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+//            robot.drive.setMotorPowers(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
 
 
 
@@ -386,27 +400,27 @@ public class LebronTele extends LinearOpMode {
 
             // Slide Level Adjustments
             if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                slideLevel = Math.min(9, slideLevel + 1);
+                slideLevel = Math.min(6, slideLevel + 1);
             } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                 slideLevel = Math.max(0, slideLevel - 1);
             }
 
             // Turret Angle Adjustments
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
-                turretLevel = Math.min(4, turretLevel+1);
+                turretLevel = Math.min(3, turretLevel+1);
             } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
-                turretLevel = Math.max(-4, turretLevel-1);
+                turretLevel = Math.max(-3, turretLevel-1);
             }
 
 
 
-
-            // Drone
-            if (droneToggle.getState()) {
-                robot.special.shootDrone();
-            } else {
-                robot.special.holdDrone();
-            }
+//
+//            // Drone
+//            if (droneToggle.getState()) {
+//                robot.special.shootDrone();
+//            } else {
+//                robot.special.holdDrone();
+//            }
 
 
 

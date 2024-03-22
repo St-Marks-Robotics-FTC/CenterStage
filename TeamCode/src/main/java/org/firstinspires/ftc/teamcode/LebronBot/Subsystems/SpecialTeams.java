@@ -18,7 +18,7 @@ public class SpecialTeams {
     public static double releasePos = 0.5;
 
     public SpecialTeams (HardwareMap hardwareMap) {
-        drone = hardwareMap.get(Servo.class, "drone");
+//        drone = hardwareMap.get(Servo.class, "drone");
 
     }
 

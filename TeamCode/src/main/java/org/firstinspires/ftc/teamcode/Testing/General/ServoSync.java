@@ -18,8 +18,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 public class ServoSync extends LinearOpMode {
 
 
-    public static String servo1Name = "linkageLeft";
-    public static String servo2Name = "linkageRight";
+    public static String servo1Name = "tiltLeft";
+    public static String servo2Name = "tiltRight";
 
     public static Double pos = 0.5;
 

@@ -33,24 +33,27 @@ public class Outtake {
     public static double slideUpPower=0.5;
 
     // V4Bar
-    public static double v4barTransfer = 0.9;
-    public static double v4barStow = 0.75;
+    public static double v4barTransfer = 0.87; // 0.9
+    public static double v4barStow = 0.73;
+    public static double v4barOut = 0.64;
     public static double v4barScore = 0.1;
 
-    public static double angleTransfer = 1;
+    public static double angleTransfer = 0.95;
     public static double angleStow = 0.8;
-    public static double angleScore = 0.21;
+    public static double angleScore = 0.15;
 
     // Claw
     public static double clawLeftOpen = 0.25;
-    public static double clawLeftClosed = 0.75;
+    public static double clawLeftClosed = 0.45;
+    public static double clawLeftMoreClosed = 0.55;
 
-    public static double clawRightOpen = 0.3;
-    public static double clawRightClosed = 0.66;
+    public static double clawRightOpen = 0.66;
+    public static double clawRightClosed = 0.48;
+    public static double clawRightMoreClosed = 0.38;
 
     // Turret
-    public static double turretTransfer = 0.41;
-    public static double turret60 = 0.04;
+    public static double turretTransfer = 0.53;
+    public static double turret60 = 0.15;
 
 
 
@@ -82,7 +85,6 @@ public class Outtake {
         // Claw
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
-        clawLeft.setDirection(Servo.Direction.REVERSE);
 
         // Turret
         turret = hardwareMap.get(Servo.class, "turret");
@@ -131,6 +133,11 @@ public class Outtake {
         setV4Bar(v4barStow);
         v4barAngleStow();
     }
+
+    public void v4barOut() {
+        setV4Bar(v4barOut);
+        v4barAngleStow();
+    }
     public void v4barScore() {
         setV4Bar(v4barScore);
         v4barAngleScore();
@@ -160,6 +167,10 @@ public class Outtake {
     public void closeBothClaws() {
         closeLeft();
         closeRight();
+    }
+    public void moreClose() {
+        clawLeft.setPosition(clawLeftMoreClosed);
+        clawRight.setPosition(clawRightMoreClosed);
     }
     public void openBothClaws() {
         openLeft();
@@ -195,9 +206,9 @@ public class Outtake {
         if (position == 0) {
             setTurret(turretTransfer);
         } else if (position > 0) {
-            setTurret(turretTransfer + (position * turret60 + turret60/2));
+            setTurret(turretTransfer + (position * turret60) + turret60/2);
         } else {
-            setTurret(turretTransfer - (position * turret60 - turret60/2));
+            setTurret(turretTransfer - (Math.abs(position) * turret60) - turret60/2);
         }
     }
 
