@@ -121,6 +121,7 @@ public class AravControls extends LinearOpMode {
 
                     if (leftClosed && rightClosed) {
                         robot.setArm(25);
+                        gamepad1.rumble(500);
                     } else {
                         robot.setArm(5);
                     }

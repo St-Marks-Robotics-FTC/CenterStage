@@ -17,7 +17,7 @@ public class MeepMeepTesting {
                 .setConstraints(65, 56, Math.toRadians(145), Math.toRadians(120), 15)
                 .setDimensions(13.5, 14) // Set size of bot
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-41, 63.5, Math.toRadians(90))) // Blue Far
+                        drive.trajectorySequenceBuilder(new Pose2d(-41, 63.5, Math.toRadians(-90))) // Blue Far
                         //drive.trajectorySequenceBuilder(new Pose2d(16.5, 63.5, Math.toRadians(90))) // Close
 
 
@@ -83,37 +83,52 @@ public class MeepMeepTesting {
 //                                .waitSeconds(1)
 
                                 //far cycle
-                                .setTangent(Math.toRadians(-120))
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-50, 18, Math.toRadians(60)), Math.toRadians(-120))
-                                .waitSeconds(1)
-                                .setTangent(Math.toRadians(-135))
-                                .splineToLinearHeading(new Pose2d(-58, 12, Math.toRadians(180)), Math.toRadians(180))
-                                .waitSeconds(1)
-                                .setTangent(0)
-                                //.splineToSplineHeading(new Pose2d(10, 12, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(18, 12, Math.toRadians(-150)), Math.toRadians(0))
-                                //.splineToLinearHeading(new Pose2d(46, 31, Math.toRadians(0)), Math.toRadians(45))
-                                .waitSeconds(0.75)
-                                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(60))
-                                .waitSeconds(1)
-                                .setTangent(Math.toRadians(-120))
-                                .splineToSplineHeading(new Pose2d(15, 12,Math.toRadians(180)), Math.toRadians(180))
-                                .splineToSplineHeading(new Pose2d(-58, 12, Math.toRadians(180)), Math.toRadians(180))
-                                .waitSeconds(1)
-                                .setTangent(0)
-                                .splineToSplineHeading(new Pose2d(20, 12,Math.toRadians(180)), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(48, 34,Math.toRadians(180)), Math.toRadians(45))
+//                                .setTangent(Math.toRadians(-120))
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-50, 18, Math.toRadians(60)), Math.toRadians(-120))
+//                                .waitSeconds(1)
+//                                .setTangent(Math.toRadians(-135))
+//                                .splineToLinearHeading(new Pose2d(-58, 12, Math.toRadians(180)), Math.toRadians(180))
+//                                .waitSeconds(1)
+//                                .setTangent(0)
+//                                //.splineToSplineHeading(new Pose2d(10, 12, Math.toRadians(180)), Math.toRadians(0))
+//                                .splineToSplineHeading(new Pose2d(18, 12, Math.toRadians(-150)), Math.toRadians(0))
+//                                //.splineToLinearHeading(new Pose2d(46, 31, Math.toRadians(0)), Math.toRadians(45))
+//                                .waitSeconds(0.75)
+//                                .splineToSplineHeading(new Pose2d(48, 42, Math.toRadians(180)), Math.toRadians(60))
+//                                .waitSeconds(1)
+//                                .setTangent(Math.toRadians(-120))
+//                                .splineToSplineHeading(new Pose2d(15, 12,Math.toRadians(180)), Math.toRadians(180))
+//                                .splineToSplineHeading(new Pose2d(-58, 12, Math.toRadians(180)), Math.toRadians(180))
+//                                .waitSeconds(1)
+//                                .setTangent(0)
+//                                .splineToSplineHeading(new Pose2d(20, 12,Math.toRadians(180)), Math.toRadians(0))
+//                                .splineToSplineHeading(new Pose2d(48, 34,Math.toRadians(180)), Math.toRadians(45))
+//                                .waitSeconds(0.5)
+//                                .setTangent(Math.toRadians(-135))
+//                                .splineToSplineHeading(new Pose2d(15, 12,Math.toRadians(180)), Math.toRadians(180))
+//                                .splineToSplineHeading(new Pose2d(-58, 12, Math.toRadians(180)), Math.toRadians(180))
+//                                .waitSeconds(1)
+//                                .setTangent(0)
+//                                .splineToSplineHeading(new Pose2d(20, 12,Math.toRadians(180)), Math.toRadians(0))
+//                                .splineToSplineHeading(new Pose2d(48, 34,Math.toRadians(180)), Math.toRadians(45))
+//                                .waitSeconds(0.5)
+//                                .back(4)
+
+                                .splineToSplineHeading(new Pose2d(-31, 34, Math.toRadians(-30)), Math.toRadians(0))
+
+                                .setTangent(Math.toRadians(180))
+                                .splineToSplineHeading(new Pose2d(-38, 34, Math.toRadians(0)), Math.toRadians(-180))
+                                .setTangent(Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(-31, 58), Math.toRadians(0))
                                 .waitSeconds(0.5)
-                                .setTangent(Math.toRadians(-135))
-                                .splineToSplineHeading(new Pose2d(15, 12,Math.toRadians(180)), Math.toRadians(180))
-                                .splineToSplineHeading(new Pose2d(-58, 12, Math.toRadians(180)), Math.toRadians(180))
-                                .waitSeconds(1)
-                                .setTangent(0)
-                                .splineToSplineHeading(new Pose2d(20, 12,Math.toRadians(180)), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(48, 34,Math.toRadians(180)), Math.toRadians(45))
-                                .waitSeconds(0.5)
-                                .back(4)
+                                .setTangent(Math.toRadians(0))
+
+                                .splineToSplineHeading(new Pose2d(22, 58, Math.toRadians(0)), Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(59, 35, Math.toRadians(0)), Math.toRadians(0))
+
+
+
                                 .build()
                 );
 

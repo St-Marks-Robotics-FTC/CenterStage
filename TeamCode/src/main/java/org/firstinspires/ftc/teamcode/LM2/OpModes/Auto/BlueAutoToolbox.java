@@ -58,7 +58,7 @@ public class BlueAutoToolbox extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(9, 27, Math.toRadians(-160)), Math.toRadians(-130))
                 .build();
         TrajectorySequence traj12 = drive.trajectorySequenceBuilder(startPose) // middle
-                .splineToSplineHeading(new Pose2d(15, 27, Math.toRadians(-90)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(15, 26.5, Math.toRadians(-90)), Math.toRadians(-90))
                 .build();
         TrajectorySequence traj13 = drive.trajectorySequenceBuilder(startPose) // left
                 .splineToSplineHeading(new Pose2d(16, 34, Math.toRadians(-45)), Math.toRadians(-90))
@@ -73,24 +73,35 @@ public class BlueAutoToolbox extends LinearOpMode {
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
                 .setTangent(Math.toRadians(45))
-                .splineToSplineHeading(new Pose2d(53, 33, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53, 32.5, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
 //                .strafeRight(18)
                 .back(4)
-                .strafeLeft(28)
+                .strafeLeft(34)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
+
+                .forward(14)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
 //                .strafeRight(22)
                 .back(4)
-                .strafeLeft(24)
+                .strafeLeft(30)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
+
+                .forward(14)
+
 
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
 //                .strafeRight(28)
                 .back(4)
-                .strafeLeft(18)
+                .strafeLeft(24)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
+
+                .forward(14)
+
                 .build();
 
         robot.closeDrone();
@@ -105,7 +116,7 @@ public class BlueAutoToolbox extends LinearOpMode {
 
         waitForStart();
         //robot.setArm(-700);
-        sleep(1000);
+        sleep(100);
         switch (loc) {
             case "none":
                 drive.followTrajectorySequence(traj11);
@@ -119,7 +130,7 @@ public class BlueAutoToolbox extends LinearOpMode {
         }
 
         robot.openRight();
-        sleep(3000);
+        sleep(1000);
         robot.setArm(350); // 390
 
         //outtake
@@ -137,7 +148,7 @@ public class BlueAutoToolbox extends LinearOpMode {
 
         robot.openLeft();
 
-        sleep(1000);
+        sleep(750);
 
         switch (loc) {
             case "none":

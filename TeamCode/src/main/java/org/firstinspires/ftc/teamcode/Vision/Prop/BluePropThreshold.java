@@ -33,7 +33,7 @@ static final Rect LEFT_RECTANGLE = new Rect(
 
     static final Rect RIGHT_RECTANGLE = new Rect(
             new Point(400, 30),
-            new Point(470, 70)
+            new Point(450, 80)
     );
 
     @Override
