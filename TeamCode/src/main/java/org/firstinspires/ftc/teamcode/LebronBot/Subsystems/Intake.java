@@ -28,10 +28,10 @@ public class Intake {
     public static double dropUp = 0.0;
 
 
-    public static double tiltUp = 0.705; // .7
+    public static double tiltUp = 0.625; // .7
     public static double tiltUpDegrees = 150;
-    public static double tiltDown =0.39;
-    public static double tiltStow = 0.62;
+    public static double tiltDown =0.32;
+    public static double tiltStow = 0.55;
     public static double tiltStack = 0.46;
 
 

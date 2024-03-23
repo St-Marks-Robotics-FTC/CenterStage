@@ -57,7 +57,7 @@ public class DriveConstants {
      * empirically tuned.
      */
     public static double kV = 0.013;
-    public static double kA = 0.002;
+    public static double kA = 0.00175;
     public static double kStatic = 0;
 
     /*
@@ -93,8 +93,8 @@ public class DriveConstants {
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR =
             RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
-    public static double MAX_VEL = 40;
-    public static double MAX_ACCEL = 35;
+    public static double MAX_VEL = 65;
+    public static double MAX_ACCEL = 55;
     public static double MAX_ANG_VEL = Math.toRadians(128.98557618116823);
     public static double MAX_ANG_ACCEL = Math.toRadians(128.98557618116823);
 

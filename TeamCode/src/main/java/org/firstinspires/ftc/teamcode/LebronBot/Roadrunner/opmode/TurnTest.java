@@ -10,10 +10,10 @@ import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
 /*
  * This is a simple routine to test turning capabilities.
  */
-@Disabled
 
 
 @Config
+@Disabled
 @Autonomous(group = "drive")
 public class TurnTest extends LinearOpMode {
     public static double ANGLE = 180; // deg
