@@ -125,7 +125,7 @@ public class MeepMeepTesting {
                                 .setTangent(Math.toRadians(0))
 
                                 .splineToSplineHeading(new Pose2d(22, -58, Math.toRadians(0)), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(59, -35, Math.toRadians(0)), Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(59, -44, Math.toRadians(0)), Math.toRadians(0))
 
 
 

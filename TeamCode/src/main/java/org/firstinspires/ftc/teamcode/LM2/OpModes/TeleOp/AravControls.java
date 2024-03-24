@@ -25,7 +25,8 @@ public class AravControls extends LinearOpMode {
     enum LinearStates {
         DOWN,
         UP,
-        HANG
+        HANG,
+        PUSH
     }
 
 
@@ -128,6 +129,8 @@ public class AravControls extends LinearOpMode {
                 })
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) ) // Raise arm
                 .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP), LinearStates.HANG) // Hang
+                .transition( () ->  pad1.wasJustPressed(GamepadKeys.Button.B), LinearStates.PUSH) // Let go on ground
+
 
 
 
@@ -202,6 +205,13 @@ public class AravControls extends LinearOpMode {
                 })
                 .transition( () ->  rightTrigger.wasJustPressed(), LinearStates.DOWN) // Drop Arm
 
+                .state(LinearStates.PUSH)
+                .onEnter( () -> {
+                    robot.openClaw();
+                    leftClosed = false;
+                    rightClosed = false;
+                })
+                .transitionTimed(0.5, LinearStates.DOWN)
 
                 .build();
 

@@ -65,34 +65,40 @@ public class RedFarTruss extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-29, -30, Math.toRadians(30)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj21 = drive.trajectorySequenceBuilder(traj11.end())
-                //.splineTo(new Vector2d(-41, -32), Math.toRadians(150))
-                .lineToLinearHeading(new Pose2d(-34, -26, Math.toRadians(120)))
-                .lineToLinearHeading(new Pose2d(-34, -3, Math.toRadians(90)))
-                .setTangent(0)
-                .splineTo(new Vector2d(22, -6), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(58, -21, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(-45))
+                .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(180))
+                .setTangent(Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-31, -58), Math.toRadians(0))
+                .waitSeconds(0.5)
+                .setTangent(Math.toRadians(0))
+
+                .splineToSplineHeading(new Pose2d(22, -58, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, -35, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj22 = drive.trajectorySequenceBuilder(traj12.end())
-                .splineToConstantHeading(new Vector2d(-48, -19), Math.toRadians(180))
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-31, -5), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(22, -5, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(57, -25.5, Math.toRadians(0)), Math.toRadians(0))
+//                .splineToSplineHeading(new Pose2d(-31, -34, Math.toRadians(30)), Math.toRadians(0))
+
+                .setTangent(Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(180))
+                .setTangent(Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-31, -58), Math.toRadians(0))
+                .waitSeconds(0.5)
+                .setTangent(Math.toRadians(0))
+
+                .splineToSplineHeading(new Pose2d(22, -58, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, -44, Math.toRadians(0)), Math.toRadians(0))
                 .build();
         TrajectorySequence traj23 = drive.trajectorySequenceBuilder(traj13.end())
-                .setTangent(Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-38, -28, Math.toRadians(0)), Math.toRadians(-180))
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-31, -5), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(22, -3, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(58, -36, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(-135))
+                .splineToSplineHeading(new Pose2d(-38, -34, Math.toRadians(0)), Math.toRadians(180))
+                .setTangent(Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-31, -58), Math.toRadians(0))
+                .waitSeconds(0.5)
+                .setTangent(Math.toRadians(0))
 
+                .splineToSplineHeading(new Pose2d(22, -58, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(59, -52, Math.toRadians(0)), Math.toRadians(0))
 
-//                .splineToSplineHeading(new Pose2d(-38, -28, Math.toRadians(0)), Math.toRadians(180))
-//                .splineToConstantHeading(new Vector2d(-31, -3), Math.toRadians(0))
-//                .splineToSplineHeading(new Pose2d(22, -3, Math.toRadians(0)), Math.toRadians(0))
-//                //.splineToSplineHeading(new Pose2d(58, -37, Math.toRadians(0)), Math.toRadians(0))
-//                .splineToConstantHeading(new Vector2d(58,-27.5), Math.toRadians(0))
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
@@ -117,7 +123,7 @@ public class RedFarTruss extends LinearOpMode {
         }
 
         waitForStart();
-        sleep(12000);
+//        sleep(12000);
         switch (loc) {
             case "none":
                 drive.followTrajectorySequence(traj13);

@@ -78,25 +78,30 @@ public class RedAutoToolbox extends LinearOpMode {
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(traj21.end())
                 .back(4)
-                .strafeRight(34)
+                .strafeLeft(16)
+//                .strafeRight(34)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
 
-                .forward(10)
+//                .forward(15)
                 .build();
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(traj22.end())
                 .back(4)
-                .strafeRight(28)
+                .strafeLeft(24)
+
+//                .strafeRight(2)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
 
-                .forward(10)
+//                .forward(15)
 
                 .build();
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(traj23.end())
                 .back(4)
-                .strafeRight(24)
+                .strafeLeft(28)
+
+//                .strafeRight(28)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {robot.setArm(0);}) // score purple Preload
 
-                .forward(10)
+//                .forward(15)
 
                 .build();
 
