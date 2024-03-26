@@ -36,14 +36,14 @@ public class Outtake {
     public static double slideUpPower=0.4;
 
     // V4Bar
-    public static double v4barTransfer = 0.855; // 0.9
-    public static double v4barStow = 0.73;
+    public static double v4barTransfer = 0.09; // 0.9
+    public static double v4barStow = 0.2;
     public static double v4barOut = 0.64;
-    public static double v4barScore = 0.1;
+    public static double v4barScore = 0.8;
     public static double v4barPurple=0;
 
-    public static double angleTransfer = 0.93;
-    public static double angleStow = 0.78;
+    public static double angleTransfer = 0.94;
+    public static double angleStow = 0.8;
     public static double angleScore = 0.17;
     public static double anglePurple = 0;
 
@@ -53,7 +53,7 @@ public class Outtake {
     public static double clawLeftMoreClosed = 0.55;
 
     public static double clawRightOpen = 1;
-    public static double clawRightClosed = 0.89;
+    public static double clawRightClosed = 0.82;
     public static double clawRightMoreClosed = 0.55;
 
     // Turret

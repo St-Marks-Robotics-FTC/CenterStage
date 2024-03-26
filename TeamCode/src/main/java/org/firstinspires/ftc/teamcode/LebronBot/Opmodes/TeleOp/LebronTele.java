@@ -191,6 +191,7 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.DROP_OUTTAKE)
                 .onEnter( () -> {
+                    robot.outtake.openBothClaws();
                     robot.outtake.turretTransfer();
                     robot.intake.setIntake(0); // Stop Intake
                     robot.outtake.v4barTransfer();
