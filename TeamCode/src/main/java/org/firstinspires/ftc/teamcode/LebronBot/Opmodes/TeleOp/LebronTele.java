@@ -43,6 +43,7 @@ public class LebronTele extends LinearOpMode {
         SUCK,
         TILT,
         DROP_OUTTAKE,
+        OUTTAKE,
         TRANSFER,
         STOW,
 
@@ -189,14 +190,20 @@ public class LebronTele extends LinearOpMode {
 //                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
+                .state(LinearStates.OUTTAKE)
+                .onEnter( () -> {
+                    robot.intake.setIntake(-1);
+                })
+                .transitionTimed(0.5)
+
                 .state(LinearStates.DROP_OUTTAKE)
                 .onEnter( () -> {
+                    robot.intake.setIntake(0); // Stop Intake
                     robot.outtake.openBothClaws();
                     robot.outtake.turretTransfer();
-                    robot.intake.setIntake(0); // Stop Intake
                     robot.outtake.v4barTransfer();
                 })
-                .transitionTimed(0.75)
+                .transitionTimed(0.5)
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
@@ -213,7 +220,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.turretTransfer();
                     //robot.intake.tiltStow();
                 })
-                .transitionTimed(0.5)
+                .transitionTimed(0.3)
                 .state(LinearStates.STOWANGLE)
                 .onEnter( () -> {
                     robot.intake.tiltStow();

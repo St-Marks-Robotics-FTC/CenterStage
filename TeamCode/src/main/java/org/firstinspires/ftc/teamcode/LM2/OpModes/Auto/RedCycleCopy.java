@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.Trajecto
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-//@Disabled
+@Disabled
 
 @Config
 @Autonomous

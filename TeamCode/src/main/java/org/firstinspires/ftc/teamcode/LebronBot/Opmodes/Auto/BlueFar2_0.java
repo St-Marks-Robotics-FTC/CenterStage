@@ -54,7 +54,7 @@ public class BlueFar2_0 extends LinearOpMode {
                 // Drive to spike
                 .setReversed(true)
                 .setTangent(Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(-42, 26, Math.toRadians(135)), Math.toRadians(-110))
+                .splineToSplineHeading(new Pose2d(-42, 26, Math.toRadians(-135)), Math.toRadians(-110))
 
 //                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
 //                    robot.openLeftClaw();
@@ -87,6 +87,7 @@ public class BlueFar2_0 extends LinearOpMode {
 //                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
 //                    robot.openLeftClaw();
 //                })
+
                 .waitSeconds(1) // Score Purple Spike
                 .back(4)
 //
@@ -117,6 +118,20 @@ public class BlueFar2_0 extends LinearOpMode {
 //                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
 //                    robot.openLeftClaw();
 //                })
+                .UNSTABLE_addTemporalMarkerOffset(-1, () -> {
+                    robot.outtake.v4barPurple();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+                    robot.outtake.v4BarAnglePurple();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
+                    robot.outtake.openRight();
+                })
+                .waitSeconds(4) // Score Purple Spike
+                .UNSTABLE_addTemporalMarkerOffset( 0, () -> {
+                    robot.outtake.v4barScore();
+                    robot.outtake.v4barAngleScore();
+                })
                 .waitSeconds(1) // Score Purple Spike
                 .back(4)
 //
@@ -162,9 +177,9 @@ public class BlueFar2_0 extends LinearOpMode {
 
 
         waitForStart();
-        sleep(delay);
+        //sleep(delay);
 //        robot.v4barPickup();
-        switch (loc) {
+        switch ("none") {
             case "left":
                 robot.drive.followTrajectorySequence(right);
                 break;

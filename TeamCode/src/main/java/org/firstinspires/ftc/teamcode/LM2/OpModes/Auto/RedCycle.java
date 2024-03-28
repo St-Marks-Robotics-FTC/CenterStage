@@ -21,7 +21,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 
 @Config
-//@Disabled
+@Disabled
 @Autonomous
 public class RedCycle extends LinearOpMode {
 

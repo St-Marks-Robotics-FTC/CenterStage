@@ -40,7 +40,7 @@ public class Outtake {
     public static double v4barStow = 0.2;
     public static double v4barOut = 0.64;
     public static double v4barScore = 0.8;
-    public static double v4barPurple=0;
+    public static double v4barPurple=1;
 
     public static double angleTransfer = 0.94;
     public static double angleStow = 0.8;

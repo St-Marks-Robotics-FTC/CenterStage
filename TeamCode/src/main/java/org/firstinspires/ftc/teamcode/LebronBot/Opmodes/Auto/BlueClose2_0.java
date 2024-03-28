@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
-
+@Disabled
 @Autonomous (group = "Blue", preselectTeleOp = "JankTele")
 public class BlueClose2_0 extends LinearOpMode {
     FtcDashboard dashboard;
