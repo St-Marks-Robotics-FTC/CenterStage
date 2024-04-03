@@ -28,29 +28,29 @@ public class Outtake {
 
 
     // Slides
-    public static int slidesDown = 2;
+    public static int slidesDown = -10;
     public static int level1 = 350;
     public static int levelIncrement = 100;
 
-    public static double slideDownPower=0.15;
+    public static double slideDownPower=0.25;
     public static double slideUpPower=0.4;
 
     // V4Bar
-    public static double v4barTransfer = 0.09; // 0.9
-    public static double v4barStow = 0.2;
+    public static double v4barTransfer = 0.023; // 0.9
+    public static double v4barStow = 0.35;
     public static double v4barOut = 0.64;
     public static double v4barScore = 0.8;
     public static double v4barPurple=1;
 
-    public static double angleTransfer = 0.94;
-    public static double angleStow = 0.8;
-    public static double angleScore = 0.17;
+    public static double angleTransfer = 0.88;
+    public static double angleStow = 0.75;
+    public static double angleScore = 0.12;
     public static double anglePurple = 0;
 
     // Claw
-    public static double clawLeftOpen = 0.25;
-    public static double clawLeftClosed = 0.46;
-    public static double clawLeftMoreClosed = 0.55;
+    public static double clawLeftOpen = 0.1;
+    public static double clawLeftClosed = 0.35;
+    public static double clawLeftMoreClosed = 0.45;
 
     public static double clawRightOpen = 1;
     public static double clawRightClosed = 0.82;
@@ -135,7 +135,7 @@ public class Outtake {
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         midSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.1 : slideDownPower);
+        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.15 : slideDownPower);
         midSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
     }
@@ -172,6 +172,10 @@ public class Outtake {
 
     public void v4barAngleStow() {
         v4barAngle.setPosition(angleStow);
+    }
+
+    public void setV4BarAngle (double pos) {
+        v4barAngle.setPosition(pos);
     }
 
     public void v4barAngleScore() {

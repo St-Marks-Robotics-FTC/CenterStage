@@ -109,11 +109,12 @@ public class LebronTele extends LinearOpMode {
 
         robot = new LebronClass(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
+        pad2 = new GamepadEx(gamepad2);
         ToggleButtonReader hangToggle = new ToggleButtonReader(
                 pad1, GamepadKeys.Button.DPAD_RIGHT
         );
         ToggleButtonReader droneToggle = new ToggleButtonReader(
-                pad1, GamepadKeys.Button.BACK
+                pad2, GamepadKeys.Button.A
         );
         TriggerReader leftTrigger = new TriggerReader(
                 pad1, GamepadKeys.Trigger.LEFT_TRIGGER
@@ -121,7 +122,6 @@ public class LebronTele extends LinearOpMode {
         TriggerReader rightTrigger = new TriggerReader(
                 pad1, GamepadKeys.Trigger.RIGHT_TRIGGER
         );
-        pad2 = new GamepadEx(gamepad2);
 
 
         // PID
@@ -178,7 +178,7 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                 })
-                .transitionTimed(0.5)
+                .transitionTimed(0.35)
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
@@ -186,7 +186,7 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                 })
-                .transitionTimed(0.5)
+                .transitionTimed(0.2)
 //                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
@@ -194,7 +194,7 @@ public class LebronTele extends LinearOpMode {
                 .onEnter( () -> {
                     robot.intake.setIntake(-1);
                 })
-                .transitionTimed(0.5)
+                .transitionTimed(0.25)
 
                 .state(LinearStates.DROP_OUTTAKE)
                 .onEnter( () -> {
@@ -203,7 +203,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barTransfer();
                 })
-                .transitionTimed(0.5)
+                .transitionTimed(0.45)
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
@@ -217,6 +217,7 @@ public class LebronTele extends LinearOpMode {
                 .state(LinearStates.STOW)
                 .onEnter( () -> {
                     robot.outtake.setV4Bar(robot.outtake.v4barStow); // V4b Stow Position
+                    robot.outtake.setV4BarAngle(robot.outtake.angleTransfer+0.015);
                     robot.outtake.turretTransfer();
                     //robot.intake.tiltStow();
                 })
@@ -458,22 +459,22 @@ public class LebronTele extends LinearOpMode {
 
 
 //
-//            // Drone
-//            if (droneToggle.getState()) {
-//                robot.special.shootDrone();
-//            } else {
-//                robot.special.holdDrone();
-//            }
+            // Drone
+            if (droneToggle.getState()) {
+                robot.special.shootDrone();
+            } else {
+                robot.special.holdDrone();
+            }
 
 
 
-            if (robot.outtake.leftSlide.getVelocity() < 1 && robot.outtake.leftSlide.getCurrent(CurrentUnit.AMPS) > 1 && robot.outtake.leftSlide.getCurrentPosition() < 25) {
+            if (robot.outtake.leftSlide.getVelocity() < 2 && robot.outtake.leftSlide.getCurrentPosition() < 0) {
                 robot.outtake.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-            if (robot.outtake.midSlide.getVelocity() < 1 && robot.outtake.midSlide.getCurrent(CurrentUnit.AMPS) > 1 && robot.outtake.midSlide.getCurrentPosition() < 25 ) {
+            if (robot.outtake.midSlide.getVelocity() < 2 && robot.outtake.midSlide.getCurrentPosition() < 0) {
                 robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-            if (robot.outtake.rightSlide.getVelocity() < 1 && robot.outtake.rightSlide.getCurrent(CurrentUnit.AMPS) > 1 && robot.outtake.rightSlide.getCurrentPosition() < 25 ) {
+            if (robot.outtake.rightSlide.getVelocity() < 2 && robot.outtake.rightSlide.getCurrentPosition() < 0) {
                 robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
