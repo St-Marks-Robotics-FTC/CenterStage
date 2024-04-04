@@ -64,6 +64,7 @@ public class LebronTele extends LinearOpMode {
     boolean rightClosed = true;
 
     boolean hangReady = false;
+    boolean extended = false;
     double loopTime = 0;
 
     LebronClass robot;
@@ -240,6 +241,11 @@ public class LebronTele extends LinearOpMode {
                 .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
                 .loop( () -> {
                     robot.outtake.turretTransfer();
+                    // Slide Level Adjustments
+                    if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                        slideLevel = Math.min(6, slideLevel + 1);
+                    }
+                    robot.outtake.slidesToLevel(slideLevel);
                 })
                 .transition( () ->  gamepad1.y) // Outtake Button
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE_AGAIN) // Intake Again if we missed
@@ -263,6 +269,7 @@ public class LebronTele extends LinearOpMode {
                 .onEnter( () -> {
                     leftClosed = true;
                     rightClosed = true;
+                    extended=true;
                 })
                 .loop( () -> {
                     if (leftTrigger.wasJustPressed()) {
@@ -288,6 +295,12 @@ public class LebronTele extends LinearOpMode {
                     }
 
                     robot.outtake.turretTo(turretLevel); // Spin Turret
+                    // Slide Level Adjustments
+                    if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                        slideLevel = Math.min(6, slideLevel + 1);
+                    } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                        slideLevel = Math.max(0, slideLevel - 1);
+                    }
                     // Manual Control
                     if (Math.abs(pad2.getLeftY()) >= 0.1) {
                         manualSlides = true;
@@ -300,10 +313,11 @@ public class LebronTele extends LinearOpMode {
                 .onExit( () -> {
                         leftClosed=true;
                         rightClosed=true;
+                        extended=false;
                 })
-                .transition( () ->  gamepad1.right_bumper && !leftClosed && !rightClosed) // Both open
+                .transition( () ->  gamepad1.a && !leftClosed && !rightClosed) // Both open
 //                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
-                .transition(() -> gamepad1.a,  // Retract Button Failsafe
+                .transition(() -> gamepad1.b,  // Retract Button Failsafe
                         LinearStates.IDLE2,
                         () -> {
                             robot.outtake.v4barStow(); // V4b Stow Position
@@ -380,8 +394,15 @@ public class LebronTele extends LinearOpMode {
 
 
 
-            double tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
-            double rotScaleFactor = gamepad1.left_bumper ? 0.4 : 0.9;
+            double tranScaleFactor;
+            double rotScaleFactor;
+            if (!extended) {
+                rotScaleFactor = gamepad1.left_bumper ? 0.4 : 0.9;
+                tranScaleFactor = gamepad1.left_bumper ? 0.4 : 1.0;
+            } else {
+                rotScaleFactor = 0.4;
+                tranScaleFactor = 0.4;
+            }
 
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
@@ -435,26 +456,10 @@ public class LebronTele extends LinearOpMode {
 
             robot.drive.setMotorPowers(frontLeftPower, backLeftPower, backRightPower, frontRightPower);
 
-
-
-
-
-
-
-
-
-
-            // Slide Level Adjustments
-            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                slideLevel = Math.min(6, slideLevel + 1);
-            } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                slideLevel = Math.max(0, slideLevel - 1);
-            }
-
             // Turret Angle Adjustments
-            if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) && extended) {
                 turretLevel = Math.min(3, turretLevel+1);
-            } else if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
+            } else if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && extended) {
                 turretLevel = Math.max(-3, turretLevel-1);
             }
 
