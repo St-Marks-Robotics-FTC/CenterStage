@@ -5,6 +5,9 @@ import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.profile.MotionProfile;
+import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
+import com.acmerobotics.roadrunner.profile.MotionState;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -131,7 +134,22 @@ public class LebronTele extends LinearOpMode {
         imu.initialize(parameters);
 
 
-        ElapsedTime time = new ElapsedTime();
+        // V4B Motion Profile
+        MotionProfile v4bProfile = MotionProfileGenerator.generateSimpleMotionProfile(
+                new MotionState(robot.outtake.v4barStow, 0, 0),
+                new MotionState(robot.outtake.v4barTransfer, 0, 0),
+                0.05,
+                0.05,
+                0.05
+        );
+
+
+
+
+
+
+
+        ElapsedTime profileTimer = new ElapsedTime();
 
 
 
@@ -193,6 +211,9 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                 })
+                .onExit( () -> {
+                    profileTimer.reset();
+                })
                 .transitionTimed(0.25)
 //                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
@@ -201,12 +222,22 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.DROP_OUTTAKE)
                 .onEnter( () -> {
+                    profileTimer.reset();
+
                     robot.intake.setIntake(0); // Stop Intake
                     robot.outtake.openBothClaws();
                     robot.outtake.turretTransfer();
-                    robot.outtake.v4barTransfer();
+
+//                    robot.outtake.v4barTransfer();
+                    robot.outtake.v4barAngleTransfer();
+
                 })
-                .transitionTimed(0.4)
+                .loop( () -> {
+                    MotionState state = v4bProfile.get(profileTimer.seconds());
+                    robot.outtake.setV4Bar(state.getX());
+                })
+                .transition( () ->  profileTimer.seconds() > v4bProfile.duration()) // V4b is down
+//                .transitionTimed(0.4)
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
