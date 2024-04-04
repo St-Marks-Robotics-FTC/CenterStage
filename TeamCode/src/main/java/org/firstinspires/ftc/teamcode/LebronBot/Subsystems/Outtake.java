@@ -29,7 +29,7 @@ public class Outtake {
 
     // Slides
     public static int slidesDown = -10;
-    public static int level1 = 350;
+    public static int level1 = 275;
     public static int levelIncrement = 100;
 
     public static double slideDownPower=0.3;
