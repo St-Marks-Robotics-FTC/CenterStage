@@ -5,8 +5,6 @@ import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.control.PIDFController;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -14,7 +12,6 @@ import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,7 +25,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
-import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
 
 import java.util.List;
 
@@ -41,9 +37,9 @@ public class LebronTele extends LinearOpMode {
         IDLE1,
         INTAKE,
         SUCK,
+        SPIT,
         TILT,
         DROP_OUTTAKE,
-        OUTTAKE,
         TRANSFER,
         STOW,
 
@@ -174,11 +170,17 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.SUCK)
                 .onEnter( () -> {
-                    robot.intake.setIntake(0.25); // keep Intaking
+                    robot.intake.setIntake(0.8); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                 })
-                .transitionTimed(0.35)
+                .transitionTimed(0.25)
+
+                .state(LinearStates.SPIT)
+                .onEnter( () -> {
+                    robot.intake.setIntake(-1);
+                })
+                .transitionTimed(0.25)
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
@@ -186,15 +188,11 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                 })
-                .transitionTimed(0.2)
+                .transitionTimed(0.25)
 //                .transition( () ->  robot.intake.isTiltUp()) // Tilt is up
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
-                .state(LinearStates.OUTTAKE)
-                .onEnter( () -> {
-                    robot.intake.setIntake(-1);
-                })
-                .transitionTimed(0.125)
+
 
                 .state(LinearStates.DROP_OUTTAKE)
                 .onEnter( () -> {
