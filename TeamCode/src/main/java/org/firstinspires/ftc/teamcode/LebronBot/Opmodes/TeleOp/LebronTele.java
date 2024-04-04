@@ -175,12 +175,16 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.turretTransfer();
                 })
                 .transitionTimed(0.25)
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
+
 
                 .state(LinearStates.SPIT)
                 .onEnter( () -> {
                     robot.intake.setIntake(-1);
                 })
                 .transitionTimed(0.25)
+                .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
+
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
