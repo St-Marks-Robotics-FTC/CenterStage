@@ -32,18 +32,18 @@ public class Outtake {
     public static int level1 = 350;
     public static int levelIncrement = 100;
 
-    public static double slideDownPower=0.25;
-    public static double slideUpPower=0.4;
+    public static double slideDownPower=0.3;
+    public static double slideUpPower=0.7;
 
     // V4Bar
-    public static double v4barTransfer = 0.023; // 0.9
-    public static double v4barStow = 0.35;
+    public static double v4barTransfer = 0.026; // 0.9
+    public static double v4barStow = 0.32;
     public static double v4barOut = 0.64;
     public static double v4barScore = 0.8;
     public static double v4barPurple=1;
 
-    public static double angleTransfer = 0.88;
-    public static double angleStow = 0.75;
+    public static double angleTransfer = 0.885;
+    public static double angleStow = 0.8;
     public static double angleScore = 0.12;
     public static double anglePurple = 0;
 
@@ -57,8 +57,8 @@ public class Outtake {
     public static double clawRightMoreClosed = 0.55;
 
     // Turret
-    public static double turretTransfer = 0.53;
-    public static double turret60 = 0.15;
+    public static double turretTransfer = 0.485;
+    public static double turret60 = 0.6;
 
 
 
@@ -82,9 +82,9 @@ public class Outtake {
         midSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftSlide.setTargetPositionTolerance(25);
-        midSlide.setTargetPositionTolerance(25);
-        rightSlide.setTargetPositionTolerance(25);
+        leftSlide.setTargetPositionTolerance(10);
+        midSlide.setTargetPositionTolerance(10);
+        rightSlide.setTargetPositionTolerance(10);
 
 
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);

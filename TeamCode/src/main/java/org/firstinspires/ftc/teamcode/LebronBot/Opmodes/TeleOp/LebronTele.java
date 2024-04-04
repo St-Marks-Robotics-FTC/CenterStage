@@ -111,7 +111,7 @@ public class LebronTele extends LinearOpMode {
         pad1 = new GamepadEx(gamepad1);
         pad2 = new GamepadEx(gamepad2);
         ToggleButtonReader hangToggle = new ToggleButtonReader(
-                pad1, GamepadKeys.Button.DPAD_RIGHT
+                pad2, GamepadKeys.Button.DPAD_RIGHT
         );
         ToggleButtonReader droneToggle = new ToggleButtonReader(
                 pad2, GamepadKeys.Button.A
@@ -194,7 +194,7 @@ public class LebronTele extends LinearOpMode {
                 .onEnter( () -> {
                     robot.intake.setIntake(-1);
                 })
-                .transitionTimed(0.25)
+                .transitionTimed(0.125)
 
                 .state(LinearStates.DROP_OUTTAKE)
                 .onEnter( () -> {
@@ -203,7 +203,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barTransfer();
                 })
-                .transitionTimed(0.45)
+                .transitionTimed(0.4)
 
                 .state(LinearStates.TRANSFER)
                 .onEnter( () -> {
@@ -387,7 +387,7 @@ public class LebronTele extends LinearOpMode {
             y *= tranScaleFactor;
             x *= tranScaleFactor;
 
-            if (gamepad1.right_stick_button || gamepad1.y) {
+            if (gamepad1.right_stick_button || gamepad1.dpad_right) {
                 PID = true;
                 stickZero = false;
             } else if (gamepad1.a) {
@@ -466,7 +466,16 @@ public class LebronTele extends LinearOpMode {
                 robot.special.holdDrone();
             }
 
-
+            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                if (!hangReady) {
+                    robot.outtake.setSlides(750);
+                    robot.outtake.v4barScore();
+                    hangReady = true;
+                } else {
+                    robot.outtake.setSlides(300);
+                    hangReady = false;
+                }
+            }
 
             if (robot.outtake.leftSlide.getVelocity() < 2 && robot.outtake.leftSlide.getCurrentPosition() < 0) {
                 robot.outtake.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -516,6 +525,7 @@ public class LebronTele extends LinearOpMode {
             droneToggle.readValue();
             leftTrigger.readValue();
             rightTrigger.readValue();
+            hangToggle.readValue();
             pad2.readButtons();
 
 
