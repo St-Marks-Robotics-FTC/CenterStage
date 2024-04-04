@@ -271,12 +271,12 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
                 .loop( () -> {
-                    robot.outtake.turretTransfer();
                     // Slide Level Adjustments
                     if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        slideLevel = Math.min(6, slideLevel + 1);
+                        slideLevel = Math.min(8, slideLevel + 1);
                     }
                     robot.outtake.slidesToLevel(slideLevel);
+                    robot.outtake.turretTo(turretLevel);
                 })
                 .transition( () ->  gamepad1.y) // Outtake Button
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE_AGAIN) // Intake Again if we missed
@@ -328,7 +328,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.turretTo(turretLevel); // Spin Turret
                     // Slide Level Adjustments
                     if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                        slideLevel = Math.min(6, slideLevel + 1);
+                        slideLevel = Math.min(8, slideLevel + 1);
                     } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                         slideLevel = Math.max(0, slideLevel - 1);
                     }
@@ -381,7 +381,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 })
                 .transitionTimed(0.75)
-                .transition( () ->  robot.outtake.getSlidePos() < 25, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
+                .transition( () ->  robot.outtake.getSlidePos() < 10, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
 
                 .state(LinearStates.INTAKE_AGAIN)
@@ -494,7 +494,11 @@ public class LebronTele extends LinearOpMode {
                 turretLevel = Math.max(-3, turretLevel-1);
             }
 
-
+            if (pad1.wasJustPressed(GamepadKeys.Button.A) && !extended) {
+                turretLevel = Math.min(3, turretLevel+1);
+            } else if (pad1.wasJustPressed(GamepadKeys.Button.B) && !extended) {
+                turretLevel = Math.max(-3, turretLevel-1);
+            }
 
 //
             // Drone
@@ -524,13 +528,6 @@ public class LebronTele extends LinearOpMode {
             if (robot.outtake.rightSlide.getVelocity() < 2 && robot.outtake.rightSlide.getCurrentPosition() < 0) {
                 robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-
-
-
-
-
-
-
 
 
             // Telemetry

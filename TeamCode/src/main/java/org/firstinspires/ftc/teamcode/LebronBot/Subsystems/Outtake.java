@@ -28,7 +28,7 @@ public class Outtake {
 
 
     // Slides
-    public static int slidesDown = -10;
+    public static int slidesDown = -20;
     public static int level1 = 275;
     public static int levelIncrement = 100;
 
@@ -42,7 +42,7 @@ public class Outtake {
     public static double v4barScore = 0.8;
     public static double v4barPurple=1;
 
-    public static double angleTransfer = 0.885;
+    public static double angleTransfer = 0.8875;
     public static double angleStow = 0.8;
     public static double angleScore = 0.12;
     public static double anglePurple = 0;
@@ -113,7 +113,8 @@ public class Outtake {
     }
 
     public void slidesToLevel(int level) {
-        setSlides(level1 +  (level - 1) * levelIncrement);
+        //setSlides(level1 +  (level - 1) * levelIncrement);
+        setSlides((level - 1) * levelIncrement);
     }
 
     public void manualSlides(double power) {
@@ -135,7 +136,7 @@ public class Outtake {
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         midSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.15 : slideDownPower);
+        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.1 : slideDownPower);
         midSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
     }
