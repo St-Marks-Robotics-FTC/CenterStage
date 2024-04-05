@@ -30,10 +30,10 @@ public class Intake {
 
     public static double tiltUp = 0.44; // .7
     public static double tiltUpDegrees = 150;
-    public static double tiltDown =0.11;
-    public static double tiltStow = 0.36;
+    public static double tiltDown =0.09;
+    public static double tiltStow = 0.34;
     public static double tiltStack = 0.2;
-
+    public static double tiltStackInc = 0.02;
 
     public Intake(HardwareMap hardwareMap) {
         //intake
@@ -85,6 +85,11 @@ public class Intake {
 
     public void tiltStack() {
         setTilt(tiltStack);
+    }
+
+    public void tiltStackTo(int pos) {
+        //0 is highest
+        setTilt(tiltStack-pos*tiltStackInc);
     }
 
     public void setTilt(double pos) {

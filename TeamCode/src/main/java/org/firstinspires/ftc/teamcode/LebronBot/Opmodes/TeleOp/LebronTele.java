@@ -202,9 +202,9 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.SPIT)
                 .onEnter( () -> {
-                    robot.intake.setIntake(-1);
+                    robot.intake.setIntake(-0.3);
                 })
-                .transitionTimed(0.25)
+                .transitionTimed(0.125)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
 
@@ -256,6 +256,8 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.setV4Bar(robot.outtake.v4barStow); // V4b Stow Position
                     robot.outtake.setV4BarAngle(robot.outtake.angleTransfer+0.015);
                     robot.outtake.turretTransfer();
+                    robot.outtake.closeRightMore();
+                    robot.outtake.closeLeftMore();
                     //robot.intake.tiltStow();
                 })
                 .transitionTimed(0.3)
@@ -264,7 +266,6 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.tiltStow();
                     robot.outtake.v4barAngleStow();
                     robot.outtake.turretTransfer();
-
                 })
                 .transitionTimed(0.25)
 
@@ -361,9 +362,9 @@ public class LebronTele extends LinearOpMode {
 
                 })
                 .onExit( () -> {
-                        leftClosed=true;
-                        rightClosed=true;
-                        extended=false;
+                    leftClosed=true;
+                    rightClosed=true;
+                    extended=false;
                 })
                 .transition( () ->  gamepad1.a && !leftClosed && !rightClosed) // Both open
 //                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
