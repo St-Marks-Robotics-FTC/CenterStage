@@ -38,9 +38,10 @@ public class Outtake {
     // V4Bar
     public static double v4barTransfer = 0.026; // 0.9
     public static double v4barStow = 0.32;
+    public static double v4barView = 0.37;
     public static double v4barOut = 0.64;
     public static double v4barScore = 0.8;
-    public static double v4barPurple=1;
+    public static double v4barPurple = 1;
 
     public static double angleTransfer = 0.8875;
     public static double angleStow = 0.8;
@@ -113,8 +114,7 @@ public class Outtake {
     }
 
     public void slidesToLevel(int level) {
-        //setSlides(level1 +  (level - 1) * levelIncrement);
-        setSlides((level - 1) * levelIncrement);
+        setSlides(level1 +  (level - 1) * levelIncrement);
     }
 
     public void manualSlides(double power) {
@@ -148,6 +148,10 @@ public class Outtake {
     }
     public void v4barStow() {
         setV4Bar(v4barStow);
+        v4barAngleStow();
+    }
+    public void v4barView() {
+        setV4Bar(v4barView);
         v4barAngleStow();
     }
 

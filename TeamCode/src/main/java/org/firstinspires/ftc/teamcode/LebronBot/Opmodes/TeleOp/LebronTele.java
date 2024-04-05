@@ -60,7 +60,7 @@ public class LebronTele extends LinearOpMode {
 
 
     int slideLevel = 1;
-    int turretLevel = 0;
+    int turretLevel = 1;
     boolean manualSlides = false;
 
     boolean leftClosed = true;
@@ -93,6 +93,8 @@ public class LebronTele extends LinearOpMode {
 
     boolean stickZero = false;
 
+    boolean slideBumper = true;
+
 
 
     @Override
@@ -110,11 +112,9 @@ public class LebronTele extends LinearOpMode {
         robot = new LebronClass(hardwareMap);
         pad1 = new GamepadEx(gamepad1);
         pad2 = new GamepadEx(gamepad2);
-        ToggleButtonReader hangToggle = new ToggleButtonReader(
-                pad2, GamepadKeys.Button.DPAD_RIGHT
-        );
+
         ToggleButtonReader droneToggle = new ToggleButtonReader(
-                pad2, GamepadKeys.Button.A
+                pad1, GamepadKeys.Button.DPAD_DOWN
         );
         TriggerReader leftTrigger = new TriggerReader(
                 pad1, GamepadKeys.Trigger.LEFT_TRIGGER
@@ -138,9 +138,9 @@ public class LebronTele extends LinearOpMode {
         MotionProfile v4bProfile = MotionProfileGenerator.generateSimpleMotionProfile(
                 new MotionState(robot.outtake.v4barStow, 0, 0),
                 new MotionState(robot.outtake.v4barTransfer, 0, 0),
-                0.05,
-                0.05,
-                0.05
+                25,
+                25,
+                25
         );
 
 
@@ -159,6 +159,9 @@ public class LebronTele extends LinearOpMode {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 .state(LinearStates.IDLE1)                 // Driving to wing to pick up
                 .onEnter( () -> { // Happens on Init as well
+                    slideBumper = true;
+                    turretLevel = 1;
+
                     robot.intake.setIntake(0); // Stop Intake
                     robot.intake.tiltStow(); // Intake Stow
 
@@ -270,20 +273,15 @@ public class LebronTele extends LinearOpMode {
 
 
                 .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
-                .loop( () -> {
-                    // Slide Level Adjustments
-                    if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        slideLevel = Math.min(8, slideLevel + 1);
-                    }
-                    robot.outtake.slidesToLevel(slideLevel);
-                    robot.outtake.turretTo(turretLevel);
-                })
-                .transition( () ->  gamepad1.y) // Outtake Button
+                .transition( () ->  gamepad1.b) // Outtake Button
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE_AGAIN) // Intake Again if we missed
 
 
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
+                    slideBumper = false;
+                    extended = true;
+
                     robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                     robot.outtake.v4barScore(); // V4b Score Position
                 })
@@ -300,9 +298,26 @@ public class LebronTele extends LinearOpMode {
                 .onEnter( () -> {
                     leftClosed = true;
                     rightClosed = true;
-                    extended=true;
                 })
                 .loop( () -> {
+                    // Turret Angle Adjustments
+                    if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                        turretLevel = Math.min(1, turretLevel+1);
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                        turretLevel = Math.max(-1, turretLevel-1);
+                    }
+                    robot.outtake.turretTo(turretLevel); // Spin Turret
+
+                    // Slide Level Adjustments
+                    if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
+                        slideLevel = Math.min(5, slideLevel + 1);
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
+                        slideLevel = Math.max(1, slideLevel - 1);
+                    }
+                    robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
+
+
+                    // Claws
                     if (leftTrigger.wasJustPressed()) {
                         leftClosed = !leftClosed;
                     }
@@ -310,35 +325,39 @@ public class LebronTele extends LinearOpMode {
                         rightClosed = !rightClosed;
                     }
 
-                    if (leftClosed) {
-                        robot.outtake.closeLeftMore();
-                        leftClosed = true;
-                    } else {
-                        robot.outtake.openLeft();
-                        leftClosed = false;
-                    }
-                    if (rightClosed) {
-                        robot.outtake.closeRightMore();
-                        rightClosed = true;
-                    } else {
-                        robot.outtake.openRight();
-                        rightClosed = false;
+                    if (turretLevel >= 1) { // accounts for left and right in orientation
+                        if (leftClosed) {
+                            robot.outtake.closeLeftMore();
+                            leftClosed = true;
+                        } else {
+                            robot.outtake.openLeft();
+                            leftClosed = false;
+                        }
+                        if (rightClosed) {
+                            robot.outtake.closeRightMore();
+                            rightClosed = true;
+                        } else {
+                            robot.outtake.openRight();
+                            rightClosed = false;
+                        }
+                    } else if (turretLevel <= -1) {
+                        if (rightClosed) {
+                            robot.outtake.closeLeftMore();
+                            leftClosed = true;
+                        } else {
+                            robot.outtake.openLeft();
+                            leftClosed = false;
+                        }
+                        if (leftClosed) {
+                            robot.outtake.closeRightMore();
+                            rightClosed = true;
+                        } else {
+                            robot.outtake.openRight();
+                            rightClosed = false;
+                        }
                     }
 
-                    robot.outtake.turretTo(turretLevel); // Spin Turret
-                    // Slide Level Adjustments
-                    if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                        slideLevel = Math.min(8, slideLevel + 1);
-                    } else if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) || pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                        slideLevel = Math.max(0, slideLevel - 1);
-                    }
-                    // Manual Control
-                    if (Math.abs(pad2.getLeftY()) >= 0.1) {
-                        manualSlides = true;
-                        robot.outtake.manualSlides(pad2.getLeftY());
-                    } else if (!manualSlides) {
-                        robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
-                    }
+
 
                 })
                 .onExit( () -> {
@@ -348,7 +367,7 @@ public class LebronTele extends LinearOpMode {
                 })
                 .transition( () ->  gamepad1.a && !leftClosed && !rightClosed) // Both open
 //                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
-                .transition(() -> gamepad1.b,  // Retract Button Failsafe
+                .transition(() -> gamepad1.dpad_down,  // Retract Button Failsafe
                         LinearStates.IDLE2,
                         () -> {
                             robot.outtake.v4barStow(); // V4b Stow Position
@@ -358,11 +377,11 @@ public class LebronTele extends LinearOpMode {
 
 
 
-                .state(LinearStates.SCORE)
-                .onEnter( () -> {
-                    robot.outtake.openBothClaws(); // Open Claw
-                })
-                .transitionTimed(0.3)
+//                .state(LinearStates.SCORE)
+//                .onEnter( () -> {
+//                    robot.outtake.openBothClaws(); // Open Claw
+//                })
+//                .transitionTimed(0.3)
 
 
                 .state(LinearStates.RETRACT)
@@ -372,7 +391,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.retractSlides(); // Retract Slide
 
                     slideLevel = 1;
-                    turretLevel = 0;
+                    turretLevel = 1;
                     manualSlides = false;
                 })
                 .onExit( () -> {
@@ -384,6 +403,7 @@ public class LebronTele extends LinearOpMode {
                 .transition( () ->  robot.outtake.getSlidePos() < 10, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
 
+                // Fail safe
                 .state(LinearStates.INTAKE_AGAIN)
                 .onEnter( () -> {
                     robot.outtake.setV4Bar(0.5); // V4b Stow Position
@@ -441,7 +461,7 @@ public class LebronTele extends LinearOpMode {
             y *= tranScaleFactor;
             x *= tranScaleFactor;
 
-            if (gamepad1.right_stick_button || gamepad1.dpad_right) {
+            if (gamepad1.right_stick_button) {
                 PID = true;
                 stickZero = false;
             } else if (gamepad1.a) {
@@ -487,20 +507,24 @@ public class LebronTele extends LinearOpMode {
 
             robot.drive.setMotorPowers(frontLeftPower, backLeftPower, backRightPower, frontRightPower);
 
-            // Turret Angle Adjustments
-            if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) && extended) {
-                turretLevel = Math.min(3, turretLevel+1);
-            } else if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && extended) {
-                turretLevel = Math.max(-3, turretLevel-1);
+            // Slide Level Adjustments
+            if (slideBumper) {
+                if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                    slideLevel = Math.min(5, slideLevel + 1);
+                }
+                if (leftTrigger.wasJustPressed()) {
+                    if (turretLevel == 1) {
+                        turretLevel = -1;
+                    } else if (turretLevel == -1) {
+                        turretLevel = 1;
+                    }
+                }
             }
 
-            if (pad1.wasJustPressed(GamepadKeys.Button.A) && !extended) {
-                turretLevel = Math.min(3, turretLevel+1);
-            } else if (pad1.wasJustPressed(GamepadKeys.Button.B) && !extended) {
-                turretLevel = Math.max(-3, turretLevel-1);
-            }
 
-//
+
+
+
             // Drone
             if (droneToggle.getState()) {
                 robot.special.shootDrone();
@@ -508,7 +532,7 @@ public class LebronTele extends LinearOpMode {
                 robot.special.holdDrone();
             }
 
-            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
                 if (!hangReady) {
                     robot.outtake.setSlides(750);
                     robot.outtake.v4barScore();
@@ -534,6 +558,7 @@ public class LebronTele extends LinearOpMode {
             telemetry.addData("State", machine.getState());
 
             telemetry.addData("Slide Level", slideLevel);
+            telemetry.addData("slide bumper adjust", slideBumper);
             telemetry.addData("Turret Pos", turretLevel);
             telemetry.addData("Manual Slides", manualSlides);
 
@@ -560,7 +585,6 @@ public class LebronTele extends LinearOpMode {
             droneToggle.readValue();
             leftTrigger.readValue();
             rightTrigger.readValue();
-            hangToggle.readValue();
             pad2.readButtons();
 
 
