@@ -60,7 +60,7 @@ public class LebronTele extends LinearOpMode {
 
 
     int slideLevel = 1;
-    int turretLevel = 1;
+    int turretLevel = -1;
     boolean manualSlides = false;
 
     boolean leftClosed = true;
@@ -94,6 +94,7 @@ public class LebronTele extends LinearOpMode {
     boolean stickZero = false;
 
     boolean slideBumper = true;
+    boolean imuReset = false;
 
 
 
@@ -128,7 +129,7 @@ public class LebronTele extends LinearOpMode {
         controller = new PIDController(p, i , d);
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(IMU.class, "imu");
+        imu = hardwareMap.get(IMU.class, "adafruit_imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
@@ -160,7 +161,7 @@ public class LebronTele extends LinearOpMode {
                 .state(LinearStates.IDLE1)                 // Driving to wing to pick up
                 .onEnter( () -> { // Happens on Init as well
                     slideBumper = true;
-                    turretLevel = 1;
+                    turretLevel = -1;
 
                     robot.intake.setIntake(0); // Stop Intake
                     robot.intake.tiltStow(); // Intake Stow
@@ -202,7 +203,7 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.SPIT)
                 .onEnter( () -> {
-                    robot.intake.setIntake(-0.3);
+                    robot.intake.setIntake(-0.5);
                 })
                 .transitionTimed(0.125)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
@@ -280,8 +281,14 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
+                    gamepad1.rumble(1.0, 1.0, 500);
+
                     slideBumper = false;
                     extended = true;
+                    if (imuReset) {
+                        PID = true;
+                        stickZero = false;
+                    }
 
                     robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                     robot.outtake.v4barScore(); // V4b Score Position
@@ -302,16 +309,24 @@ public class LebronTele extends LinearOpMode {
                 })
                 .loop( () -> {
                     // Turret Angle Adjustments
-                    if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                        turretLevel = Math.min(1, turretLevel+1);
-                    } else if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        turretLevel = Math.max(-1, turretLevel-1);
+                    if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                        turretLevel = Math.min(2, turretLevel+1);
+                        if (turretLevel == 0) {
+                            turretLevel = 1;
+                        }
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                        turretLevel = Math.max(-2, turretLevel-1);
+                        if (turretLevel == 0) {
+                            turretLevel = -1;
+                        }
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
+                        turretLevel = 0;
                     }
                     robot.outtake.turretTo(turretLevel); // Spin Turret
 
                     // Slide Level Adjustments
                     if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
-                        slideLevel = Math.min(5, slideLevel + 1);
+                        slideLevel = Math.min(6, slideLevel + 1);
                     } else if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
                         slideLevel = Math.max(1, slideLevel - 1);
                     }
@@ -326,7 +341,7 @@ public class LebronTele extends LinearOpMode {
                         rightClosed = !rightClosed;
                     }
 
-                    if (turretLevel >= 1) { // accounts for left and right in orientation
+                    if (turretLevel <= -1) { // accounts for left and right in orientation
                         if (leftClosed) {
                             robot.outtake.closeLeftMore();
                             leftClosed = true;
@@ -341,19 +356,19 @@ public class LebronTele extends LinearOpMode {
                             robot.outtake.openRight();
                             rightClosed = false;
                         }
-                    } else if (turretLevel <= -1) {
-                        if (rightClosed) {
-                            robot.outtake.closeLeftMore();
-                            leftClosed = true;
-                        } else {
-                            robot.outtake.openLeft();
-                            leftClosed = false;
-                        }
+                    } else if (turretLevel >= 0) {
                         if (leftClosed) {
                             robot.outtake.closeRightMore();
-                            rightClosed = true;
+                            leftClosed = true;
                         } else {
                             robot.outtake.openRight();
+                            leftClosed = false;
+                        }
+                        if (rightClosed) {
+                            robot.outtake.closeLeftMore();
+                            rightClosed = true;
+                        } else {
+                            robot.outtake.openLeft();
                             rightClosed = false;
                         }
                     }
@@ -392,7 +407,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.retractSlides(); // Retract Slide
 
                     slideLevel = 1;
-                    turretLevel = 1;
+                    turretLevel = -1;
                     manualSlides = false;
                 })
                 .onExit( () -> {
@@ -400,7 +415,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 })
-                .transitionTimed(0.75)
+                .transitionTimed(1)
                 .transition( () ->  robot.outtake.getSlidePos() < 10, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
 
@@ -439,8 +454,9 @@ public class LebronTele extends LinearOpMode {
             currAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 //            currAngle = AngleUnit.normalizeRadians(currAngle);
 
-            if (gamepad1.dpad_down) {
+            if (gamepad1.dpad_left) {
                 targetAngle = currAngle;
+                imuReset = true;
             }
 
 
@@ -574,6 +590,8 @@ public class LebronTele extends LinearOpMode {
 
             telemetry.addData("Left V4B Pos: ", robot.outtake.v4barLeft.getPosition());
             telemetry.addData("Right V4B Pos: ", robot.outtake.v4barRight.getPosition());
+
+            telemetry.addData("Heading Degrees", Math.toDegrees(currAngle));
 
 //            telemetry.addData("Servo Current", robot.outtake.v4barLeft.get)
 

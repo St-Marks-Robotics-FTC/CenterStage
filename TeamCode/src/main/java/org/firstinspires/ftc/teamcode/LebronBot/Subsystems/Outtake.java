@@ -29,11 +29,11 @@ public class Outtake {
 
     // Slides
     public static int slidesDown = -20;
-    public static int level1 = 275;
-    public static int levelIncrement = 100;
+    public static int level1 = 160;
+    public static int levelIncrement = 150;
 
-    public static double slideDownPower=0.3;
-    public static double slideUpPower=0.7;
+    public static double slideDownPower = 0.3;
+    public static double slideUpPower = 0.7;
 
     // V4Bar
     public static double v4barTransfer = 0.023; // 0.9
@@ -60,7 +60,7 @@ public class Outtake {
 
     // Turret
     public static double turretTransfer = 0.49;
-    public static double turret60 = 0.6;
+    public static double turret60 = 0.16;
 
 
 
