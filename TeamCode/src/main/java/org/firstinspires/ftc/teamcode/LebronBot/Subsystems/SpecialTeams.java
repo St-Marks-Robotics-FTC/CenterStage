@@ -14,7 +14,7 @@ public class SpecialTeams {
 
 
     // Drone
-    public static double holdPos = 0.15;
+    public static double holdPos = 0.65;
     public static double releasePos = 1;
 
     public SpecialTeams (HardwareMap hardwareMap) {

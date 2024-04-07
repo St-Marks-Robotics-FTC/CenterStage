@@ -168,7 +168,7 @@ public class LebronTele extends LinearOpMode {
 
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.v4barStow(); // V4b ready for transfer
-                    robot.outtake.v4barAngleTransfer();
+                    //robot.outtake.v4barAngleTransfer();
                     robot.outtake.turretTransfer(); // Turret Vertical
 //                    robot.outtake.retractSlides(); // Retract Slide
 
@@ -196,6 +196,7 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.setIntake(0.8); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
+                    robot.outtake.v4barAngleTransfer();
                 })
                 .transitionTimed(0.25)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
@@ -555,7 +556,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.v4barScore();
                     hangReady = true;
                 } else {
-                    robot.outtake.setSlides(300);
+                    robot.outtake.setSlides(250);
                     hangReady = false;
                 }
             }

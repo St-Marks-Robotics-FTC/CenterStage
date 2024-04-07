@@ -51,17 +51,18 @@ public class RedFar2_0 extends LinearOpMode {
 
         robot = new LebronClass(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-41, -62.5, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-40.25, -64, Math.toRadians(-90));
         robot.drive.setPoseEstimate(startPose);
-
         TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // Truss side / No Prop Seen
                 // Drive to spike
                 .setReversed(true)
                 .setTangent(Math.toRadians(110))
-                .splineToSplineHeading(new Pose2d(-39, -33, Math.toRadians(-150)), Math.toRadians(60))
+                .splineToSplineHeading(new Pose2d(-40, -38, Math.toRadians(-150)), Math.toRadians(60))
                 //bring arm out
+                //.waitSeconds(5)
                 .UNSTABLE_addTemporalMarkerOffset(-1.5, () -> {
                     robot.outtake.v4barPurple();
+                    robot.intake.tiltStow();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-1.1, () -> {
                     robot.outtake.v4BarAnglePurple();
@@ -69,7 +70,7 @@ public class RedFar2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     robot.outtake.openRight();
                 })
-                .waitSeconds(1) // Score Purple Spike
+                .waitSeconds(0.8) // Score Purple Spike
                 //stow back/prep for transfer
                 .UNSTABLE_addTemporalMarkerOffset( 0, () -> {
                     robot.outtake.v4barStow();
@@ -78,33 +79,30 @@ public class RedFar2_0 extends LinearOpMode {
                 //go to stack
                 .setTangent(Math.toRadians(135))
                 .splineToLinearHeading(new Pose2d(-55, -13, Math.toRadians(180)), Math.toRadians(180))
+                //.waitSeconds(5)
                 //turn on intake
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     robot.intake.setIntake(1);
                     robot.intake.tiltStack();
+                    robot.outtake.v4barAngleTransfer();
                 })
                 .waitSeconds(0.5) //wait for robot to stabilize
                 //line into the stack and pray intake works
-                .lineToLinearHeading(new Pose2d(-60.5, -13, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-59.5, -13, Math.toRadians(180)))
+                //.waitSeconds(5)
                 //start transfer sequence
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.intake.setIntake(-0.3);
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    robot.intake.setIntake(0);
                     robot.intake.tiltUp();
-                    robot.outtake.v4barAngleTransfer();
-                    robot.outtake.openBothClaws();
                 })
                 .waitSeconds(0.4)
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
-                    robot.intake.setIntake(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    robot.outtake.turretTransfer();
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     robot.outtake.v4barTransfer();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1.15, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {
                     robot.outtake.closeBothClaws();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.85, () -> {
                     robot.outtake.setV4Bar(robot.outtake.v4barStow);
                     robot.outtake.turretTransfer();
                 })
@@ -113,6 +111,7 @@ public class RedFar2_0 extends LinearOpMode {
                     robot.outtake.v4barAngleStow();
                     robot.outtake.turretTransfer();
                 })
+                //.waitSeconds(5)
                 //drive to the backdrop
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(0))
@@ -122,22 +121,26 @@ public class RedFar2_0 extends LinearOpMode {
                     robot.outtake.turretTo(1);
                 })
                 //finish going to backdrop
-                .splineToConstantHeading(new Vector2d(15, -10), Math.toRadians(-20))
-                .splineToConstantHeading(new Vector2d(48, -42), Math.toRadians(-45))
+                .splineToConstantHeading(new Vector2d(5, -10), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(45.5, -41.5), Math.toRadians(-45))
                 //release
+                //.waitSeconds(5)
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
                     robot.outtake.openBothClaws();
                 })
                 .waitSeconds(1.25)
                 .build();
+
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 // Drive to spike
                 .setReversed(true)
                 .setTangent(Math.toRadians(110))
-                .splineToSplineHeading(new Pose2d(-48, -28, Math.toRadians(-150)), Math.toRadians(120))
+                .splineToSplineHeading(new Pose2d(-48, -32, Math.toRadians(-160)), Math.toRadians(120))
                 //bring arm out
+                //.waitSeconds(5)
                 .UNSTABLE_addTemporalMarkerOffset(-1.5, () -> {
                     robot.outtake.v4barPurple();
+                    robot.intake.tiltStow();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-1.1, () -> {
                     robot.outtake.v4BarAnglePurple();
@@ -145,7 +148,7 @@ public class RedFar2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     robot.outtake.openRight();
                 })
-                .waitSeconds(1) // Score Purple Spike
+                .waitSeconds(0.8) // Score Purple Spike
                 //stow back/prep for transfer
                 .UNSTABLE_addTemporalMarkerOffset( 0, () -> {
                     robot.outtake.v4barStow();
@@ -154,33 +157,30 @@ public class RedFar2_0 extends LinearOpMode {
                 //go to stack
                 .setTangent(Math.toRadians(135))
                 .splineToLinearHeading(new Pose2d(-55, -13, Math.toRadians(180)), Math.toRadians(180))
+                //.waitSeconds(5)
                 //turn on intake
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     robot.intake.setIntake(1);
                     robot.intake.tiltStack();
+                    robot.outtake.v4barAngleTransfer();
                 })
                 .waitSeconds(0.5) //wait for robot to stabilize
                 //line into the stack and pray intake works
-                .lineToLinearHeading(new Pose2d(-60.5, -13, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-59.5, -13, Math.toRadians(180)))
+                //.waitSeconds(5)
                 //start transfer sequence
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.intake.setIntake(-0.3);
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    robot.intake.setIntake(0);
                     robot.intake.tiltUp();
-                    robot.outtake.v4barAngleTransfer();
-                    robot.outtake.openBothClaws();
                 })
                 .waitSeconds(0.4)
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
-                    robot.intake.setIntake(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    robot.outtake.turretTransfer();
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     robot.outtake.v4barTransfer();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1.15, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {
                     robot.outtake.closeBothClaws();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.85, () -> {
                     robot.outtake.setV4Bar(robot.outtake.v4barStow);
                     robot.outtake.turretTransfer();
                 })
@@ -189,6 +189,7 @@ public class RedFar2_0 extends LinearOpMode {
                     robot.outtake.v4barAngleStow();
                     robot.outtake.turretTransfer();
                 })
+                //.waitSeconds(5)
                 //drive to the backdrop
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(0))
@@ -198,9 +199,10 @@ public class RedFar2_0 extends LinearOpMode {
                     robot.outtake.turretTo(1);
                 })
                 //finish going to backdrop
-                .splineToConstantHeading(new Vector2d(15, -10), Math.toRadians(-20))
-                .splineToConstantHeading(new Vector2d(48, -36), Math.toRadians(-45))
+                .splineToConstantHeading(new Vector2d(5, -10), Math.toRadians(-10))
+                .splineToConstantHeading(new Vector2d(46.5, -36), Math.toRadians(-40))
                 //release
+                //.waitSeconds(5)
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
                     robot.outtake.openBothClaws();
                 })
@@ -212,8 +214,10 @@ public class RedFar2_0 extends LinearOpMode {
                 .setTangent(Math.toRadians(110))
                 .splineToSplineHeading(new Pose2d(-56, -24, Math.toRadians(120)), Math.toRadians(120))
                 //bring arm out
+                //.waitSeconds(5)
                 .UNSTABLE_addTemporalMarkerOffset(-1.5, () -> {
                     robot.outtake.v4barPurple();
+                    robot.intake.tiltStow();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-1.1, () -> {
                     robot.outtake.v4BarAnglePurple();
@@ -221,7 +225,7 @@ public class RedFar2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     robot.outtake.openRight();
                 })
-                .waitSeconds(1) // Score Purple Spike
+                .waitSeconds(0.8) // Score Purple Spike
                 //stow back/prep for transfer
                 .UNSTABLE_addTemporalMarkerOffset( 0, () -> {
                     robot.outtake.v4barStow();
@@ -230,33 +234,30 @@ public class RedFar2_0 extends LinearOpMode {
                 //go to stack
                 .setTangent(Math.toRadians(135))
                 .splineToLinearHeading(new Pose2d(-55, -13, Math.toRadians(180)), Math.toRadians(180))
+                //.waitSeconds(5)
                 //turn on intake
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     robot.intake.setIntake(1);
                     robot.intake.tiltStack();
+                    robot.outtake.v4barAngleTransfer();
                 })
                 .waitSeconds(0.5) //wait for robot to stabilize
                 //line into the stack and pray intake works
-                .lineToLinearHeading(new Pose2d(-60.5, -13, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-60, -13, Math.toRadians(180)))
+                //.waitSeconds(5)
                 //start transfer sequence
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.intake.setIntake(-0.3);
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    robot.intake.setIntake(0);
                     robot.intake.tiltUp();
-                    robot.outtake.v4barAngleTransfer();
-                    robot.outtake.openBothClaws();
                 })
                 .waitSeconds(0.4)
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
-                    robot.intake.setIntake(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    robot.outtake.turretTransfer();
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     robot.outtake.v4barTransfer();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1.15, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {
                     robot.outtake.closeBothClaws();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.85, () -> {
                     robot.outtake.setV4Bar(robot.outtake.v4barStow);
                     robot.outtake.turretTransfer();
                 })
@@ -265,6 +266,7 @@ public class RedFar2_0 extends LinearOpMode {
                     robot.outtake.v4barAngleStow();
                     robot.outtake.turretTransfer();
                 })
+                //.waitSeconds(5)
                 //drive to the backdrop
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(0))
@@ -274,19 +276,19 @@ public class RedFar2_0 extends LinearOpMode {
                     robot.outtake.turretTo(1);
                 })
                 //finish going to backdrop
-                .splineToConstantHeading(new Vector2d(15, -10), Math.toRadians(-20))
-                .splineToConstantHeading(new Vector2d(48, -30), Math.toRadians(-45))
+                .splineToConstantHeading(new Vector2d(5, -10), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(45.5, -32), Math.toRadians(-45))
                 //release
+                //.waitSeconds(5)
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
                     robot.outtake.openBothClaws();
                 })
                 .waitSeconds(1.25)
-                .waitSeconds(2.5) // Place Yellow
                 .build();
 
         // On Init
 //        robot.closeClaw();
-        robot.outtake.closeRight();
+        robot.outtake.closeRightMore();
         robot.outtake.turretTransfer();
         robot.intake.tiltUp();
 
@@ -310,146 +312,146 @@ public class RedFar2_0 extends LinearOpMode {
         waitForStart();
         //sleep(delay);
 //        robot.v4barPickup();
-        switch ("left") {
-            case "left":
+        switch (redFarPropThreshold.getPropPosition()) {
+            case "none":
                 robot.drive.followTrajectorySequence(right);
                 break;
             case "right":
                 robot.drive.followTrajectorySequence(middle);
                 break;
-            case "none":
+            case "left":
                 robot.drive.followTrajectorySequence(left);
                 break;
         }
 
         TrajectorySequence path = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                 //stow back
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.outtake.v4barStow();
-                    robot.outtake.turretTransfer();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.outtake.v4barStow();
+//                    robot.outtake.turretTransfer();
+//                })
                 //return back to stack
                 .setTangent(Math.toRadians(150))
                 .splineToConstantHeading(new Vector2d(13, -15), Math.toRadians(150))
                 .splineToConstantHeading(new Vector2d(-24, -15), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(-55, -15), Math.toRadians(180))
                 //turn on intake
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.intake.setIntake(1);
-                    robot.intake.tiltStackTo(1);
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.intake.setIntake(1);
+//                    robot.intake.tiltStackTo(1);
+//                })
                 .waitSeconds(0.5) //wait for robot to stabilize
                 //line into the stack and pray intake works
                 .lineToLinearHeading(new Pose2d(-60.5, -13, Math.toRadians(180)))
                 //start transfer sequence
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.intake.setIntake(-0.3);
-                    robot.intake.tiltUp();
-                    robot.outtake.v4barAngleTransfer();
-                    robot.outtake.openBothClaws();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//                    robot.intake.setIntake(-0.3);
+//                    robot.intake.tiltUp();
+//                    robot.outtake.v4barAngleTransfer();
+//                    robot.outtake.openBothClaws();
+//                })
                 .waitSeconds(0.4)
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
-                    robot.intake.setIntake(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    robot.outtake.turretTransfer();
-                    robot.outtake.v4barTransfer();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.15, () -> {
-                    robot.outtake.closeBothClaws();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> {
-                    robot.outtake.setV4Bar(robot.outtake.v4barStow);
-                    robot.outtake.turretTransfer();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.25, () -> {
-                    robot.intake.tiltStow();
-                    robot.outtake.v4barAngleStow();
-                    robot.outtake.turretTransfer();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
+//                    robot.intake.setIntake(0);
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                    robot.outtake.turretTransfer();
+//                    robot.outtake.v4barTransfer();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(1.15, () -> {
+//                    robot.outtake.closeBothClaws();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> {
+//                    robot.outtake.setV4Bar(robot.outtake.v4barStow);
+//                    robot.outtake.turretTransfer();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(2.25, () -> {
+//                    robot.intake.tiltStow();
+//                    robot.outtake.v4barAngleStow();
+//                    robot.outtake.turretTransfer();
+//                })
                 //drive to the backdrop
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(0))
                 //prep the outtake
-                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-                    robot.outtake.v4BarAuto();
-                    robot.outtake.turretTo(1);
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+//                    robot.outtake.v4BarAuto();
+//                    robot.outtake.turretTo(1);
+//                })
                 //finish going to backdrop
                 .splineToConstantHeading(new Vector2d(15, -10), Math.toRadians(-20))
                 .splineToConstantHeading(new Vector2d(46, -35), Math.toRadians(-45))
                 //release
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
-                    robot.outtake.openBothClaws();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+//                    robot.outtake.openBothClaws();
+//                })
                 .waitSeconds(1.25)
                 //stow back
-                .UNSTABLE_addTemporalMarkerOffset(-0.25, () -> {
-                    robot.outtake.v4barStow();
-                    robot.outtake.turretTransfer();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(-0.25, () -> {
+//                    robot.outtake.v4barStow();
+//                    robot.outtake.turretTransfer();
+//                })
                 //return back to stack
                 .setTangent(Math.toRadians(150))
                 .splineToConstantHeading(new Vector2d(13, -13), Math.toRadians(150))
                 .splineToConstantHeading(new Vector2d(-24, -13), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(-55, -13), Math.toRadians(180))
                 //turn on intake
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.intake.setIntake(1);
-                    robot.intake.tiltDown();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.intake.setIntake(1);
+//                    robot.intake.tiltDown();
+//                })
                 .waitSeconds(0.5) //wait for robot to stabilize
                 //line into the stack and pray intake works
                 .lineToLinearHeading(new Pose2d(-60.5, -13, Math.toRadians(180)))
                 //start transfer sequence
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.intake.setIntake(-0.3);
-                    robot.intake.tiltUp();
-                    robot.outtake.v4barAngleTransfer();
-                    robot.outtake.openBothClaws();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//                    robot.intake.setIntake(-0.3);
+//                    robot.intake.tiltUp();
+//                    robot.outtake.v4barAngleTransfer();
+//                    robot.outtake.openBothClaws();
+//                })
                 .waitSeconds(0.4)
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
-                    robot.intake.setIntake(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    robot.outtake.turretTransfer();
-                    robot.outtake.v4barTransfer();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.15, () -> {
-                    robot.outtake.closeBothClaws();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> {
-                    robot.outtake.setV4Bar(robot.outtake.v4barStow);
-                    robot.outtake.turretTransfer();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.25, () -> {
-                    robot.intake.tiltStow();
-                    robot.outtake.v4barAngleStow();
-                    robot.outtake.turretTransfer();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
+//                    robot.intake.setIntake(0);
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                    robot.outtake.turretTransfer();
+//                    robot.outtake.v4barTransfer();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(1.15, () -> {
+//                    robot.outtake.closeBothClaws();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> {
+//                    robot.outtake.setV4Bar(robot.outtake.v4barStow);
+//                    robot.outtake.turretTransfer();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(2.25, () -> {
+//                    robot.intake.tiltStow();
+//                    robot.outtake.v4barAngleStow();
+//                    robot.outtake.turretTransfer();
+//                })
                 //drive to the backdrop
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(0))
                 //prep the outtake
-                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {
-                    robot.outtake.v4BarAuto();
-                    robot.outtake.turretTo(1);
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {
+//                    robot.outtake.v4BarAuto();
+//                    robot.outtake.turretTo(1);
+//                })
                 //finish going to backdrop
                 .splineToConstantHeading(new Vector2d(15, -10), Math.toRadians(-20))
                 .splineToConstantHeading(new Vector2d(48, -35), Math.toRadians(-45))
                 //release
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
-                    robot.outtake.openBothClaws();
-                })
-                .waitSeconds(1.5)
-                //stow back
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    robot.outtake.v4barStow();
-                    robot.outtake.turretTransfer();
-                })
+//                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+//                    robot.outtake.openBothClaws();
+//                })
+//                .waitSeconds(1.5)
+//                //stow back
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    robot.outtake.v4barStow();
+//                    robot.outtake.turretTransfer();
+//                })
                 .build();
         robot.drive.followTrajectorySequence(path);
 //        if (middlePark) {
