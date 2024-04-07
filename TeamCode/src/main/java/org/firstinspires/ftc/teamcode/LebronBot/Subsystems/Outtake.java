@@ -44,8 +44,8 @@ public class Outtake {
     public static double v4barAutoScore = 0.75;
     public static double v4barPurple=1;
 
-    public static double angleTransfer = 0.82;
-    public static double angleStow = 0.72;
+    public static double angleTransfer = 0.81;
+    public static double angleStow = 0.74;
     public static double angleScore = 0.07;
     public static double anglePurple = 0;
 
@@ -247,12 +247,22 @@ public class Outtake {
 
     public void turretTo(int position) {
         if (position == 0) {
-            setTurret(turretTransfer);
-        } else if (position > 0) {
-            setTurret(turretTransfer + (position * turret60) + turret60/2);
-        } else {
-            setTurret(turretTransfer - (Math.abs(position) * turret60) - turret60/2);
+            setTurret(0.49);
+        } else if (position == 1) {
+            setTurret(0.73);
+        } else if (position == -1) {
+            setTurret(0.23);
+        } else if (position == 2) {
+            setTurret(0.98);
+        } else if (position == -2) {
+            setTurret(0);
         }
+
+//        else if (position > 0) {
+//            setTurret(turretTransfer + (position * turret60) + turret60/2);
+//        } else {
+//            setTurret(turretTransfer - (Math.abs(position) * turret60) - turret60/2);
+//        }
     }
 
     public void setTurret(double pos) {

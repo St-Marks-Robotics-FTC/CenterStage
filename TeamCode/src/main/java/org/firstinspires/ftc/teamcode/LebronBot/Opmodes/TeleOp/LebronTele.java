@@ -144,6 +144,15 @@ public class LebronTele extends LinearOpMode {
                 25
         );
 
+        // Intake Motion Profile
+        MotionProfile intakeProfile = MotionProfileGenerator.generateSimpleMotionProfile(
+                new MotionState(robot.intake.tiltStow, 0, 0),
+                new MotionState(robot.intake.tiltDown, 0, 0),
+                25,
+                25,
+                25
+        );
+
 
 
 
@@ -176,16 +185,25 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 })
+                .onExit( () -> {
+                    profileTimer.reset();
+                })
                 .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer if 1 pixel
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button Main one
 
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
+                    profileTimer.reset();
+
                     robot.intake.tiltDown(); // Drop Intake
                     robot.intake.setIntake(0.8); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
 
+                })
+                .loop( () -> {
+                    MotionState intakeState = intakeProfile.get(profileTimer.seconds());
+//                    robot.intake.setIntake(intakeState.getX());
                 })
                 .transition( () -> (gamepad1.right_trigger < 0.5)) // if let go and not both pixels
 //                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
@@ -258,8 +276,11 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.setV4Bar(robot.outtake.v4barStow); // V4b Stow Position
                     robot.outtake.setV4BarAngle(robot.outtake.angleTransfer+0.015);
                     robot.outtake.turretTransfer();
+
                     robot.outtake.closeRightMore();
                     robot.outtake.closeLeftMore();
+
+                    robot.intake.setTilt(robot.intake.tiltUp - 0.1);
                     //robot.intake.tiltStow();
                 })
                 .transitionTimed(0.3)
@@ -550,7 +571,7 @@ public class LebronTele extends LinearOpMode {
                 robot.special.holdDrone();
             }
 
-            if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
                 if (!hangReady) {
                     robot.outtake.setSlides(750);
                     robot.outtake.v4barScore();
