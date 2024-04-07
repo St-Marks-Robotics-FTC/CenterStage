@@ -116,17 +116,17 @@ public class Outtake {
 
     public void slidesToLevel(int level) {
         if (level == 1) {
-            setSlides(160);
+            setSlides(0);
         } else if (level == 2) {
-            setSlides(280);
+            setSlides(120);
         } else if (level == 3) {
-            setSlides(400);
+            setSlides(270);
         } else if (level == 4) {
-            setSlides(520);
+            setSlides(390);
         } else if (level == 5) {
-            setSlides(640);
+            setSlides(510);
         } else if (level == 6) {
-            setSlides(760);
+            setSlides(630);
         } else if (level == 7) {
             setSlides(880);
         } else if (level == 8) {
