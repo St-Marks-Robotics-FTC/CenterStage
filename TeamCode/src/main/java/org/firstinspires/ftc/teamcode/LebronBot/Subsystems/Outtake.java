@@ -275,7 +275,7 @@ public class Outtake {
         } else if (position == 2) {
             setTurret(0.98);
         } else if (position == -2) {
-            setTurret(0);
+            setTurret(0.015);
         }
 
 //        else if (position > 0) {
