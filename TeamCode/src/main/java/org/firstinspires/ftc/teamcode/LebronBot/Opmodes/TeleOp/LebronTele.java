@@ -230,7 +230,7 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
-                    robot.intake.setIntake(0); // suck in
+                    robot.intake.setIntake(0.25); // suck in
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                 })
@@ -318,7 +318,7 @@ public class LebronTele extends LinearOpMode {
                 .loop( () -> {
                     robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                 })
-                .transitionTimed(1)
+                .transitionTimed(0.15)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -348,7 +348,7 @@ public class LebronTele extends LinearOpMode {
 
                     // Slide Level Adjustments
                     if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
-                        slideLevel = Math.min(6, slideLevel + 1);
+                        slideLevel = Math.min(9, slideLevel + 1);
                     } else if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
                         slideLevel = Math.max(1, slideLevel - 1);
                     }
@@ -549,7 +549,7 @@ public class LebronTele extends LinearOpMode {
             // Slide Level Adjustments
             if (slideBumper) {
                 if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                    slideLevel = Math.min(5, slideLevel + 1);
+                    slideLevel = Math.min(9, slideLevel + 1);
                 }
                 if (leftTrigger.wasJustPressed()) {
                     if (turretLevel == 1) {

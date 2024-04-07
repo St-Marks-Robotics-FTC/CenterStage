@@ -37,16 +37,16 @@ public class Outtake {
 
     // V4Bar
     public static double v4barTransfer = 0.06; // 0.9
-    public static double v4barStow = 0.2;
+    public static double v4barStow = 0.19;
     public static double v4barView = 0.37;
     public static double v4barOut = 0.64;
-    public static double v4barScore = 0.9;
+    public static double v4barScore = 0.7;
     public static double v4barAutoScore = 0.75;
     public static double v4barPurple=1;
 
     public static double angleTransfer = 0.81;
-    public static double angleStow = 0.74;
-    public static double angleScore = 0.07;
+    public static double angleStow = 0.77;
+    public static double angleScore = 0.05;
     public static double anglePurple = 0;
 
     // Claw
@@ -115,7 +115,27 @@ public class Outtake {
     }
 
     public void slidesToLevel(int level) {
-        setSlides(level1 +  (level - 1) * levelIncrement);
+        if (level == 1) {
+            setSlides(160);
+        } else if (level == 2) {
+            setSlides(280);
+        } else if (level == 3) {
+            setSlides(400);
+        } else if (level == 4) {
+            setSlides(520);
+        } else if (level == 5) {
+            setSlides(640);
+        } else if (level == 6) {
+            setSlides(760);
+        } else if (level == 7) {
+            setSlides(880);
+        } else if (level == 8) {
+            setSlides(1000);
+        } else if (level == 9) {
+            setSlides(1120);
+        } else if (level == 10) {
+            setSlides(1240);
+        }
     }
 
     public void manualSlides(double power) {
