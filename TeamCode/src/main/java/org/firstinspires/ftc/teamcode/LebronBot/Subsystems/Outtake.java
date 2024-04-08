@@ -46,7 +46,7 @@ public class Outtake {
 
     public static double angleTransfer = 0.81;
     public static double angleStow = 0.77;
-    public static double angleScore = 0.05;
+    public static double angleScore = 0.04;
     public static double anglePurple = 0;
 
     // Claw
@@ -269,13 +269,13 @@ public class Outtake {
         if (position == 0) {
             setTurret(0.49);
         } else if (position == 1) {
-            setTurret(0.73);
+            setTurret(0.70);
         } else if (position == -1) {
-            setTurret(0.23);
+            setTurret(0.245);
         } else if (position == 2) {
-            setTurret(0.98);
+            setTurret(0.962);
         } else if (position == -2) {
-            setTurret(0.015);
+            setTurret(0.02);
         }
 
 //        else if (position > 0) {
