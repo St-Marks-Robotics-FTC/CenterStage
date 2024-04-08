@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Opmodes.Auto;
 
+import android.util.Log;
 import android.util.Size;
 
 import androidx.annotation.NonNull;
@@ -19,8 +20,12 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+
+import java.util.List;
 
 @Config
 @Autonomous (group = "Blue", preselectTeleOp = "JankTele")
@@ -33,7 +38,13 @@ public class RedFar2_0 extends LinearOpMode {
 
     private VisionPortal portal;
     private RedFarPropThreshold redFarPropThreshold;
+    private AprilTagRelocalize relocalize;
     private int delay = 10000;
+    private int exposure = 6;
+    private int gain = 100;
+
+    Pose2d poses[] = new Pose2d[]{new Pose2d(), new Pose2d(), new Pose2d(63, 41.5, Math.toRadians(180))};
+    private int tagPose;
 
 
     @Override
@@ -43,15 +54,14 @@ public class RedFar2_0 extends LinearOpMode {
         redFarPropThreshold = new RedFarPropThreshold();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .setCameraResolution(new Size(640, 480))
-                .setCamera(BuiltinCameraDirection.BACK)
+                .setCameraResolution(new Size( 1280, 720))
                 .addProcessor(redFarPropThreshold)
                 .build();
-
+        //portal.resumeStreaming();
 
         robot = new LebronClass(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-40.25, -64, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-40.5, -64, Math.toRadians(-90));
         robot.drive.setPoseEstimate(startPose);
         TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // Truss side / No Prop Seen
                 // Drive to spike
@@ -84,11 +94,11 @@ public class RedFar2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     robot.intake.setIntake(1);
                     robot.intake.tiltStack();
-                    robot.outtake.v4barAngleTransfer();
+                    robot.outtake.setV4BarAngle(robot.outtake.angleTransfer+0.015);
                 })
                 .waitSeconds(0.5) //wait for robot to stabilize
                 //line into the stack and pray intake works
-                .lineToLinearHeading(new Pose2d(-59.5, -13, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-61.5, -13, Math.toRadians(180)))
                 //.waitSeconds(5)
                 //start transfer sequence
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
@@ -111,24 +121,34 @@ public class RedFar2_0 extends LinearOpMode {
                     robot.outtake.v4barAngleStow();
                     robot.outtake.turretTransfer();
                 })
-                //.waitSeconds(5)
+//                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+//                    relocalize = new AprilTagRelocalize(hardwareMap);
+//                    relocalize.setManualExposure(exposure, gain);
+//                    relocalize.getTagPos(tagPose);
+//                })
+//                .waitSeconds(5)
                 //drive to the backdrop
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(-24, -10, Math.toRadians(180)), Math.toRadians(0))
                 //prep the outtake
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
                     robot.outtake.v4BarAuto();
                     robot.outtake.turretTo(1);
                 })
                 //finish going to backdrop
-                .splineToConstantHeading(new Vector2d(5, -10), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(45.5, -41.5), Math.toRadians(-45))
-                //release
-                //.waitSeconds(5)
+                .splineToSplineHeading(new Pose2d(5, -10, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(45.5, -45, Math.toRadians(180)), Math.toRadians(-45))
+//                //release
+//                //.waitSeconds(5)
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
                     robot.outtake.openBothClaws();
+//                    Pose2d relocalizePose = relocalize.getTagPos(tagPose);
+//                    Log.d("Relocalize Pose: ", relocalizePose.toString());
+//                    if (relocalizePose.getX()<=72) {
+//                        robot.drive.setPoseEstimate(poses[tagPose-1].minus(relocalizePose));
+//                    }
                 })
-                .waitSeconds(1.25)
+                .waitSeconds(1.5)
                 .build();
 
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
@@ -203,10 +223,10 @@ public class RedFar2_0 extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(46.5, -36), Math.toRadians(-40))
                 //release
                 //.waitSeconds(5)
-                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {
                     robot.outtake.openBothClaws();
                 })
-                .waitSeconds(1.25)
+                .waitSeconds(1.5)
                 .build();
         TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
                 // Drive to spike
@@ -249,9 +269,10 @@ public class RedFar2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     robot.intake.setIntake(0);
                     robot.intake.tiltUp();
+                    robot.outtake.v4barAngleTransfer();
                 })
                 .waitSeconds(0.4)
-                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     robot.outtake.v4barTransfer();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {
@@ -270,6 +291,9 @@ public class RedFar2_0 extends LinearOpMode {
                 //drive to the backdrop
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(0))
+                .addDisplacementMarker(() -> {
+
+                })
                 //prep the outtake
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
                     robot.outtake.v4BarAuto();
@@ -307,20 +331,21 @@ public class RedFar2_0 extends LinearOpMode {
 
             telemetry.update();
         }
-
-
         waitForStart();
         //sleep(delay);
 //        robot.v4barPickup();
         switch (redFarPropThreshold.getPropPosition()) {
             case "none":
                 robot.drive.followTrajectorySequence(right);
+                tagPose=3;
                 break;
             case "right":
                 robot.drive.followTrajectorySequence(middle);
+                tagPose=2;
                 break;
             case "left":
                 robot.drive.followTrajectorySequence(left);
+                tagPose=1;
                 break;
         }
 
@@ -453,7 +478,8 @@ public class RedFar2_0 extends LinearOpMode {
 //                    robot.outtake.turretTransfer();
 //                })
                 .build();
-        robot.drive.followTrajectorySequence(path);
+        //relocalize.visionPortal.close();
+        //robot.drive.followTrajectorySequence(path);
 //        if (middlePark) {
 //            TrajectorySequence idealPark = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate()) // Ideal Park pointed towards truss
 //                    .setReversed(false)

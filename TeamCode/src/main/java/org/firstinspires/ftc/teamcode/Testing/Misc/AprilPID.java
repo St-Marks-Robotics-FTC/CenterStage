@@ -86,7 +86,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp(group = "Testing")
-@Disabled
+//@Disabled
 public class AprilPID extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.

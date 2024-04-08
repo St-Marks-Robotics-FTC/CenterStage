@@ -29,17 +29,31 @@
 
 package org.firstinspires.ftc.teamcode.Vision.AprilTag;
 
+import android.graphics.Bitmap;
+import android.util.Size;
+
+import com.acmerobotics.dashboard.canvas.Canvas;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Consumer;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
+import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+import kotlin.coroutines.Continuation;
 
 /*
  * This OpMode illustrates the basics of AprilTag recognition and pose estimation,
@@ -65,11 +79,10 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@Disabled
-@TeleOp(name = "Concept: AprilTag", group = "Concept")
+//@Disabled
+@Autonomous(name = "Concept: AprilTag", group = "Concept")
 //@Disabled
 public class ConceptAprilTag extends LinearOpMode {
-
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     /**
@@ -137,7 +150,7 @@ public class ConceptAprilTag extends LinearOpMode {
             // == CAMERA CALIBRATION ==
             // If you do not manually specify calibration parameters, the SDK will attempt
             // to load a predefined calibration for your camera.
-            //.setLensIntrinsics(578.272, 578.272, 402.145, 221.506)
+            .setLensIntrinsics(1428.5532386128232,  1428.5174844713965, 662.6856180303788, 310.1945772625487)
             // ... these parameters are fx, fy, cx, cy.
 
             .build();
@@ -149,7 +162,7 @@ public class ConceptAprilTag extends LinearOpMode {
         // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second (default)
         // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second (default)
         // Note: Decimation can be changed on-the-fly to adapt during a match.
-        //aprilTag.setDecimation(3);
+        aprilTag.setDecimation(3);
 
         // Create the vision portal by using a builder.
         VisionPortal.Builder builder = new VisionPortal.Builder();
@@ -162,7 +175,7 @@ public class ConceptAprilTag extends LinearOpMode {
         }
 
         // Choose a camera resolution. Not all cameras support all resolutions.
-        //builder.setCameraResolution(new Size(640, 480));
+        builder.setCameraResolution(new Size(1280, 720));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
         //builder.enableLiveView(true);

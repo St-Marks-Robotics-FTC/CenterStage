@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Opmodes.Testing;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -13,7 +15,7 @@ import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
 
-@Disabled
+//@Disabled
 
 @Config
 @TeleOp (group = "test")
@@ -25,7 +27,7 @@ public class AprilTagTest extends OpMode {
     private GamepadEx pad1;
     private final double STRAFE_SENSITIVITY = 1.0;
     private final double TURN_SENSITIVITY = 0.6;
-    private int tag = 2;
+    private int tag = 3;
     private int exposure = 6;
     private int gain = 100;
     //TODO: find the tag poses
@@ -48,8 +50,9 @@ public class AprilTagTest extends OpMode {
 
     @Override
     public void init_loop() {
+        Log.d("bruh: ", relocalize.getTagPos(tag).toString());
         Pose2d relocalizePose = relocalize.getTagPos(tag);
-        Pose2d predictPose = tagPose2.minus(relocalizePose);
+        Pose2d predictPose = tagPose1.minus(relocalizePose);
         telemetry.addData("relocalizePose: ", relocalizePose.toString());
         telemetry.addData("estimated pose from ", predictPose.toString());
         telemetry.addData("Current Pose: ", robot.drive.getPoseEstimate().toString());
