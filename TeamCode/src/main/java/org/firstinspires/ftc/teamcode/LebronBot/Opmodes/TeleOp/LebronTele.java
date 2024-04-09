@@ -188,8 +188,9 @@ public class LebronTele extends LinearOpMode {
                 .onExit( () -> {
                     profileTimer.reset();
                 })
-                .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer if 1 pixel
+//                .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer if 1 pixel
                 .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button Main one
+                .transition( () ->  gamepad1.dpad_up, LinearStates.EXTEND) // Extend Slides
 
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
@@ -356,14 +357,15 @@ public class LebronTele extends LinearOpMode {
 
 
                     // Claws
-                    if (leftTrigger.wasJustPressed()) {
-                        leftClosed = !leftClosed;
-                    }
-                    if (rightTrigger.wasJustPressed()) {
-                        rightClosed = !rightClosed;
-                    }
 
                     if (turretLevel <= -1) { // accounts for left and right in orientation
+                        if (leftTrigger.wasJustPressed()) {
+                            leftClosed = !leftClosed;
+                        }
+                        if (rightTrigger.wasJustPressed()) {
+                            rightClosed = !rightClosed;
+                        }
+
                         if (leftClosed) {
                             robot.outtake.closeLeftMore();
                             leftClosed = true;
@@ -379,18 +381,25 @@ public class LebronTele extends LinearOpMode {
                             rightClosed = false;
                         }
                     } else if (turretLevel >= 0) {
+                        if (rightTrigger.wasJustPressed()) {
+                            leftClosed = !leftClosed;
+                        }
+                        if (leftTrigger.wasJustPressed()) {
+                            rightClosed = !rightClosed;
+                        }
+
                         if (leftClosed) {
-                            robot.outtake.closeRightMore();
+                            robot.outtake.closeLeftMore();
                             leftClosed = true;
                         } else {
-                            robot.outtake.openRight();
+                            robot.outtake.openLeft();
                             leftClosed = false;
                         }
                         if (rightClosed) {
-                            robot.outtake.closeLeftMore();
+                            robot.outtake.closeRightMore();
                             rightClosed = true;
                         } else {
-                            robot.outtake.openLeft();
+                            robot.outtake.openRight();
                             rightClosed = false;
                         }
                     }
@@ -428,7 +437,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.retractSlides(); // Retract Slide
 
-                    slideLevel = 1;
+//                    slideLevel = 1;
                     turretLevel = -1;
                     manualSlides = false;
                 })
@@ -550,6 +559,8 @@ public class LebronTele extends LinearOpMode {
             if (slideBumper) {
                 if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                     slideLevel = Math.min(9, slideLevel + 1);
+                } else if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
+                    slideLevel = Math.max(1, slideLevel - 1);
                 }
                 if (leftTrigger.wasJustPressed()) {
                     if (turretLevel == 1) {
