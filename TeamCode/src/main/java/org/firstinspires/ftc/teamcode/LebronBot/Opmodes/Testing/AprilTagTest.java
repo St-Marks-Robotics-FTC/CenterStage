@@ -50,9 +50,11 @@ public class AprilTagTest extends OpMode {
 
     @Override
     public void init_loop() {
-        Log.d("bruh: ", relocalize.getTagPos(tag).toString());
-        Pose2d relocalizePose = relocalize.getTagPos(tag);
+        Log.d("bruh: ", relocalize.getTagPos(new int[]{1,2,3}).toString());
+        Pose2d relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
         Pose2d predictPose = tagPose1.minus(relocalizePose);
+        relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
+        robot.drive.setPoseEstimate(relocalizePose);
         telemetry.addData("relocalizePose: ", relocalizePose.toString());
         telemetry.addData("estimated pose from ", predictPose.toString());
         telemetry.addData("Current Pose: ", robot.drive.getPoseEstimate().toString());
@@ -60,9 +62,9 @@ public class AprilTagTest extends OpMode {
         telemetry.addData("Exposure: ", exposure);
         telemetry.addData("Gain: ", gain);
         relocalize.setManualExposure(exposure, gain);
-        if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
+        if (gamepad1.a) {
             TrajectorySequence traj1 = robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                    .lineToSplineHeading(relocalizePose.plus(robot.drive.getPoseEstimate()))
+                    .lineToSplineHeading(new Pose2d(36, -36, Math.toRadians(180)))
                     .build();
             robot.drive.followTrajectorySequenceAsync(traj1);
         } else {
@@ -76,10 +78,11 @@ public class AprilTagTest extends OpMode {
 
             robot.drive.setMotorPowers(leftFrontSpeed, leftBackSpeed,  rightBackSpeed, rightFrontSpeed);
         }
-        if (gamepad1.a) exposure++;
-        if (gamepad1.b) exposure--;
-        if (gamepad1.x) gain+=10;
-        if (gamepad1.y) gain-=10;
+//        if (gamepad1.a) exposure++;
+//        if (gamepad1.b) exposure--;
+//        if (gamepad1.x) gain+=10;
+//        if (gamepad1.y) gain-=10;
+        robot.drive.update();
     }
 
     @Override

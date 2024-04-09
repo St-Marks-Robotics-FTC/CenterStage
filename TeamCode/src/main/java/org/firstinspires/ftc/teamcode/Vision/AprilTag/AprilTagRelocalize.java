@@ -33,6 +33,7 @@ public class AprilTagRelocalize {
 
     //how far away is the camera from the center of the robot
     private Pose2d cameraOffset = new Pose2d(-7, 0, Math.toRadians(180));
+    Pose2d poses[] = new Pose2d[]{new Pose2d(63, -29.5, Math.toRadians(180)), new Pose2d(63, -35.5, Math.toRadians(180)), new Pose2d(63, -41.5, Math.toRadians(180))};
     //5 inches away from the apriltag
 
     public AprilTagRelocalize(HardwareMap hardwareMap) {
@@ -101,12 +102,15 @@ public class AprilTagRelocalize {
                 total++;
                 Pose2d average = new Pose2d(
                         target.ftcPose.range*Math.cos(Math.toRadians(target.ftcPose.bearing-target.ftcPose.yaw)),
-                        -target.ftcPose.range*Math.sin(Math.toRadians(target.ftcPose.bearing-target.ftcPose.yaw)),
-                        angleWrap(Math.toRadians(90-target.ftcPose.yaw))).minus(cameraOffset);
+                        target.ftcPose.range*Math.sin(Math.toRadians(target.ftcPose.bearing-target.ftcPose.yaw)),
+                        //angleWrap(Math.toRadians(90-target.ftcPose.yaw))).minus(cameraOffset);
+                0).minus(cameraOffset);
+                average=poses[tag-1].minus(average);
+                Log.d("pose: ", average.toString());
                 answer = answer.plus(average);
             }
         }
-        return new Pose2d(answer.getX()/total, answer.getY()/total, answer.getHeading()/total+Math.toRadians(90));
+        return new Pose2d(answer.getX()/total, answer.getY()/total, 0);
     }
 
     public boolean robot(int[] tags) {

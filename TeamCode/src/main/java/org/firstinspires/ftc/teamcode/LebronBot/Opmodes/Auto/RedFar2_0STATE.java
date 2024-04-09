@@ -46,6 +46,7 @@ import java.util.List;
 public class RedFar2_0STATE extends  LinearOpMode{
     enum LinearStates {
         PURPLE,
+        PURPLEPAUSE,
         PURPLE2STACK,
         IDLE1,
         INTAKE,
@@ -212,11 +213,15 @@ public class RedFar2_0STATE extends  LinearOpMode{
                     robot.outtake.v4barStow();
                     robot.outtake.turretTransfer();
                 })
-                .transitionTimed(2, LinearStates.PURPLE2STACK)
+                .transitionTimed(2, LinearStates.PURPLEPAUSE)
+                .state(LinearStates.PURPLEPAUSE)
+                .onEnter(() -> {
+                    robot.outtake.openRight();
+                })
+                .transitionTimed(0.5, LinearStates.PURPLE2STACK)
                 //.transitionTimed(1, LinearStates.EXTEND)
                 .state(LinearStates.PURPLE2STACK)
                 .onEnter(() -> {
-                    robot.outtake.openRight();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .setTangent(Math.toRadians(135))
                             .splineToLinearHeading(new Pose2d(-55, -13, Math.toRadians(180)), Math.toRadians(180))
@@ -256,7 +261,7 @@ public class RedFar2_0STATE extends  LinearOpMode{
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-60, -13, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-60, -10, Math.toRadians(180)))
                             .build());
                 })
                 .loop( () -> {
@@ -278,8 +283,8 @@ public class RedFar2_0STATE extends  LinearOpMode{
                             robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                                     .setTangent(Math.toRadians(0))
                                     .splineToSplineHeading(new Pose2d(-24, -10, Math.toRadians(180)), Math.toRadians(0))
-                                    .splineToSplineHeading(new Pose2d(5, -10, Math.toRadians(180)), Math.toRadians(0))
-                                    .splineToSplineHeading(new Pose2d(45, -43, Math.toRadians(180)), Math.toRadians(-45))
+                                    .splineToSplineHeading(new Pose2d(10, -15, Math.toRadians(160)), Math.toRadians(-20))
+                                    .splineToSplineHeading(new Pose2d(40, -43.5, Math.toRadians(180)), Math.toRadians(-45))
                                     .build());
                             break;
                         case "right":
@@ -287,7 +292,7 @@ public class RedFar2_0STATE extends  LinearOpMode{
                                     .setTangent(Math.toRadians(0))
                                     .splineToSplineHeading(new Pose2d(-24, -10, Math.toRadians(180)), Math.toRadians(0))
                                     .splineToSplineHeading(new Pose2d(5, -10, Math.toRadians(180)), Math.toRadians(0))
-                                    .splineToSplineHeading(new Pose2d(45.5, -38, Math.toRadians(180)), Math.toRadians(-45))
+                                    .splineToSplineHeading(new Pose2d(40, -38, Math.toRadians(180)), Math.toRadians(-45))
                                     .build());
                             break;
                         case "left":
@@ -295,7 +300,7 @@ public class RedFar2_0STATE extends  LinearOpMode{
                                     .setTangent(Math.toRadians(0))
                                     .splineToSplineHeading(new Pose2d(-24, -10, Math.toRadians(180)), Math.toRadians(0))
                                     .splineToSplineHeading(new Pose2d(5, -10, Math.toRadians(180)), Math.toRadians(0))
-                                    .splineToSplineHeading(new Pose2d(45.5, -32, Math.toRadians(180)), Math.toRadians(-45))
+                                    .splineToSplineHeading(new Pose2d(40, -32, Math.toRadians(180)), Math.toRadians(-45))
                                     .build());
                             break;
                     }
@@ -374,34 +379,26 @@ public class RedFar2_0STATE extends  LinearOpMode{
                     robot.outtake.v4barAngleStow();
                     robot.outtake.turretTransfer();
                 })
-                .transitionTimed(0.25)
+                .transitionTimed(0.25, LinearStates.IDLE2)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-                .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
-                .transition(() -> !robot.drive.isBusy())
-
-
+                .state(LinearStates.IDLE2)
+                .transitionTimed(2)
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
                     //robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                     robot.outtake.v4barScore(); // V4b Score Position
                     robot.outtake.turretTo(turretLevel);
                     extended = true;
-                })
-                .loop( () -> {
-                    //robot.outtake.slidesToLevel(slideLevel); // Extend Slide
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(45.5, -43, Math.toRadians(180)), Math.toRadians(-45))
+                            .lineToLinearHeading(new Pose2d(45.5, -43, Math.toRadians(180)))
                             .build());
                 })
                 .onExit( () -> {
                     robot.outtake.openBothClaws();
                     extended=false;
                 })
-                .transitionTimed(2)
+                .transitionTimed(5)
 
                 .state(LinearStates.RETRACT)
                 .onEnter( () -> {
@@ -470,11 +467,12 @@ public class RedFar2_0STATE extends  LinearOpMode{
 
         while (opModeIsActive() && !isStopRequested()) {
             if (extended) {
-                relocalize.setManualExposure(exposure, gain);
-                Pose2d relocalizePose = relocalize.getTagPos(tagPose);
+                //relocalize.setManualExposure(exposure, gain);
+                Pose2d relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
                 Log.d("Relocalize Pose: ", relocalizePose.toString());
                 if (relocalizePose.getX()<=72) {
-                    robot.drive.setPoseEstimate(poses[tagPose-1].minus(relocalizePose));
+                    relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
+                    robot.drive.setPoseEstimate(relocalizePose);
                 }
             }
             robot.drive.update();
