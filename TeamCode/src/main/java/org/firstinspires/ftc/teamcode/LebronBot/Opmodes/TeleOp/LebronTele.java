@@ -601,7 +601,7 @@ public class LebronTele extends LinearOpMode {
 
             if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
                 if (!hangReady) {
-                    robot.outtake.setSlides(750);
+                    robot.outtake.setSlides(735);
                     robot.outtake.v4barScore();
                     hangReady = true;
                 } else {
