@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -32,14 +31,14 @@ public class Outtake {
     public static int level1 = 160;
     public static int levelIncrement = 150;
 
-    public static double slideDownPower = 0.3;
-    public static double slideUpPower = 0.7;
+    public static double slideDownPower = 0.4;
+    public static double slideUpPower = 0.9;
 
     // V4Bar
     public static double v4barTransfer = 0.06; // 0.9
     public static double v4barStow = 0.19;
     public static double v4barView = 0.37;
-    public static double v4barOut = 0.64;
+    public static double v4barUp = 0.45;
     public static double v4barScore = 0.7;
     public static double v4barAutoScore = 0.75;
     public static double v4barPurple=1;
@@ -162,6 +161,18 @@ public class Outtake {
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : slideDownPower);
     }
 
+    public void hang(int pos) {
+        leftSlide.setTargetPosition(pos);
+        midSlide.setTargetPosition(pos);
+        rightSlide.setTargetPosition(pos);
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        midSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.1 : 0.8);
+        midSlide.setPower(getSlidePos() > pos ? slideUpPower : 0.8);
+        rightSlide.setPower(getSlidePos() > pos ? slideUpPower : 0.8);
+    }
+
     // V4Bar
     public void v4barTransfer() {
         setV4Bar(v4barTransfer);
@@ -176,8 +187,8 @@ public class Outtake {
         v4barAngleStow();
     }
 
-    public void v4barOut() {
-        setV4Bar(v4barOut);
+    public void v4barUp() {
+        setV4Bar(v4barUp);
         v4barAngleStow();
     }
     public void v4barScore() {

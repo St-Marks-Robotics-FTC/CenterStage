@@ -58,6 +58,11 @@ public class LebronTele extends LinearOpMode {
         ALIGN
     }
 
+    enum initStates {
+        UP,
+        DOWN
+    }
+
 
     int slideLevel = 1;
     int turretLevel = -1;
@@ -461,6 +466,18 @@ public class LebronTele extends LinearOpMode {
                 .build();
 
 
+        // Init Procedure
+        StateMachine init = new StateMachineBuilder() // Intake Init
+                .state(initStates.UP)
+                .onEnter( () -> {
+                    robot.intake.tiltStow();
+                    robot.outtake.openBothClaws();
+                    robot.outtake.setV4Bar(0.5); // V4b Stow Position
+                    robot.outtake.v4barAngle.setPosition(0.7); // V4b Stow Position
+                    robot.outtake.turretTransfer();
+                    robot.outtake.retractSlides();
+                })
+                .build();
 
 
 
