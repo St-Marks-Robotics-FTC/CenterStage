@@ -42,8 +42,8 @@ import java.util.List;
  */
 @Config
 public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(12, 0, 0.2);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0.2);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(18, 0, 0.5);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 0.5);
 
     public static double LATERAL_MULTIPLIER = 1.153;
 
@@ -119,7 +119,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
-        //setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,

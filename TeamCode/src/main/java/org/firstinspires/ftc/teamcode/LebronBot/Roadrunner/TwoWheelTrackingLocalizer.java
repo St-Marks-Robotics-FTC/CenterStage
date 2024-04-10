@@ -33,7 +33,7 @@ import java.util.List;
  *
  */
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 8192;
+    public static double TICKS_PER_REV = 4096;
     public static double WHEEL_RADIUS = 0.688975; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
@@ -42,8 +42,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     public static double PERPENDICULAR_X = 1.5;
     public static double PERPENDICULAR_Y = -6;
-    public static double X_MULTIPLIER = 1.997; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 1.9975; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = 0.996; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 0.99; // Multiplier in the Y direction
 
 
     // Parallel/Perpendicular to the forward axis
@@ -96,7 +96,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public List<Double> getWheelVelocities() {
         // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
         //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
-        //  compensation method
+        //  compensation metho
 
         return Arrays.asList(
                 encoderTicksToInches(parallelEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
