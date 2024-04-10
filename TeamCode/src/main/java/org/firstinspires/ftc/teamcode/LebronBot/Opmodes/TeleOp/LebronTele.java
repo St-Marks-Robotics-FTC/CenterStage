@@ -80,7 +80,7 @@ public class LebronTele extends LinearOpMode {
     // The IMU sensor object
     private IMU imu;
 
-    public static double p = 0.7, i = 0, d = 0.05;
+    public static double p = 0.8, i = 0, d = 0.05;
     public static double f = 0;
 
     public static double targetAngle = Math.toRadians(0);
