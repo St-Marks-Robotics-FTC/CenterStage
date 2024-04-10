@@ -467,7 +467,7 @@ public class LebronTele extends LinearOpMode {
 
 
         // Init Procedure
-        StateMachine init = new StateMachineBuilder() // Intake Init
+        StateMachine initMachine = new StateMachineBuilder() // Intake Init
                 .state(initStates.UP)
                 .onEnter( () -> {
                     robot.intake.tiltStow();
@@ -475,14 +475,29 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.setV4Bar(0.5); // V4b Stow Position
                     robot.outtake.v4barAngle.setPosition(0.7); // V4b Stow Position
                     robot.outtake.turretTransfer();
-                    robot.outtake.retractSlides();
+
                 })
+                .transitionTimed(0.25)
+
+                .state(initStates.DOWN)
+                .onEnter( () -> {
+                    robot.outtake.setSlidesPower(-0.25);
+                })
+
                 .build();
 
 
 
+        initMachine.start();
+        while (opModeInInit()) {
+            initMachine.update();
+            telemetry.addData("Init State", initMachine.getState());
+            telemetry.update();
+        }
+        initMachine.stop();
+        robot.outtake.zeroSlides();
 
-        waitForStart();
+//        waitForStart();
 
         targetAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 

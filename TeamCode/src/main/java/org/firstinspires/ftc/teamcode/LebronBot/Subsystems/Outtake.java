@@ -173,6 +173,25 @@ public class Outtake {
         rightSlide.setPower(getSlidePos() > pos ? slideUpPower : 0.8);
     }
 
+    public void setSlidesPower(double power) {
+        leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        midSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        leftSlide.setPower(power);
+        midSlide.setPower(power);
+        rightSlide.setPower(power);
+    }
+
+    public void zeroSlides() {
+        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        midSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     // V4Bar
     public void v4barTransfer() {
         setV4Bar(v4barTransfer);
