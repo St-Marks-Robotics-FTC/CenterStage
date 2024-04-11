@@ -49,12 +49,12 @@ public class Outtake {
     public static double anglePurple = 0;
 
     // Claw
-    public static double clawLeftOpen = 0.1;
+    public static double clawLeftOpen = 0;
     public static double clawLeftClosed = 0.55;
-    public static double clawLeftMoreClosed = 0.45;
+    public static double clawLeftMoreClosed = 0.75;
 
     public static double clawRightOpen = 1;
-    public static double clawRightClosed = 0.75;
+    public static double clawRightClosed = 0.65;
     public static double clawRightMoreClosed = 0.55;
 
     // Turret
