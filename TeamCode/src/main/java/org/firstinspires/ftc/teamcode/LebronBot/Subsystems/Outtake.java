@@ -36,7 +36,7 @@ public class Outtake {
 
     // V4Bar
     public static double v4barTransfer = 0.06; // 0.9
-    public static double v4barStow = 0.19;
+    public static double v4barStow = 0.3;
     public static double v4barView = 0.37;
     public static double v4barUp = 0.45;
     public static double v4barScore = 0.7;
