@@ -168,9 +168,9 @@ public class Outtake {
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         midSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.1 : 0.8);
-        midSlide.setPower(getSlidePos() > pos ? slideUpPower : 0.8);
-        rightSlide.setPower(getSlidePos() > pos ? slideUpPower : 0.8);
+        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.1 : 1);
+        midSlide.setPower(getSlidePos() > pos ? slideUpPower : 1);
+        rightSlide.setPower(getSlidePos() > pos ? slideUpPower : 1);
     }
 
     public void setSlidesPower(double power) {
@@ -296,17 +296,23 @@ public class Outtake {
     }
 
     public void turretTo(int position) {
-        if (position == 0) {
+        if (position == -3) {
+            setTurret(0);
+        } else if (position == -2) {
+            setTurret(0.13);
+        } else if (position == -1) {
+            setTurret(0.345);
+        } else if (position == 0) {
             setTurret(0.49);
         } else if (position == 1) {
-            setTurret(0.83);
-        } else if (position == -1) {
             setTurret(0.6);
         } else if (position == 2) {
-            setTurret(0.38);
-        } else if (position == -2) {
-            setTurret(0.16);
+            setTurret(0.78);
+        } else if (position == 3) {
+            setTurret(1);
         }
+
+
 
 //        else if (position > 0) {
 //            setTurret(turretTransfer + (position * turret60) + turret60/2);

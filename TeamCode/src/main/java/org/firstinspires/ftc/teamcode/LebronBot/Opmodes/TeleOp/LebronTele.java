@@ -65,7 +65,7 @@ public class LebronTele extends LinearOpMode {
 
 
     int slideLevel = 1;
-    int turretLevel = -1;
+    int turretLevel = -2;
     boolean manualSlides = false;
 
     boolean leftClosed = true;
@@ -348,12 +348,12 @@ public class LebronTele extends LinearOpMode {
                 .loop( () -> {
                     // Turret Angle Adjustments
                     if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        turretLevel = Math.min(2, turretLevel+1);
+                        turretLevel = Math.min(3, turretLevel+1);
                         if (turretLevel == 0) {
                             turretLevel = 1;
                         }
                     } else if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                        turretLevel = Math.max(-2, turretLevel-1);
+                        turretLevel = Math.max(-3, turretLevel-1);
                         if (turretLevel == 0) {
                             turretLevel = -1;
                         }
@@ -605,10 +605,10 @@ public class LebronTele extends LinearOpMode {
                     slideLevel = Math.max(1, slideLevel - 1);
                 }
                 if (leftTrigger.wasJustPressed()) {
-                    if (turretLevel == 1) {
-                        turretLevel = -1;
-                    } else if (turretLevel == -1) {
-                        turretLevel = 1;
+                    if (turretLevel == 2) {
+                        turretLevel = -2;
+                    } else if (turretLevel == -2) {
+                        turretLevel = 2;
                     }
                 }
             }
@@ -630,7 +630,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.v4barScore();
                     hangReady = true;
                 } else {
-                    robot.outtake.setSlides(150);
+                    robot.outtake.hang(150);
                     hangReady = false;
                 }
             }
