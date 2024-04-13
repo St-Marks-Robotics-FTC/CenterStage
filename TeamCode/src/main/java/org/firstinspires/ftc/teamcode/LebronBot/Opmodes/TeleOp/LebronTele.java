@@ -175,7 +175,7 @@ public class LebronTele extends LinearOpMode {
                 .state(LinearStates.IDLE1)                 // Driving to wing to pick up
                 .onEnter( () -> { // Happens on Init as well
                     slideBumper = true;
-                    turretLevel = -1;
+                    turretLevel = -2;
 
                     robot.intake.setIntake(0); // Stop Intake
                     robot.intake.tiltStow(); // Intake Stow
@@ -194,7 +194,7 @@ public class LebronTele extends LinearOpMode {
                     profileTimer.reset();
                 })
 //                .transition( () ->  gamepad1.right_bumper, LinearStates.TILT) // Manual Transfer if 1 pixel
-                .transition( () ->  gamepad1.right_trigger > 0.5 ) // Intake Button Main one
+                .transition( () ->  gamepad1.right_trigger > 0.5) // Intake Button Main one
                 .transition( () ->  gamepad1.dpad_up, LinearStates.EXTEND) // Extend Slides
 
                 .state(LinearStates.INTAKE)
@@ -236,7 +236,7 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.TILT)
                 .onEnter( () -> {
-                    robot.intake.setIntake(0.25); // suck in
+                    robot.intake.setIntake(0.4); // suck in
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                 })
@@ -279,14 +279,15 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.STOW)
                 .onEnter( () -> {
+                    //robot.outtake.setSlides(100);
                     robot.outtake.setV4Bar(robot.outtake.v4barStow); // V4b Stow Position
-                    robot.outtake.setV4BarAngle(robot.outtake.angleTransfer+0.015);
+                    //robot.outtake.setV4BarAngle(robot.outtake.angleTransfer-0.01);//+0.015);
                     robot.outtake.turretTransfer();
 
                     robot.outtake.closeRightMore();
                     robot.outtake.closeLeftMore();
 
-                    robot.intake.setTilt(robot.intake.tiltUp - 0.1);
+                    //robot.intake.setTilt(robot.intake.tiltUp - 0.1);
                     //robot.intake.tiltStow();
                 })
                 .transitionTimed(0.3)
@@ -303,6 +304,15 @@ public class LebronTele extends LinearOpMode {
 
 
                 .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
+                .onEnter(() -> {
+                    //robot.outtake.retractSlides();
+                    //robot.intake.tiltStow();
+                })
+                .onExit(() -> {
+                    robot.outtake.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                })
                 .transition( () ->  gamepad1.b) // Outtake Button
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.INTAKE_AGAIN) // Intake Again if we missed
 
@@ -620,7 +630,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.v4barScore();
                     hangReady = true;
                 } else {
-                    robot.outtake.setSlides(250);
+                    robot.outtake.setSlides(150);
                     hangReady = false;
                 }
             }

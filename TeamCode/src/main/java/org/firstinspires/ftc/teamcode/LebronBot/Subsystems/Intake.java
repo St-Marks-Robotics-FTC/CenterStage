@@ -28,11 +28,11 @@ public class Intake {
     public static double dropUp = 0.0;
 
 
-    public static double tiltUp = 0.47; // .7
+    public static double tiltUp = 0.87; // .7
     public static double tiltUpDegrees = 150;
-    public static double tiltDown =0.11;
-    public static double tiltStow = 0.44;
-    public static double tiltStack = 0.25;
+    public static double tiltDown =0.52;
+    public static double tiltStow = 0.77;
+    public static double tiltStack = 0.67;
     public static double tiltStackInc = 0.02;
 
     public Intake(HardwareMap hardwareMap) {
