@@ -106,7 +106,7 @@ public class AprilTagRelocalize {
                         //angleWrap(Math.toRadians(90-target.ftcPose.yaw))).minus(cameraOffset);
                 0).minus(cameraOffset);
                 average=poses[tag-1].minus(average);
-                Log.d("pose: ", average.toString());
+                //Log.d("pose: ", average.toString());
                 answer = answer.plus(average);
             }
         }

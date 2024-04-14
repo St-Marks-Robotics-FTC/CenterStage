@@ -33,6 +33,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
+import org.firstinspires.ftc.teamcode.LebronBot.Opmodes.Testing.KALMAN;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
@@ -123,6 +124,10 @@ public class RedFar2_0STATE extends  LinearOpMode{
     private int cycles = 1;
     private int numCycles=0;
     private int tagPose = 3;
+    private boolean read = false;
+    private Pose2d relocalizePose;
+    private KALMAN kalman;
+    private int intakeNum = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -146,7 +151,6 @@ public class RedFar2_0STATE extends  LinearOpMode{
 
         robot = new LebronClass(hardwareMap);
 
-
         // V4B Motion Profile
         MotionProfile v4bProfile = MotionProfileGenerator.generateSimpleMotionProfile(
                 new MotionState(robot.outtake.v4barStow, 0, 0),
@@ -166,7 +170,7 @@ public class RedFar2_0STATE extends  LinearOpMode{
         );
         Pose2d startPose = new Pose2d(-40.5, -64, Math.toRadians(-90));
         robot.drive.setPoseEstimate(startPose);
-
+        kalman = new KALMAN(startPose);
 
         ElapsedTime profileTimer = new ElapsedTime();
 
@@ -211,16 +215,16 @@ public class RedFar2_0STATE extends  LinearOpMode{
                             tagPose=1;
                             break;
                     }
-                    robot.intake.tiltStow();
                     robot.outtake.v4barPurple();
                     robot.outtake.v4BarAnglePurple();
+                    robot.intake.tiltStow();
                 })
                 .transitionTimed(2, LinearStates.PURPLEPAUSE)
                 .state(LinearStates.PURPLEPAUSE)
                 .onEnter(() -> {
                     robot.outtake.openRight();
                 })
-                .transitionTimed(0.3, LinearStates.PURPLE2STACK)
+                .transitionTimed(0.5, LinearStates.PURPLE2STACK)
                 //.transitionTimed(1, LinearStates.EXTEND)
                 .state(LinearStates.PURPLE2STACK)
                 .onEnter(() -> {
@@ -232,26 +236,26 @@ public class RedFar2_0STATE extends  LinearOpMode{
                 })
                 .transition(() -> !robot.drive.isBusy(), LinearStates.IDLE1)
                 .state(LinearStates.IDLE1)                 // Driving to wing to pick up
-                .transitionTimed(0.5)
+                .transitionTimed(1)
 
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
                     profileTimer.reset();
 
-                    robot.intake.tiltStack(); // Drop Intake
+                    robot.intake.setTilt(robot.intake.tiltStack-robot.intake.tiltStackInc*intakeNum); // Drop Intake
                     robot.intake.setIntake(1); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-60, -10, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-60, -11, Math.toRadians(180)))
                             .build());
                 })
                 .loop( () -> {
                     MotionState intakeState = intakeProfile.get(profileTimer.seconds());
 //                    robot.intake.setIntake(intakeState.getX());
                 })
-                .transitionTimed(1) // if let go and not both pixels
-//                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
+                .transitionTimed(1.5) // if let go and not both pixels
+                .transition( () -> !robot.drive.isBusy())
 
 
                 .state(LinearStates.SUCK)
@@ -365,7 +369,8 @@ public class RedFar2_0STATE extends  LinearOpMode{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 .state(LinearStates.IDLE2)
-                .transitionTimed(1.2)
+                .transitionTimed(1.25)
+                //.transition(() -> !robot.drive.isBusy())
                 .state(LinearStates.EXTEND)
                 .onEnter( () -> {
                     //robot.outtake.slidesToLevel(slideLevel); // Extend Slide
@@ -375,10 +380,12 @@ public class RedFar2_0STATE extends  LinearOpMode{
                 })
                 .onExit( () -> {
                     extended = false;
+                    read = true;
                 })
-                .transitionTimed(0.9)
+                .transitionTimed(0.8)
                 .state(LinearStates.RELOCALIZE)
                 .onEnter(() -> {
+                    read=false;
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(51.5, placementY, Math.toRadians(180)))
                             .build());
@@ -387,9 +394,9 @@ public class RedFar2_0STATE extends  LinearOpMode{
                     robot.outtake.openBothClaws();
                     placementY=-32;
                 })
-                .transitionTimed(0.8)
+                .transitionTimed(0.9)
                 .state(LinearStates.PAUSE)
-                .transitionTimed(0.5)
+                .transitionTimed(0.6)
                 .state(LinearStates.RETRACT)
                 .onEnter( () -> {
                     robot.outtake.v4barStow(); // V4b Stow Position
@@ -399,7 +406,7 @@ public class RedFar2_0STATE extends  LinearOpMode{
                     slideLevel = 1;
                     turretLevel = -1;
                     manualSlides = false;
-                    robot.drive.setPoseEstimate(new Pose2d(robot.drive.getPoseEstimate().getX(),robot.drive.getPoseEstimate().getY()+5,robot.drive.getPoseEstimate().getHeading()));
+                    robot.drive.setPoseEstimate(new Pose2d(robot.drive.getPoseEstimate().getX(),robot.drive.getPoseEstimate().getY()+6,robot.drive.getPoseEstimate().getHeading()));
                 })
                 .onExit( () -> {
                     robot.outtake.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -410,15 +417,16 @@ public class RedFar2_0STATE extends  LinearOpMode{
                 .state(LinearStates.TO_STACK)
                 .onEnter( () -> {
                     numCycles++;
+                    intakeNum+=2;
                     loc = "left";
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                                     .setTangent(Math.toRadians(160))
                             .splineToConstantHeading(new Vector2d(18, -8), Math.toRadians(180))
                             .splineToConstantHeading(new Vector2d(-24, -8), Math.toRadians(180))
-                            .splineToConstantHeading(new Vector2d(-53, -8), Math.toRadians(180))
+                            .splineToConstantHeading(new Vector2d(-50, -8), Math.toRadians(180))
                             .build());
                 })
-                .transitionTimed(3.35, LinearStates.INTAKE)
+                .transitionTimed(3.3, LinearStates.INTAKE)
                 // Fail safe
                 .state(LinearStates.INTAKE_AGAIN)
                 .onEnter( () -> {
@@ -462,11 +470,20 @@ public class RedFar2_0STATE extends  LinearOpMode{
         while (opModeIsActive() && !isStopRequested()) {
             if (extended) {
                 //relocalize.setManualExposure(exposure, gain);
-                Pose2d relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
+                relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
                 Log.d("Relocalize Pose: ", relocalizePose.toString());
+//                if (relocalizePose.getX()<=72 && read) {
+//                    relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
+//                    robot.drive.setPoseEstimate(relocalizePose);
+//                }
                 if (relocalizePose.getX()<=72) {
                     relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
-                    robot.drive.setPoseEstimate(relocalizePose);
+                    kalman.update(robot.drive.getPoseEstimate(), relocalizePose);
+                    Log.d("Kalman Pose: ", kalman.getPose().toString());
+                    Log.d("Odometry Pose: ", robot.drive.getPoseEstimate().toString());
+                    Pose2d input = kalman.getPose();
+                    input = new Pose2d(input.getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
+                    robot.drive.setPoseEstimate(input);
                 }
             }
             if (numCycles>cycles) {
