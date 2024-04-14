@@ -215,6 +215,11 @@ public class Outtake {
         v4barAngleScore();
     }
 
+    public void v4barLevel1() {
+        setV4Bar(v4barScore+0.05);
+        v4barAngle.setPosition(0.07);
+    }
+
     public void v4BarAuto() {
         setV4Bar(v4barAutoScore);
         v4barAngleScore();

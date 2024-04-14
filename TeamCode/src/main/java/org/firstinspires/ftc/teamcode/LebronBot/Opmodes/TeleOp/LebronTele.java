@@ -379,6 +379,11 @@ public class LebronTele extends LinearOpMode {
                         robot.outtake.setSlides(robot.outtake.getSlidePos()-20);
                     }
 
+                    if (slideLevel == 1) {
+                        robot.outtake.v4barLevel1();
+                    } else {
+                        robot.outtake.v4barScore(); // V4b Score Position
+                    }
 
                     // Claws
 
