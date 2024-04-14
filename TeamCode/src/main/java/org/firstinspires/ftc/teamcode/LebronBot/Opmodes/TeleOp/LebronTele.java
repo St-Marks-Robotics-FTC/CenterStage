@@ -346,6 +346,8 @@ public class LebronTele extends LinearOpMode {
                 .onEnter( () -> {
                     leftClosed = true;
                     rightClosed = true;
+
+                    robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
                 })
                 .loop( () -> {
                     // Turret Angle Adjustments
@@ -367,10 +369,15 @@ public class LebronTele extends LinearOpMode {
                     // Slide Level Adjustments
                     if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
                         slideLevel = Math.min(9, slideLevel + 1);
+                        robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
                     } else if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
                         slideLevel = Math.max(1, slideLevel - 1);
+                        robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
+                    } else if (gamepad1.dpad_left) {
+                        robot.outtake.setSlides(robot.outtake.getSlidePos()+15);
+                    } else if(gamepad1.dpad_down){
+                        robot.outtake.setSlides(robot.outtake.getSlidePos()-20);
                     }
-                    robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
 
 
                     // Claws
@@ -431,7 +438,7 @@ public class LebronTele extends LinearOpMode {
                 })
                 .transition( () ->  gamepad1.a && !leftClosed && !rightClosed) // Both open
 //                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
-                .transition(() -> gamepad1.dpad_down,  // Retract Button Failsafe
+                .transition(() -> gamepad1.dpad_right,  // Retract Button Failsafe
                         LinearStates.IDLE2,
                         () -> {
                             robot.outtake.v4barStow(); // V4b Stow Position
