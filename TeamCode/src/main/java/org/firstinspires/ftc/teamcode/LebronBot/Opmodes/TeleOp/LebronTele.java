@@ -99,7 +99,7 @@ public class LebronTele extends LinearOpMode {
     boolean stickZero = false;
 
     boolean slideBumper = true;
-    boolean imuReset = false;
+    boolean imuReset = true;
 
 
 
