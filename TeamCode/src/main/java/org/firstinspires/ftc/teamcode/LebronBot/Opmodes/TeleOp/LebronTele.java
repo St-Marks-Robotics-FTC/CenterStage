@@ -280,15 +280,15 @@ public class LebronTele extends LinearOpMode {
                 .state(LinearStates.STOW)
                 .onEnter( () -> {
                     //robot.outtake.setSlides(100);
-                    robot.outtake.setV4Bar(robot.outtake.v4barStow); // V4b Stow Position
-                    robot.outtake.setV4BarAngle(robot.outtake.angleTransfer+0.015);
+                    robot.outtake.setV4Bar(robot.outtake.v4barStow+0.1); // V4b Stow Position
+//                    robot.outtake.setV4BarAngle(robot.outtake.angleTransfer+0.015);
                     //robot.outtake.setV4BarAngle(robot.outtake.angleTransfer-0.01);//+0.015);
                     robot.outtake.turretTransfer();
 
                     robot.outtake.closeRightMore();
                     robot.outtake.closeLeftMore();
 
-                    robot.intake.setTilt(robot.intake.tiltUp - 0.1);
+//                    robot.intake.setTilt(robot.intake.tiltUp - 0.1);
                     //robot.intake.tiltStow();
                 })
                 .transitionTimed(0.7)
