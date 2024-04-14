@@ -351,13 +351,21 @@ public class LebronTele extends LinearOpMode {
                 })
                 .loop( () -> {
                     // Turret Angle Adjustments
-                    if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                        turretLevel = Math.min(3, turretLevel+1);
+                    if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) { // clockwise
+                        if (turretLevel == 3) {
+                            turretLevel = -3;
+                        } else {
+                            turretLevel = Math.min(3, turretLevel+1);
+                        }
                         if (turretLevel == 0) {
                             turretLevel = 1;
                         }
-                    } else if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                        turretLevel = Math.max(-3, turretLevel-1);
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) { // counter-clockwise
+                        if (turretLevel == -3) {
+                            turretLevel = 3;
+                        } else {
+                            turretLevel = Math.max(-3, turretLevel-1);
+                        }
                         if (turretLevel == 0) {
                             turretLevel = -1;
                         }
