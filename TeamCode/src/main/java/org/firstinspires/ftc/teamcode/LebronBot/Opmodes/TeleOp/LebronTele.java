@@ -222,7 +222,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barAngleTransfer();
                 })
-                .transitionTimed(0.25)
+                .transitionTimed(0.5)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
 
@@ -281,13 +281,14 @@ public class LebronTele extends LinearOpMode {
                 .onEnter( () -> {
                     //robot.outtake.setSlides(100);
                     robot.outtake.setV4Bar(robot.outtake.v4barStow); // V4b Stow Position
+                    robot.outtake.setV4BarAngle(robot.outtake.angleTransfer+0.015);
                     //robot.outtake.setV4BarAngle(robot.outtake.angleTransfer-0.01);//+0.015);
                     robot.outtake.turretTransfer();
 
                     robot.outtake.closeRightMore();
                     robot.outtake.closeLeftMore();
 
-                    //robot.intake.setTilt(robot.intake.tiltUp - 0.1);
+                    robot.intake.setTilt(robot.intake.tiltUp - 0.1);
                     //robot.intake.tiltStow();
                 })
                 .transitionTimed(0.3)
