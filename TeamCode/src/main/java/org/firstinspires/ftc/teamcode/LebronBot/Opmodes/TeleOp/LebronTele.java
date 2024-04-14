@@ -144,9 +144,9 @@ public class LebronTele extends LinearOpMode {
         MotionProfile v4bProfile = MotionProfileGenerator.generateSimpleMotionProfile(
                 new MotionState(robot.outtake.v4barStow, 0, 0),
                 new MotionState(robot.outtake.v4barTransfer, 0, 0),
-                25,
-                25,
-                25
+                40,
+                40,
+                40
         );
 
         // Intake Motion Profile
@@ -274,7 +274,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.closeBothClaws(); // Claw Grab
                     robot.outtake.turretTransfer();
                 })
-                .transitionTimed(0.3)
+                .transitionTimed(0.25)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
 
                 .state(LinearStates.STOW)
@@ -291,7 +291,7 @@ public class LebronTele extends LinearOpMode {
                     robot.intake.setTilt(robot.intake.tiltUp - 0.1);
                     //robot.intake.tiltStow();
                 })
-                .transitionTimed(0.3)
+                .transitionTimed(0.7)
                 .state(LinearStates.STOWANGLE)
                 .onEnter( () -> {
                     robot.intake.tiltStow();
@@ -306,6 +306,7 @@ public class LebronTele extends LinearOpMode {
 
                 .state(LinearStates.IDLE2)                                   // Have pixels in claw, driving back to backboard
                 .onEnter(() -> {
+                    robot.outtake.setV4Bar(robot.outtake.v4barStow);
                     //robot.outtake.retractSlides();
                     //robot.intake.tiltStow();
                 })
@@ -462,7 +463,7 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 })
-                .transitionTimed(1)
+                .transitionTimed(1.5)
                 .transition( () ->  robot.outtake.getSlidePos() < 10, LinearStates.IDLE1) // Checks if slides are down, goes back to IDLE1
 
 
