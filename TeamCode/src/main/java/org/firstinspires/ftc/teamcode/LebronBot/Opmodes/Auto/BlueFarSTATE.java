@@ -230,8 +230,8 @@ public class BlueFarSTATE extends  LinearOpMode{
                             .build());
                 })
                 .transitionTimed(2)
-                .state(LinearStates.DISTANCERELOCALIZE)
-                .onEnter(() -> robot.drive.setPoseEstimate(ak47.relocalize()))
+                //.state(LinearStates.DISTANCERELOCALIZE)
+                //.onEnter(() -> robot.drive.setPoseEstimate(ak47.relocalize()))
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
                     profileTimer.reset();
