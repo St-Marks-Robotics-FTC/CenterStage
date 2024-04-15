@@ -39,13 +39,13 @@ public class Outtake {
     public static double v4barStow = 0.19;
     public static double v4barView = 0.37;
     public static double v4barUp = 0.45;
-    public static double v4barScore = 0.7;
+    public static double v4barScore = 0.72;
     public static double v4barAutoScore = 0.75;
     public static double v4barPurple=1;
 
     public static double angleTransfer = 0.825;
     public static double angleStow = 0.7;
-    public static double angleScore = 0.04;
+    public static double angleScore = 0.05;
     public static double anglePurple = 0;
 
     // Claw
