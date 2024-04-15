@@ -369,7 +369,7 @@ public class LebronTele extends LinearOpMode {
                         if (turretLevel == 0) {
                             turretLevel = -1;
                         }
-                    } else if (pad1.wasJustPressed(GamepadKeys.Button.Y)) {
+                    } else if (pad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                         turretLevel = 0;
                     }
                     robot.outtake.turretTo(turretLevel); // Spin Turret
@@ -381,10 +381,10 @@ public class LebronTele extends LinearOpMode {
                     } else if (pad1.wasJustPressed(GamepadKeys.Button.A)) {
                         slideLevel = Math.max(1, slideLevel - 1);
                         robot.outtake.slidesToLevel(slideLevel); // Extend Slide to Level
-                    } else if (gamepad1.dpad_left) {
-                        robot.outtake.setSlides(robot.outtake.getSlidePos()+15);
-                    } else if(gamepad1.dpad_down){
-                        robot.outtake.setSlides(robot.outtake.getSlidePos()-20);
+                    } else if (gamepad1.y) {
+                        robot.outtake.setSlides(robot.outtake.getSlidePos()+25);
+                    } else if(gamepad1.x){
+                        robot.outtake.setSlides(robot.outtake.getSlidePos()-30);
                     }
 
                     if (slideLevel == 1) {
@@ -646,7 +646,7 @@ public class LebronTele extends LinearOpMode {
                 robot.special.holdDrone();
             }
 
-            if (pad1.wasJustPressed(GamepadKeys.Button.X)) {
+            if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
                 if (!hangReady) {
                     robot.outtake.setSlides(735);
                     robot.outtake.v4barScore();
