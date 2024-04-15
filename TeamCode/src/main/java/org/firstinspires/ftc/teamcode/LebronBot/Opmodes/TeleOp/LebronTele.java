@@ -292,6 +292,9 @@ public class LebronTele extends LinearOpMode {
                     //robot.intake.tiltStow();
                 })
                 .transitionTimed(0.7)
+                .transition( () ->  gamepad1.b, LinearStates.EXTEND) // Outtake Button
+
+
                 .state(LinearStates.STOWANGLE)
                 .onEnter( () -> {
                     robot.intake.tiltStow();
@@ -299,6 +302,8 @@ public class LebronTele extends LinearOpMode {
                     robot.outtake.turretTransfer();
                 })
                 .transitionTimed(0.25)
+                .transition( () ->  gamepad1.b, LinearStates.EXTEND) // Outtake Button
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

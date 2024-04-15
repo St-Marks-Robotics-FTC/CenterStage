@@ -35,7 +35,7 @@ public class Outtake {
     public static double slideUpPower = 0.9;
 
     // V4Bar
-    public static double v4barTransfer = 0.115; // 0.9
+    public static double v4barTransfer = 0.11; // 0.9
     public static double v4barStow = 0.19;
     public static double v4barView = 0.37;
     public static double v4barUp = 0.45;
@@ -43,7 +43,7 @@ public class Outtake {
     public static double v4barAutoScore = 0.75;
     public static double v4barPurple=1;
 
-    public static double angleTransfer = 0.825;
+    public static double angleTransfer = 0.82;
     public static double angleStow = 0.7;
     public static double angleScore = 0.04;
     public static double anglePurple = 0;
@@ -58,7 +58,7 @@ public class Outtake {
     public static double clawRightMoreClosed = 0.55;
 
     // Turret
-    public static double turretTransfer = 0.49;
+    public static double turretTransfer = 0.55;
     public static double turret60 = 0.16;
 
 
@@ -117,9 +117,9 @@ public class Outtake {
         if (level == 1) {
             setSlides(0);
         } else if (level == 2) {
-            setSlides(120);
+            setSlides(130);
         } else if (level == 3) {
-            setSlides(270);
+            setSlides(280);
         } else if (level == 4) {
             setSlides(390);
         } else if (level == 5) {
@@ -302,17 +302,17 @@ public class Outtake {
 
     public void turretTo(int position) {
         if (position == -3) {
-            setTurret(0);
+            setTurret(0.06);
         } else if (position == -2) {
-            setTurret(0.13);
+            setTurret(0.19);
         } else if (position == -1) {
-            setTurret(0.345);
+            setTurret(0.405);
         } else if (position == 0) {
-            setTurret(0.49);
+            setTurret(0.55);
         } else if (position == 1) {
-            setTurret(0.6);
+            setTurret(0.66);
         } else if (position == 2) {
-            setTurret(0.78);
+            setTurret(0.84);
         } else if (position == 3) {
             setTurret(1);
         }
