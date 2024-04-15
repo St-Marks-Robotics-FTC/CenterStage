@@ -25,7 +25,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
-import org.firstinspires.ftc.teamcode.LebronBot.Opmodes.Testing.KALMAN;
+import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.KALMAN;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.DistanceRelocalize;
 import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
@@ -228,9 +228,10 @@ public class RedFarSTATE extends  LinearOpMode{
                             .lineToLinearHeading(new Pose2d(-52, -13, Math.toRadians(180)))
                             .build());
                 })
-                .transitionTimed(2)
+                .transitionTimed(1.5)
                 .state(LinearStates.DISTANCERELOCALIZE)
-                .onEnter(() -> robot.drive.setPoseEstimate(ak47.relocalize()))
+                .onEnter(() -> read=true)
+                .transitionTimed(0.5)
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
                     profileTimer.reset();
@@ -457,6 +458,12 @@ public class RedFarSTATE extends  LinearOpMode{
                     Pose2d input = kalman.getPose();
                     input = new Pose2d(input.getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
                     robot.drive.setPoseEstimate(input);
+                }
+            }
+            if (read) {
+                Pose2d sensorytouch =ak47.relocalize(robot.drive.getPoseEstimate().getHeading());
+                if (sensorytouch.vec().minus(robot.drive.getPoseEstimate().vec()).norm() < 5) {
+                    robot.drive.setPoseEstimate(sensorytouch);
                 }
             }
             if (numCycles>cycles) {

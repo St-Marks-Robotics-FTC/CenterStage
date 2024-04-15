@@ -76,10 +76,9 @@ public class DistanceRelocalize {
         }
     }
 
-    public Pose2d relocalize(){
+    public Pose2d relocalize(double angle){
 
         //i was gonna make this more complicated but i want to keep it simple for now, so just assume the distance sensors are both facing the correct walls
-        angle=getAngle()+((side==RED)?Math.toRadians(180):0);
         double dist1 = getDistF();///Math.cos(Math.toRadians(20));
 
         if (dist1>100) return new Pose2d(999,0,0);

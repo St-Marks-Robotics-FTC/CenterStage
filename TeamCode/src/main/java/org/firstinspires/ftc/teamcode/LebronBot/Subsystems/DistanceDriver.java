@@ -18,9 +18,9 @@ public class DistanceDriver {
         this.sensor= hardwareMap.get(AnalogInput.class, sensor);
     }
     public double getDistance(){
-        if(System.currentTimeMillis() - lastRead > 33){
+        if(System.currentTimeMillis() - lastRead > 100){
             double volt = sensor.getVoltage();
-            if (true) cachedDistance = ((volt*6)/((2.74/1024)))-300; //increasing vcc makes less extreme
+            if (true) cachedDistance = ((volt*6)/((2.74/1024)))-300; //increasing vcc makes less "extreme"
             lastRead = System.currentTimeMillis();
         }
         return (cachedDistance);

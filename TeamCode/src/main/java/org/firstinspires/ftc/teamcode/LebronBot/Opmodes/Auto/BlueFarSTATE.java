@@ -25,12 +25,11 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
-import org.firstinspires.ftc.teamcode.LebronBot.Opmodes.Testing.KALMAN;
+import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.KALMAN;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.DistanceRelocalize;
 import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BlueFarPropThreshold;
-import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.List;
