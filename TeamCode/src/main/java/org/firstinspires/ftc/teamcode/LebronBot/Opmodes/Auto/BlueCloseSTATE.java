@@ -35,6 +35,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.KALMAN;
 import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
 import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
@@ -126,6 +127,8 @@ public class BlueCloseSTATE extends  LinearOpMode{
     private int numCycles=0;
     private double placePause = 2;
     //private int tagPose = 3;
+    private Pose2d relocalizePose;
+    private KALMAN kalman;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -170,6 +173,7 @@ public class BlueCloseSTATE extends  LinearOpMode{
         Pose2d startPose = new Pose2d(16.5, 64, Math.toRadians(90));
         robot.drive.setPoseEstimate(startPose);
 
+        kalman = new KALMAN(startPose);
 
         ElapsedTime profileTimer = new ElapsedTime();
 
@@ -197,8 +201,8 @@ public class BlueCloseSTATE extends  LinearOpMode{
                     switch (loc) {
                         case "none":
                             robot.drive.followTrajectorySequenceAsync(right);
-                            placementY=43;
-                            placePause=2.5;
+                            placementY=33;
+                            placePause=3;
                             //tagPose=3;
                             break;
                         case "right":
@@ -208,7 +212,7 @@ public class BlueCloseSTATE extends  LinearOpMode{
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(left);
-                            placementY=32;
+                            placementY=43;
                             //tagPose=1;
                             break;
                     }
@@ -363,7 +367,7 @@ public class BlueCloseSTATE extends  LinearOpMode{
                     robot.outtake.v4barScore(); // V4b Score Position
                     robot.outtake.turretTo(turretLevel);
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(50.5, placementY, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(49, placementY, Math.toRadians(180)))
                             .build());
                 })
                 .onExit( () -> {
@@ -377,15 +381,18 @@ public class BlueCloseSTATE extends  LinearOpMode{
                 .state(LinearStates.RETRACT)
                 .onEnter( () -> {
                     placePause=0.8;
-                    robot.outtake.v4barStow(); // V4b Stow Position
-                    robot.outtake.turretTransfer(); // Turret Vertical
-                    robot.outtake.retractSlides(); // Retract Slide
-
+                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(44, placementY, Math.toRadians(180)))
+                            .build());
                     slideLevel = 1;
                     turretLevel = -1;
                     manualSlides = false;
+                    numCycles++;
                 })
                 .onExit( () -> {
+                    robot.outtake.v4barStow(); // V4b Stow Position
+                    robot.outtake.turretTransfer(); // Turret Vertical
+                    robot.outtake.retractSlides(); // Retract Slide
                     robot.outtake.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -393,7 +400,6 @@ public class BlueCloseSTATE extends  LinearOpMode{
                 .transitionTimed(0.5)
                 .state(LinearStates.TO_STACK)
                 .onEnter( () -> {
-                    numCycles++;
                     loc = "left";
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .setTangent(Math.toRadians(160))
@@ -444,13 +450,22 @@ public class BlueCloseSTATE extends  LinearOpMode{
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
-            if (false) {
+            if (extended) {
                 //relocalize.setManualExposure(exposure, gain);
-                Pose2d relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
+                relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
                 Log.d("Relocalize Pose: ", relocalizePose.toString());
+//                if (relocalizePose.getX()<=72 && read) {
+//                    relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
+//                    robot.drive.setPoseEstimate(relocalizePose);
+//                }
                 if (relocalizePose.getX()<=72) {
                     relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
-                    robot.drive.setPoseEstimate(relocalizePose);
+                    kalman.update(robot.drive.getPoseEstimate(), relocalizePose);
+                    Log.d("Kalman Pose: ", kalman.getPose().toString());
+                    Log.d("Odometry Pose: ", robot.drive.getPoseEstimate().toString());
+                    Pose2d input = kalman.getPose();
+                    input = new Pose2d(input.getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
+                    robot.drive.setPoseEstimate(input);
                 }
             }
             if (numCycles>cycles) {
@@ -505,8 +520,10 @@ public class BlueCloseSTATE extends  LinearOpMode{
 
         }
         relocalize.visionPortal.close();
+        robot.outtake.v4barStow(); // V4b Stow Position
+        robot.outtake.turretTransfer(); // Turret Vertical
         robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(51, 62, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(47, 62, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(64, 64, Math.toRadians(180)))
                 .build());
     }

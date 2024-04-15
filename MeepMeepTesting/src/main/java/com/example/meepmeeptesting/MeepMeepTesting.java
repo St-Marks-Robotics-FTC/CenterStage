@@ -111,9 +111,15 @@ public class MeepMeepTesting {
         RoadRunnerBotEntity farBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(70, 60, Math.toRadians(120), Math.toRadians(120), 15)
-                .setDimensions(14, 14) // Set size of bot
+                .setDimensions(18, 18) // Set size of bot
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-60, -10, Math.toRadians(180))) //  Far
+                        drive.trajectorySequenceBuilder(new Pose2d(-50, 10, Math.toRadians(180))) //  Far
+                                .setTangent(Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(4, 8, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(44, 36, Math.toRadians(180)), Math.toRadians(35))
+                                .setTangent(Math.toRadians(-145))
+                                .splineToSplineHeading(new Pose2d(4, 8, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToSplineHeading(new Pose2d(-50,  10, Math.toRadians(180)), Math.toRadians(180))
                                 //Far Truss
 //                                .setReversed(true)
 //                                .setTangent(Math.toRadians(-90))
@@ -147,10 +153,10 @@ public class MeepMeepTesting {
 //                                .splineToSplineHeading(new Pose2d(15, 60,Math.toRadians(180)), Math.toRadians(0))
 //                                .splineToSplineHeading(new Pose2d(48, 42,Math.toRadians(180)), Math.toRadians(-45))
 //                                .waitSeconds(0.5)
-                                .setTangent(Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(-24, -10, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(10, -15, Math.toRadians(160)), Math.toRadians(-20))
-                                .splineToSplineHeading(new Pose2d(45, -43.5, Math.toRadians(180)), Math.toRadians(-45))
+//                                .setTangent(Math.toRadians(0))
+//                                .splineToSplineHeading(new Pose2d(-24, -10, Math.toRadians(180)), Math.toRadians(0))
+//                                .splineToSplineHeading(new Pose2d(10, -15, Math.toRadians(160)), Math.toRadians(-20))
+//                                .splineToSplineHeading(new Pose2d(45, -43.5, Math.toRadians(180)), Math.toRadians(-45))
                                 //Far Door
 //                                .setReversed(true)
 //                                .setTangent(Math.toRadians(-90))

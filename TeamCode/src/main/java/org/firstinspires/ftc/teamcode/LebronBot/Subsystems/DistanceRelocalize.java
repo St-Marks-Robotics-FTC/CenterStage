@@ -60,7 +60,7 @@ public class DistanceRelocalize {
         this.side = side;
     }
 
-    private double getAngle(){
+    public double getAngle(){
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
@@ -95,9 +95,9 @@ public class DistanceRelocalize {
 
             y=-Math.cos(Math.toRadians(90)+(angle2+angle))*dist2;
             double yOff=sensors[1].vec().rotated(angle).getY();
-            Log.d("y, ", Double.toString(y));
+            //Log.d("y, ", Double.toString(y));
             y+=yOff;
-            Log.d("yOff, ", Double.toString(yOff));
+            //Log.d("yOff, ", Double.toString(yOff));
         }
         else{
             dist3 = getDistL();
@@ -110,7 +110,7 @@ public class DistanceRelocalize {
         Pose2d pose=new Pose2d(x,y,angle);
         Log.d("pose: ", pose.toString());
         if(side == BLUE){
-            pose=new Pose2d(-72+pose.getX(),72+pose.getY(), pose.getHeading());
+            pose=new Pose2d(-72-pose.getX(),72-pose.getY(), pose.getHeading());
         }else{
             pose=new Pose2d(-72+pose.getX(),-72-pose.getY(), pose.getHeading());
         }

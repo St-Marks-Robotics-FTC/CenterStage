@@ -45,7 +45,7 @@ public class DistanceRelocalizeTest extends OpMode {
 
     @Override
     public void init_loop() {
-        Pose2d relocalizePose = relocalize.relocalize();
+        Pose2d relocalizePose = relocalize.relocalize(relocalize.getAngle());
         Log.d("bruh: ", relocalizePose.toString());
         robot.drive.setPoseEstimate(relocalizePose);
         telemetry.addData("relocalizePose: ", relocalizePose.toString());

@@ -33,7 +33,7 @@ public class AprilTagRelocalize {
 
     //how far away is the camera from the center of the robot
     private Pose2d cameraOffset = new Pose2d(-7, 0, Math.toRadians(180));
-    Pose2d poses[] = new Pose2d[]{new Pose2d(63, 29.5, Math.toRadians(180)), new Pose2d(63, 35.5, Math.toRadians(180)), new Pose2d(63, 41.5, Math.toRadians(180)), new Pose2d(63, -29.5, Math.toRadians(180)), new Pose2d(63, -35.5, Math.toRadians(180)), new Pose2d(63, -41.5, Math.toRadians(180))};
+    Pose2d poses[] = new Pose2d[]{new Pose2d(63, 41.5, Math.toRadians(180)), new Pose2d(63, 35.5, Math.toRadians(180)), new Pose2d(63, 29.5, Math.toRadians(180)), new Pose2d(63, -29.5, Math.toRadians(180)), new Pose2d(63, -35.5, Math.toRadians(180)), new Pose2d(63, -41.5, Math.toRadians(180))};
     //5 inches away from the apriltag
 
     public AprilTagRelocalize(HardwareMap hardwareMap) {

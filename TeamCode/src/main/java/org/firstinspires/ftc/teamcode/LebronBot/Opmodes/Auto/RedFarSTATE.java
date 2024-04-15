@@ -231,6 +231,7 @@ public class RedFarSTATE extends  LinearOpMode{
                 .transitionTimed(1.5)
                 .state(LinearStates.DISTANCERELOCALIZE)
                 .onEnter(() -> read=true)
+                .onExit(() -> read=false)
                 .transitionTimed(0.5)
                 .state(LinearStates.INTAKE)
                 .onEnter( () -> {
@@ -351,12 +352,10 @@ public class RedFarSTATE extends  LinearOpMode{
                 })
                 .onExit( () -> {
                     extended = false;
-                    read = true;
                 })
                 .transitionTimed(0.4)
                 .state(LinearStates.RELOCALIZE)
                 .onEnter(() -> {
-                    read=false;
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(52, placementY, Math.toRadians(180)))
                             .build());

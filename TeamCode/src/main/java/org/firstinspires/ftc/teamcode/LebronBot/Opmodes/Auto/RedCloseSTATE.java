@@ -207,7 +207,7 @@ public class RedCloseSTATE extends  LinearOpMode{
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(middle);
-                            placementY=-37;
+                            placementY=-37.5;
                             //tagPose=1;
                             break;
                     }

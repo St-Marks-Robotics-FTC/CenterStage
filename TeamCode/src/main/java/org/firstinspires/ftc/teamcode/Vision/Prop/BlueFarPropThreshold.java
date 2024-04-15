@@ -23,8 +23,8 @@ public class BlueFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(500, 450),
-            new Point(600, 550)
+            new Point(400, 450),
+            new Point(500, 550)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
@@ -44,10 +44,10 @@ public class BlueFarPropThreshold implements VisionProcessor {
 
 
         Scalar lowHSVRedLower = new Scalar(0, 70, 20);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
+        Scalar lowHSVRedUpper = new Scalar(35, 255, 255);
 
-        Scalar redHSVRedLower = new Scalar(160, 70, 20); //Wraps around Color Wheel
-        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
+        Scalar redHSVRedLower = new Scalar(150, 70, 20); //Wraps around Color Wheel
+        Scalar highHSVRedUpper = new Scalar(190, 255, 255);
 
         Core.inRange(testMat, lowHSVRedLower, lowHSVRedUpper, lowMat);
         Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);

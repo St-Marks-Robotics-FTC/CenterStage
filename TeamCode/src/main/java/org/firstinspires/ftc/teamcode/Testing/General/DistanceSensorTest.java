@@ -15,7 +15,7 @@ public class DistanceSensorTest extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addData("relocalize Pose: ", relocalize.relocalize());
+        telemetry.addData("relocalize Pose: ", relocalize.relocalize(Math.toRadians(180)));
         telemetry.addData("distL", relocalize.getDistL());
         telemetry.addData("distR", relocalize.getDistR());
         telemetry.addData("distF", relocalize.getDistF());
