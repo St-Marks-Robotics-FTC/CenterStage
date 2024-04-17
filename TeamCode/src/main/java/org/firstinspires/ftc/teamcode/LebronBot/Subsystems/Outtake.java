@@ -45,7 +45,7 @@ public class Outtake {
 
     public static double angleTransfer = 0.815;
     public static double angleStow = 0.7;
-    public static double angleScore = 0.05;
+    public static double angleScore = 0.03;
     public static double anglePurple = 0;
 
     // Claw
@@ -58,7 +58,7 @@ public class Outtake {
     public static double clawRightMoreClosed = 0.55;
 
     // Turret
-    public static double turretTransfer = 0.55;
+    public static double turretTransfer = 0.49;
     public static double turret60 = 0.16;
 
 
@@ -117,9 +117,9 @@ public class Outtake {
         if (level == 1) {
             setSlides(0);
         } else if (level == 2) {
-            setSlides(130);
+            setSlides(120);
         } else if (level == 3) {
-            setSlides(280);
+            setSlides(270);
         } else if (level == 4) {
             setSlides(390);
         } else if (level == 5) {
@@ -302,19 +302,19 @@ public class Outtake {
 
     public void turretTo(int position) {
         if (position == -3) {
-            setTurret(0.08);
+            setTurret(0.07);
         } else if (position == -2) {
-            setTurret(0.27);
+            setTurret(0.24);
         } else if (position == -1) {
-            setTurret(0.445);
+            setTurret(0.4);
         } else if (position == 0) {
-            setTurret(0.55);
+            setTurret(0.49);
         } else if (position == 1) {
-            setTurret(0.64);
+            setTurret(0.57);
         } else if (position == 2) {
-            setTurret(0.825);
+            setTurret(0.735);
         } else if (position == 3) {
-            setTurret(1);
+            setTurret(0.915);
         }
 
 

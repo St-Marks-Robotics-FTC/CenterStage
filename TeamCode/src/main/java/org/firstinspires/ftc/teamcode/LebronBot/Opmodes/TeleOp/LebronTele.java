@@ -358,7 +358,7 @@ public class LebronTele extends LinearOpMode {
                     // Turret Angle Adjustments
                     if (pad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) { // clockwise
                         if (turretLevel == 3) {
-                            turretLevel = -3;
+//                            turretLevel = -3;
                         } else {
                             turretLevel = Math.min(3, turretLevel+1);
                         }
@@ -367,7 +367,7 @@ public class LebronTele extends LinearOpMode {
                         }
                     } else if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) { // counter-clockwise
                         if (turretLevel == -3) {
-                            turretLevel = 3;
+//                            turretLevel = 3;
                         } else {
                             turretLevel = Math.max(-3, turretLevel-1);
                         }
@@ -674,6 +674,8 @@ public class LebronTele extends LinearOpMode {
 
 
             // Telemetry
+            telemetry.addData("Turret Pos", robot.outtake.turret.getPosition());
+
             telemetry.addData("State", machine.getState());
 
             telemetry.addData("Slide Level", slideLevel);
