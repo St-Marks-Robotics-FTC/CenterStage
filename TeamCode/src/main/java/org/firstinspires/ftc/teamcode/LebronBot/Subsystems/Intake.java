@@ -125,7 +125,20 @@ public class Intake {
         return tiltAngle.getVoltage() / 3.3 * 360.0;
     }
 
-
-
+    public void setStack(int level) {
+        if (level == 1) {
+            tiltDown();
+        } else if (level == 2) {
+            setTilt(0.465);
+        } else if (level == 3) {
+            setTilt(0.47);
+        } else if (level == 4) {
+            setTilt(0.505);
+        } else if (level == 5) {
+            setTilt(0.56);
+        } else {
+            tiltDown();
+        }
+    }
 
 }
