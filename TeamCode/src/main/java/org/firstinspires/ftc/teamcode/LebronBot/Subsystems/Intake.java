@@ -30,7 +30,7 @@ public class Intake {
 
     public static double tiltUp = 0.735; // .7
     public static double tiltUpDegrees = 150;
-    public static double tiltDown =0.405;
+    public static double tiltDown =0.45;
     public static double tiltStow = 0.65;
     public static double tiltStack = 0.56;
     public static double tiltStackInc = 0.03;
@@ -129,13 +129,13 @@ public class Intake {
         if (level == 1) {
             tiltDown();
         } else if (level == 2) {
-            setTilt(0.42);
+            setTilt(0.485);
         } else if (level == 3) {
-            setTilt(0.46);
+            setTilt(0.51);
         } else if (level == 4) {
-            setTilt(0.46);
+            setTilt(0.52);
         } else if (level == 5) {
-            setTilt(0.55);
+            setTilt(0.545);
         } else {
             tiltDown();
         }

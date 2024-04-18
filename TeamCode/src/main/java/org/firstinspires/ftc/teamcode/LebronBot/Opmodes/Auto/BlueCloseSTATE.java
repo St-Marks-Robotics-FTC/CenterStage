@@ -290,7 +290,7 @@ public class BlueCloseSTATE extends  LinearOpMode{
                     robot.outtake.v4barAngleTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .setTangent(0)
-                            .splineToSplineHeading(new Pose2d(4, 12, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToSplineHeading(new Pose2d(4, 10, Math.toRadians(180)), Math.toRadians(0))
                             .splineToSplineHeading(new Pose2d(43, 34.5, Math.toRadians(180)), Math.toRadians(35))
                             .build());
                     intakeNum-=2;

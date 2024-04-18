@@ -209,14 +209,14 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                             break;
                         case "right":
                             robot.drive.followTrajectorySequenceAsync(right);
-                            placementY = 32;
+                            placementY = 31;
                             turretLevel = 2;
                             purplePause = 2.3;
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(middle);
-                            placementY = 35;
-                            turretLevel=2;
+                            placementY = 37;
+                            turretLevel=3;
                             break;
                     }
                     robot.outtake.v4barPurple();
@@ -235,10 +235,10 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     robot.outtake.v4barStow();
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-52, 37.25, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-50, 36, Math.toRadians(180)))
                             .build());
                 })
-                .transitionTimed(1.5, LinearStates.INTAKE)
+                .transitionTimed(1.6, LinearStates.INTAKE)
                 .state(RedFarSTATE.LinearStates.DISTANCERELOCALIZE)
                 .onEnter(() -> read = true)
                 .onExit(() -> read = false)
@@ -251,21 +251,21 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     profileTimer.reset();
 
                     robot.intake.setStack(intakeNum); // Drop Intake
-                    robot.intake.setIntake(1); // Spin Intake
+                    robot.intake.setIntake(0.65); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(intakeDistance, 37, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(intakeDistance, 36, Math.toRadians(180)))
                             .build());
                 })
                 //.transitionTimed(1.5) // if let go and not both pixels
                 .transitionTimed(0.5)
                 .state(LinearStates.SUCKY)
-                .transitionTimed(0.4)
+                .transitionTimed(0.8)
 
                 .state(LinearStates.SUCK)
                 .onEnter(() -> {
-                    robot.intake.setIntake(0.8); // keep Intaking
+                    robot.intake.setIntake(0.5); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barAngleTransfer();
@@ -275,13 +275,13 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                             .splineToConstantHeading(new Vector2d(-36, 60), Math.toRadians(0))
                             .build());
                     if (purpleIntake) {
-                        intakeNum-=2;
+                        intakeNum-=4;
                     } else {
                         purpleIntake=false;
                         intakeNum-=2;
                     }
                 })
-                .transitionTimed(0.25)
+                .transitionTimed(0.5)
                 .transition(() -> gamepad1.right_trigger > 0.5, LinearStates.IDLE1) // Intake Again if we missed
 
 
@@ -432,7 +432,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .splineToConstantHeading(new Vector2d(-48, 36), Math.toRadians(-135))
                             .build());
-                    intakeDistance = -57;
+                    intakeDistance = -58.5;
                 })
                 .transitionTimed(5.5, LinearStates.DISTANCERELOCALIZE)
                 // Fail safe
@@ -566,6 +566,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
         robot.outtake.retractSlides();
         robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                 .lineToLinearHeading(new Pose2d(48, 36, Math.toRadians(180)))
+                        .lineToLinearHeading(new Pose2d(48, 64, Math.toRadians(180)))
                 .build());
         sleep(500);
     }

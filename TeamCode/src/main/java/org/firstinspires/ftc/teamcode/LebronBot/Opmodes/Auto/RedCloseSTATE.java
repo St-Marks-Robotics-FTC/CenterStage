@@ -310,6 +310,7 @@ public class RedCloseSTATE extends  LinearOpMode{
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                 })
+
                 .onExit( () -> {
                     profileTimer.reset();
                 })

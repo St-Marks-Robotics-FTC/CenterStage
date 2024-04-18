@@ -23,8 +23,8 @@ public class BlueFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(375, 450),
-            new Point(475, 550)
+            new Point(300, 450),
+            new Point(400, 550)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(

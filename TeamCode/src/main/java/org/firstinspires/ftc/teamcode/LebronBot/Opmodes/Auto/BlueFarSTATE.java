@@ -385,7 +385,7 @@ public class BlueFarSTATE extends  LinearOpMode{
                 .onExit(() -> {
                     robot.outtake.openLeft();
                 })
-                .transitionTimed(0.6)
+                .transitionTimed(0.8)
                 .state(LinearStates.PAUSE)
                 .onExit(() -> robot.outtake.openBothClaws())
                 .transitionTimed(0.3)
