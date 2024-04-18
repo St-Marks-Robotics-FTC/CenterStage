@@ -16,7 +16,7 @@ public class BluePropThreshold implements VisionProcessor {
     Mat highMat = new Mat();
     Mat lowMat = new Mat();
     Mat finalMat = new Mat();
-    double blueThreshold = 0.4;
+    double blueThreshold = 0.7;
 
     String outStr = "left"; //Set a default value in case vision does not work
     double avgLeft = 0;
@@ -27,13 +27,13 @@ public class BluePropThreshold implements VisionProcessor {
 //            new Point(240, 270)
 //    );
 static final Rect LEFT_RECTANGLE = new Rect(
-        new Point(150, 600),
-        new Point(250, 700)
+        new Point(150, 450),
+        new Point(250, 550)
 );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(700, 500),
-            new Point(800, 600)
+            new Point(750, 450),
+            new Point(850, 550)
     );
 
     @Override
@@ -47,11 +47,11 @@ static final Rect LEFT_RECTANGLE = new Rect(
         Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
 
 
-        Scalar lowHSVRedLower = new Scalar(0, 30, 10);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(40, 255, 255);
+        Scalar lowHSVRedLower = new Scalar(0, 70, 20);  //Beginning of Color Wheel
+        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
 
-        Scalar redHSVRedLower = new Scalar(140, 30, 10); //Wraps around Color Wheel
-        Scalar highHSVRedUpper = new Scalar(200, 255, 255);
+        Scalar redHSVRedLower = new Scalar(160, 70, 20); //Wraps around Color Wheel
+        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
 
         Core.inRange(testMat, lowHSVRedLower, lowHSVRedUpper, lowMat);
         Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);
@@ -86,7 +86,8 @@ static final Rect LEFT_RECTANGLE = new Rect(
         avgLeft = averagedLeftBox;
         avgRight = averagedRightBox;
 
-        finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
+        finalMat.copyTo(frame);
+        /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as
                                   you use the "frame" mat for all of your pipelines, such as April Tags*/
         return null;            //You do not return the original mat anymore, instead return null

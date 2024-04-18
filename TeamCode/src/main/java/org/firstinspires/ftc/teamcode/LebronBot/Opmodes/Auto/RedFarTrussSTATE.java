@@ -125,7 +125,7 @@ public class RedFarTrussSTATE extends  LinearOpMode{
     private KALMAN kalman;
     private int intakeNum = 4;
     private DistanceRelocalize ak47;
-    private double intakeDistance=-57.25;
+    private double intakeDistance=-61;
     private double purplePause=1.7;
     private double intakeTime = 0.7;
     private int slideHeight = 100;
@@ -262,7 +262,7 @@ public class RedFarTrussSTATE extends  LinearOpMode{
                 //.transitionTimed(1.5) // if let go and not both pixels
                 .transitionTimed(0.5)
                 .state(LinearStates.SUCKY)
-                .transitionTimed(0.4)
+                .transitionTimed(0.7)
 
                 .state(LinearStates.SUCK)
                 .onEnter(() -> {
@@ -433,7 +433,7 @@ public class RedFarTrussSTATE extends  LinearOpMode{
                     robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .splineToConstantHeading(new Vector2d(-47, -36), Math.toRadians(135))
                             .build());
-                    intakeDistance = -56.5;
+                    intakeDistance = -57;
                 })
                 .transitionTimed(5.5, LinearStates.DISTANCERELOCALIZE)
                 // Fail safe

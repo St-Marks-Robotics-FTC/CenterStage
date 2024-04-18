@@ -43,11 +43,11 @@ public class BlueFarPropThreshold implements VisionProcessor {
         Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
 
 
-        Scalar lowHSVRedLower = new Scalar(0, 30, 10);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(40, 255, 255);
+        Scalar lowHSVRedLower = new Scalar(0, 70, 20);  //Beginning of Color Wheel
+        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
 
-        Scalar redHSVRedLower = new Scalar(140, 30, 10); //Wraps around Color Wheel
-        Scalar highHSVRedUpper = new Scalar(200, 255, 255);
+        Scalar redHSVRedLower = new Scalar(160, 70, 20); //Wraps around Color Wheel
+        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
 
         Core.inRange(testMat, lowHSVRedLower, lowHSVRedUpper, lowMat);
         Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);

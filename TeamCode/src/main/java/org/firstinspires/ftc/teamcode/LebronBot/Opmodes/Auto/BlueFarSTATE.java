@@ -124,7 +124,7 @@ public class BlueFarSTATE extends  LinearOpMode{
     private KALMAN kalman;
     private int intakeNum = 4;
     private DistanceRelocalize ak47;
-    private double intakeDistance=-58;
+    private double intakeDistance=-57;
     private double purplePause=1.7;
     private double intakeTime = 0.7;
     private int slideHeight = 100;
@@ -192,7 +192,7 @@ public class BlueFarSTATE extends  LinearOpMode{
                 // Drive to spike
                 .setReversed(true)
                 .setTangent(Math.toRadians(-110))
-                .splineToSplineHeading(new Pose2d(-56, 21, Math.toRadians(-135)), Math.toRadians(-120))
+                .splineToSplineHeading(new Pose2d(-55, 21, Math.toRadians(-135)), Math.toRadians(-120))
                 .build();
 
         // MAIN State Machine
@@ -209,7 +209,7 @@ public class BlueFarSTATE extends  LinearOpMode{
                             break;
                         case "right":
                             robot.drive.followTrajectorySequenceAsync(right);
-                            placementY = 33;
+                            placementY = 30.5;
                             turretLevel = 2;
                             purplePause = 2.3;
                             break;
@@ -370,7 +370,7 @@ public class BlueFarSTATE extends  LinearOpMode{
                 .state(LinearStates.EXTEND)
                 .onEnter(() -> {
                     //robot.outtake.slidesToLevel(slideLevel); // Extend Slide
-                    extended = false;
+                    extended = true;
                 })
                 .onExit(() -> {
                     extended = false;

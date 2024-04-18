@@ -122,9 +122,9 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
     private boolean read = false;
     private Pose2d relocalizePose;
     private KALMAN kalman;
-    private int intakeNum = 4;
+    private int intakeNum = 5;
     private DistanceRelocalize ak47;
-    private double intakeDistance=-56.5;
+    private double intakeDistance=-59.5;
     private double purplePause=1.7;
     private double intakeTime = 0.7;
     private int slideHeight = 100;
@@ -192,7 +192,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                 // Drive to spike
                 .setReversed(true)
                 .setTangent(Math.toRadians(-110))
-                .splineToSplineHeading(new Pose2d(-48, 40, Math.toRadians(90)), Math.toRadians(-110))
+                .splineToSplineHeading(new Pose2d(-48, 42, Math.toRadians(90)), Math.toRadians(-110))
                 .build();
 
         // MAIN State Machine
@@ -215,8 +215,8 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(middle);
-                            placementY = 36;
-                            turretLevel=-3;
+                            placementY = 35;
+                            turretLevel=2;
                             break;
                     }
                     robot.outtake.v4barPurple();
@@ -235,7 +235,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     robot.outtake.v4barStow();
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-52, 36, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-52, 37.25, Math.toRadians(180)))
                             .build());
                 })
                 .transitionTimed(1.5, LinearStates.INTAKE)
@@ -275,7 +275,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                             .splineToConstantHeading(new Vector2d(-36, 60), Math.toRadians(0))
                             .build());
                     if (purpleIntake) {
-                        intakeNum-=4;
+                        intakeNum-=2;
                     } else {
                         purpleIntake=false;
                         intakeNum-=2;
@@ -369,7 +369,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .setReversed(true)
                             .setTangent(Math.toRadians(30))
-                            .splineToConstantHeading(new Vector2d(42, 36), Math.toRadians(0))
+                            .splineToConstantHeading(new Vector2d(42, 38), Math.toRadians(0))
                             .build());
                 })
                 .transitionTimed(2)
@@ -408,7 +408,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     turretLevel = 2;
                     manualSlides = false;
                     //robot.drive.setPoseEstimate(new Pose2d(robot.drive.getPoseEstimate().getX(),robot.drive.getPoseEstimate().getY()+3,robot.drive.getPoseEstimate().getHeading()));
-                    placementY = 32;
+                    placementY = 39;
                     slideHeight=250;
                 })
                 .onExit(() -> {
@@ -432,7 +432,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .splineToConstantHeading(new Vector2d(-48, 36), Math.toRadians(-135))
                             .build());
-                    intakeDistance = -58;
+                    intakeDistance = -57;
                 })
                 .transitionTimed(5.5, LinearStates.DISTANCERELOCALIZE)
                 // Fail safe

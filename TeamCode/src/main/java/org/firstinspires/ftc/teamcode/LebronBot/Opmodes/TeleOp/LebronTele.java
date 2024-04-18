@@ -99,7 +99,7 @@ public class LebronTele extends LinearOpMode {
     boolean stickZero = false;
 
     boolean slideBumper = true;
-    boolean imuReset = true;
+    boolean imuReset = false;
 
 
 
@@ -456,13 +456,13 @@ public class LebronTele extends LinearOpMode {
                 })
                 .transition( () ->  gamepad1.a && !leftClosed && !rightClosed) // Both open
 //                .transition( () ->  robot.outtake.isClawOpen()) // if both sides were individually opened
-                .transition(() -> gamepad1.dpad_right,  // Retract Button Failsafe
-                        LinearStates.IDLE2,
-                        () -> {
-                            robot.outtake.v4barStow(); // V4b Stow Position
-                            robot.outtake.turretTransfer(); // Turret Vertical
-                            robot.outtake.retractSlides(); // Retract Slide
-                        })
+//                .transition(() -> gamepad1.dpad_right,  // Retract Button Failsafe
+//                        LinearStates.IDLE2,
+//                        () -> {
+//                            robot.outtake.v4barStow(); // V4b Stow Position
+//                            robot.outtake.turretTransfer(); // Turret Vertical
+//                            robot.outtake.retractSlides(); // Retract Slide
+//                        })
 
 
 
@@ -507,17 +507,18 @@ public class LebronTele extends LinearOpMode {
         StateMachine initMachine = new StateMachineBuilder() // Intake Init
                 .state(initStates.UP)
                 .onEnter( () -> {
-                    robot.intake.tiltStow();
+
                     robot.outtake.openBothClaws();
                     robot.outtake.setV4Bar(0.5); // V4b Stow Position
                     robot.outtake.v4barAngle.setPosition(0.7); // V4b Stow Position
                     robot.outtake.turretTransfer();
 
                 })
-                .transitionTimed(0.25)
+                .transitionTimed(0.35)
 
                 .state(initStates.DOWN)
                 .onEnter( () -> {
+                    robot.intake.tiltStow();
                     robot.outtake.setSlidesPower(-0.25);
                 })
 

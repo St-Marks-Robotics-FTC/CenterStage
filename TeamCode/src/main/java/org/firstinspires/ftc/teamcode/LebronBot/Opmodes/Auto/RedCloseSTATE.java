@@ -34,8 +34,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.DistanceRelocalize;
 import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.LebronBot.Subsystems.KALMAN;
 import org.firstinspires.ftc.teamcode.Vision.AprilTag.AprilTagRelocalize;
+import org.firstinspires.ftc.teamcode.Vision.Prop.BluePropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedFarPropThreshold;
 import org.firstinspires.ftc.teamcode.Vision.Prop.RedPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -70,7 +73,9 @@ public class RedCloseSTATE extends  LinearOpMode{
         INTAKE_AGAIN,
         STOWANGLE,
         ALIGN,
-        TO_STACK
+        TO_STACK,
+        DISTANCERELOCALIZE,
+        YELLOW
     }
 
 
@@ -121,10 +126,20 @@ public class RedCloseSTATE extends  LinearOpMode{
     private int exposure = 6;
     private int gain = 100;
     private double placementY=-43;
-    private int cycles = 0;
+    private int cycles = 2;
     private int numCycles=0;
     private double placePause = 2;
     //private int tagPose = 3;
+    private Pose2d relocalizePose;
+    private KALMAN kalman;
+    private int intakeNum = 4;
+    private DistanceRelocalize ak47;
+    private double intakeDistance=-57;
+    private double purplePause=1.7;
+    private double intakeTime = 0.7;
+    private int slideHeight = 100;
+    private boolean purpleIntake = true;
+    private boolean read = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -169,23 +184,25 @@ public class RedCloseSTATE extends  LinearOpMode{
         Pose2d startPose = new Pose2d(16.5, -64, Math.toRadians(-90));
         robot.drive.setPoseEstimate(startPose);
 
+        kalman = new KALMAN(startPose);
+        ak47 = new DistanceRelocalize(hardwareMap, DistanceRelocalize.Side.RED);
 
         ElapsedTime profileTimer = new ElapsedTime();
 
         TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // Truss side / No Prop Seen
                 // Drive to spike
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(24, -50, Math.toRadians(-90)), Math.toRadians(60))
+                .splineToSplineHeading(new Pose2d(23, -52, Math.toRadians(-90)), Math.toRadians(60))
                 .build();
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 // Drive to spike
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(20, -31, Math.toRadians(-30)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(20, -33.5, Math.toRadians(-30)), Math.toRadians(90))
                 .build();
         TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
                 // Drive to spike
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(12, -40, Math.toRadians(-30)), Math.toRadians(135))
+                .splineToSplineHeading(new Pose2d(14, -43, Math.toRadians(-30)), Math.toRadians(135))
                 .build();
 
         // MAIN State Machine
@@ -196,63 +213,71 @@ public class RedCloseSTATE extends  LinearOpMode{
                     switch (loc) {
                         case "none":
                             robot.drive.followTrajectorySequenceAsync(left);
-                            placementY=-32;
-                            placePause=2.5;
+                            placementY=-31;
+                            placePause=3;
+                            turretLevel = -2;
+                            turretLevel=-3;
                             //tagPose=3;
                             break;
                         case "right":
                             robot.drive.followTrajectorySequenceAsync(right);
-                            placementY=-43;
+                            placementY=-42;
+                            turretLevel = 2;
                             //tagPose=2;
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(middle);
-                            placementY=-37.5;
+                            placementY=-36;
+                            turretLevel = -2;
                             //tagPose=1;
                             break;
                     }
-                    robot.intake.tiltStow();
                     robot.outtake.v4barPurple();
                     robot.outtake.v4BarAnglePurple();
+                    robot.intake.tiltStow();
                 })
                 .transitionTimed(2, LinearStates.PURPLEPAUSE)
                 .state(LinearStates.PURPLEPAUSE)
                 .onEnter(() -> {
                     robot.outtake.openRight();
                 })
-                .transitionTimed(0.7, LinearStates.RELOCALIZE)
-                //.transitionTimed(1, LinearStates.EXTEND)
-                .state(LinearStates.PURPLE2STACK)
+                .transitionTimed(0.4)
+                .state(BlueFarSTATE.LinearStates.RELOCALIZE)
                 .onEnter(() -> {
-                    robot.outtake.v4barStow();
-                    robot.outtake.turretTransfer();
+                    robot.outtake.v4barScore(); // V4b Score Position
+                    robot.outtake.turretTo(turretLevel);
+                    robot.outtake.setSlides(slideHeight);
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-52, -13, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(50.5, placementY, Math.toRadians(180)))
                             .build());
                 })
-                .transition(() -> !robot.drive.isBusy(), LinearStates.IDLE1)
-                .state(LinearStates.IDLE1)                 // Driving to wing to pick up
-                .transitionTimed(1)
+                .onExit(() -> {
+                    robot.outtake.openLeft();
+                })
+                .transitionTimed(2.7, LinearStates.RETRACT)
+                .state(BlueCloseSTATE.LinearStates.DISTANCERELOCALIZE)
+                .onEnter(() -> read = true)
+                .onExit(() -> read = false)
+                .transitionTimed(0.4)
 
-                .state(LinearStates.INTAKE)
-                .onEnter( () -> {
+                //.state(LinearStates.DISTANCERELOCALIZE)
+                //.onEnter(() -> robot.drive.setPoseEstimate(ak47.relocalize()))
+                .state(BlueFarSTATE.LinearStates.INTAKE)
+                .onEnter(() -> {
                     profileTimer.reset();
 
-                    robot.intake.tiltStack(); // Drop Intake
+                    robot.intake.setStack(intakeNum); // Drop Intake
                     robot.intake.setIntake(1); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-60, -10, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(intakeDistance, -11.5, Math.toRadians(180)))
                             .build());
                 })
-                .loop( () -> {
-                    MotionState intakeState = intakeProfile.get(profileTimer.seconds());
-//                    robot.intake.setIntake(intakeState.getX());
-                })
-                .transitionTimed(1.5) // if let go and not both pixels
-//                .transition( () -> robot.intake.getPixel1() && robot.intake.getPixel2())
-
+                //.transitionTimed(1.5) // if let go and not both pixels
+                .transitionTimed(0.8)
+                .state(BlueFarSTATE.LinearStates.SUCKY)
+                .transitionTimed(0.4)
 
                 .state(LinearStates.SUCK)
                 .onEnter( () -> {
@@ -261,11 +286,11 @@ public class RedCloseSTATE extends  LinearOpMode{
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barAngleTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .setTangent(Math.toRadians(0))
-                            .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(0))
-                            .splineToConstantHeading(new Vector2d(10, -10), Math.toRadians(0))
-                            .splineToConstantHeading(new Vector2d(40, -38), Math.toRadians(-45))
+                            .setTangent(0)
+                            .splineToSplineHeading(new Pose2d(4, -12, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToSplineHeading(new Pose2d(43, -34.5, Math.toRadians(180)), Math.toRadians(-35))
                             .build());
+                    intakeNum-=2;
                 })
                 .transitionTimed(0.25)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
@@ -345,63 +370,71 @@ public class RedCloseSTATE extends  LinearOpMode{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 .state(LinearStates.IDLE2)
-                .transition(() ->!robot.drive.isBusy())
-                .state(LinearStates.EXTEND)
-                .onEnter( () -> {
-                    //robot.outtake.slidesToLevel(slideLevel); // Extend Slide
+                .onEnter(() -> {
                     robot.outtake.v4barScore(); // V4b Score Position
                     robot.outtake.turretTo(turretLevel);
+                    robot.outtake.setSlides(slideHeight);
+                })
+                .transitionTimed(1.4)
+                .state(LinearStates.EXTEND)
+                .onEnter( () -> {
                     extended = true;
                 })
                 .onExit( () -> {
                     extended = false;
                 })
-                .transitionTimed(1)
-                .state(LinearStates.RELOCALIZE)
+                .transitionTimed(0.4)
+                .state(BlueFarSTATE.LinearStates.RELOCALIZE)
                 .onEnter(() -> {
-                    robot.outtake.v4barScore(); // V4b Score Position
-                    robot.outtake.turretTo(turretLevel);
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(50.5, placementY, Math.toRadians(180)))
                             .build());
                 })
-                .onExit( () -> {
-                    robot.outtake.openBothClaws();
-                    placementY=-32;
+                .onExit(() -> {
+                    robot.outtake.openLeft();
                 })
-                .transitionTimed(placePause)
-                .state(LinearStates.PAUSE)
-                .transitionTimed(0.5)
-
-                .state(LinearStates.RETRACT)
-                .onEnter( () -> {
-                    placePause=0.8;
+                .transitionTimed(0.6)
+                .state(BlueFarSTATE.LinearStates.PAUSE)
+                .onExit(() -> robot.outtake.openBothClaws())
+                .transitionTimed(0.3)
+                .state(BlueFarSTATE.LinearStates.IDLE1)
+                .transitionTimed(0.3)
+                .state(BlueFarSTATE.LinearStates.RETRACT)
+                .onEnter(() -> {
+                    numCycles++;
+                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(47, placementY, Math.toRadians(180)))
+                            .build());
+                    slideLevel = 1;
+                    turretLevel = 2;
+                    manualSlides = false;
+                    //robot.drive.setPoseEstimate(new Pose2d(robot.drive.getPoseEstimate().getX(),robot.drive.getPoseEstimate().getY()+3,robot.drive.getPoseEstimate().getHeading()));
+                    placementY = -32;
+                    slideHeight=250;
+                })
+                .onExit(() -> {
                     robot.outtake.v4barStow(); // V4b Stow Position
                     robot.outtake.turretTransfer(); // Turret Vertical
                     robot.outtake.retractSlides(); // Retract Slide
-
-                    slideLevel = 1;
-                    turretLevel = -1;
-                    manualSlides = false;
-                })
-                .onExit( () -> {
                     robot.outtake.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 })
-                .transitionTimed(0.5)
-                .state(LinearStates.TO_STACK)
-                .onEnter( () -> {
-                    numCycles++;
+                .transitionTimed(0.35)
+                .state(BlueFarSTATE.LinearStates.TO_STACK)
+                .onEnter(() -> {
                     loc = "left";
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .setTangent(Math.toRadians(160))
-                            .splineToConstantHeading(new Vector2d(10, -10), Math.toRadians(180))
-                            .splineToConstantHeading(new Vector2d(-24, -10), Math.toRadians(180))
-                            .splineToConstantHeading(new Vector2d(-53, -10), Math.toRadians(180))
+                            .setTangent(Math.toRadians(140))
+//                            .splineToConstantHeading(new Vector2d(4, 8), Math.toRadians(180))
+//                            .splineToConstantHeading(new Vector2d(-50,  10), Math.toRadians(180))
+
+                            .splineToSplineHeading(new Pose2d(9, -8, Math.toRadians(180)), Math.toRadians(180))
+                            .splineToSplineHeading(new Pose2d(-44, -12, Math.toRadians(180)), Math.toRadians(180))
                             .build());
+                    intakeDistance = -58;
                 })
-                .transitionTimed(3.35, LinearStates.INTAKE)
+                .transitionTimed(3.6, BlueFarSTATE.LinearStates.DISTANCERELOCALIZE)
                 // Fail safe
                 .state(LinearStates.INTAKE_AGAIN)
                 .onEnter( () -> {
@@ -414,6 +447,7 @@ public class RedCloseSTATE extends  LinearOpMode{
 
 
         robot.outtake.closeBothClaws();
+        robot.outtake.closeRightMore();
         robot.outtake.turretTransfer();
         robot.intake.tiltUp();
 
@@ -443,13 +477,34 @@ public class RedCloseSTATE extends  LinearOpMode{
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
-            if (false) {
+            if (extended) {
                 //relocalize.setManualExposure(exposure, gain);
-                Pose2d relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
+                relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
                 Log.d("Relocalize Pose: ", relocalizePose.toString());
+//                if (relocalizePose.getX()<=72 && read) {
+//                    relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
+//                    robot.drive.setPoseEstimate(relocalizePose);
+//                }
                 if (relocalizePose.getX()<=72) {
                     relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
-                    robot.drive.setPoseEstimate(relocalizePose);
+                    kalman.update(robot.drive.getPoseEstimate(), relocalizePose);
+                    Log.d("Kalman Pose: ", kalman.getPose().toString());
+                    Log.d("Odometry Pose: ", robot.drive.getPoseEstimate().toString());
+                    Pose2d input = kalman.getPose();
+                    input = new Pose2d(input.getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
+                    robot.drive.setPoseEstimate(input);
+                }
+            }
+            if (read) {
+                Pose2d sensorytouch = ak47.relocalize(robot.drive.getPoseEstimate().getHeading());
+                Log.d("Sensory: ", sensorytouch.toString());
+                if (sensorytouch.vec().minus(robot.drive.getPoseEstimate().vec()).norm() < 10) {
+                    kalman.update(robot.drive.getPoseEstimate(), sensorytouch);
+                    Log.d("Kalman Pose: ", kalman.getPose().toString());
+                    Log.d("Odometry Pose: ", robot.drive.getPoseEstimate().toString());
+                    Pose2d input = kalman.getPose();
+                    input = new Pose2d(robot.drive.getPoseEstimate().getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
+                    robot.drive.setPoseEstimate(input);
                 }
             }
             if (numCycles>cycles) {
@@ -504,9 +559,12 @@ public class RedCloseSTATE extends  LinearOpMode{
 
         }
         relocalize.visionPortal.close();
+        robot.outtake.v4barStow(); // V4b Stow Position
+        robot.outtake.turretTransfer(); // Turret Vertical
+        robot.outtake.retractSlides();
         robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(51, -62, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(64, -64, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(47, -60, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(60, -60, Math.toRadians(180)))
                 .build());
     }
 }

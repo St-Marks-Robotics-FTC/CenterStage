@@ -31,7 +31,7 @@ public class Outtake {
     public static int level1 = 160;
     public static int levelIncrement = 150;
 
-    public static double slideDownPower = 0.4;
+    public static double slideDownPower = 0.5;
     public static double slideUpPower = 0.9;
 
     // V4Bar
