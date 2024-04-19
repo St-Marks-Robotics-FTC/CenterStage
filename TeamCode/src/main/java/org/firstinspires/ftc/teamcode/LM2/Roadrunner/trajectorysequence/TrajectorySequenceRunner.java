@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.sequence
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.sequencesegment.TurnSegment;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.trajectorysequence.sequencesegment.WaitSegment;
 import org.firstinspires.ftc.teamcode.LM2.Roadrunner.util.DashboardUtil;
-import org.firstinspires.ftc.teamcode.LM2.Roadrunner.util.LogFiles;
+//import org.firstinspires.ftc.teamcode.LM2.Roadrunner.util.LogFiles;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -211,10 +211,10 @@ public class TrajectorySequenceRunner {
         }
 
         if (targetPose != null) {
-            LogFiles.record(
-                    targetPose, poseEstimate, voltage,
-                    lastDriveEncPositions, lastDriveEncVels, lastTrackingEncPositions, lastTrackingEncVels
-            );
+//            LogFiles.record(
+//                    targetPose, poseEstimate, voltage,
+//                    lastDriveEncPositions, lastDriveEncVels, lastTrackingEncPositions, lastTrackingEncVels
+//            );
         }
 
         packet.put("x", poseEstimate.getX());

@@ -53,8 +53,6 @@ import org.opencv.core.Mat;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import kotlin.coroutines.Continuation;
-
 /*
  * This OpMode illustrates the basics of AprilTag recognition and pose estimation,
  * including Java Builder structures for specifying Vision parameters.

@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.sequencesegment.TrajectorySegment;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.sequencesegment.TurnSegment;
-import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.util.LogFiles;
+//import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.util.LogFiles;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.sequencesegment.WaitSegment;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.util.DashboardUtil;
@@ -211,10 +211,10 @@ public class TrajectorySequenceRunner {
         }
 
         if (targetPose != null) {
-            LogFiles.record(
-                    targetPose, poseEstimate, voltage,
-                    lastDriveEncPositions, lastDriveEncVels, lastTrackingEncPositions, lastTrackingEncVels
-            );
+//            LogFiles.record(
+//                    targetPose, poseEstimate, voltage,
+//                    lastDriveEncPositions, lastDriveEncVels, lastTrackingEncPositions, lastTrackingEncVels
+//            );
         }
 
         packet.put("x", poseEstimate.getX());
