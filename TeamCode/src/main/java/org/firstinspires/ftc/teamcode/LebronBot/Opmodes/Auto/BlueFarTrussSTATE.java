@@ -122,13 +122,15 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
     private boolean read = false;
     private Pose2d relocalizePose;
     private KALMAN kalman;
-    private int intakeNum = 4;
+    private int intakeNum = 5;
     private DistanceRelocalize ak47;
-    private double intakeDistance=-56.5;
+    private double intakeDistance=-59.5;
     private double purplePause=1.7;
     private double intakeTime = 0.7;
     private int slideHeight = 100;
     private boolean purpleIntake = true;
+    private boolean distanceRead = false;
+    private boolean cameraRead = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -192,7 +194,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                 // Drive to spike
                 .setReversed(true)
                 .setTangent(Math.toRadians(-110))
-                .splineToSplineHeading(new Pose2d(-48, 40, Math.toRadians(90)), Math.toRadians(-110))
+                .splineToSplineHeading(new Pose2d(-48, 42, Math.toRadians(90)), Math.toRadians(-110))
                 .build();
 
         // MAIN State Machine
@@ -209,14 +211,14 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                             break;
                         case "right":
                             robot.drive.followTrajectorySequenceAsync(right);
-                            placementY = 32;
+                            placementY = 31;
                             turretLevel = 2;
                             purplePause = 2.3;
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(middle);
-                            placementY = 36;
-                            turretLevel=-3;
+                            placementY = 37;
+                            turretLevel=3;
                             break;
                     }
                     robot.outtake.v4barPurple();
@@ -235,37 +237,37 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     robot.outtake.v4barStow();
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-52, 36, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-50, 36, Math.toRadians(180)))
                             .build());
                 })
-                .transitionTimed(1.5, LinearStates.INTAKE)
+                .transitionTimed(1.6, LinearStates.INTAKE)
                 .state(RedFarSTATE.LinearStates.DISTANCERELOCALIZE)
                 .onEnter(() -> read = true)
                 .onExit(() -> read = false)
                 .transitionTimed(0.4)
-
+                .transition(() -> distanceRead)
                 //.state(LinearStates.DISTANCERELOCALIZE)
                 //.onEnter(() -> robot.drive.setPoseEstimate(ak47.relocalize()))
                 .state(LinearStates.INTAKE)
                 .onEnter(() -> {
                     profileTimer.reset();
-
+                    distanceRead=false;
                     robot.intake.setStack(intakeNum); // Drop Intake
-                    robot.intake.setIntake(1); // Spin Intake
+                    robot.intake.setIntake(0.65); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(intakeDistance, 37, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(intakeDistance, 36, Math.toRadians(180)))
                             .build());
                 })
                 //.transitionTimed(1.5) // if let go and not both pixels
                 .transitionTimed(0.5)
                 .state(LinearStates.SUCKY)
-                .transitionTimed(0.4)
+                .transitionTimed(0.8)
 
                 .state(LinearStates.SUCK)
                 .onEnter(() -> {
-                    robot.intake.setIntake(0.8); // keep Intaking
+                    robot.intake.setIntake(0.5); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barAngleTransfer();
@@ -281,7 +283,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                         intakeNum-=2;
                     }
                 })
-                .transitionTimed(0.25)
+                .transitionTimed(0.5)
                 .transition(() -> gamepad1.right_trigger > 0.5, LinearStates.IDLE1) // Intake Again if we missed
 
 
@@ -369,22 +371,19 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .setReversed(true)
                             .setTangent(Math.toRadians(30))
-                            .splineToConstantHeading(new Vector2d(42, 36), Math.toRadians(0))
+                            .splineToConstantHeading(new Vector2d(42, 38), Math.toRadians(0))
                             .build());
                 })
                 .transitionTimed(2)
                 //.transition(() -> !robot.drive.isBusy())
                 .state(LinearStates.EXTEND)
-                .onEnter(() -> {
-                    //robot.outtake.slidesToLevel(slideLevel); // Extend Slide
-                    extended = false;
-                })
-                .onExit(() -> {
-                    extended = false;
-                })
-                .transitionTimed(0.6)
+                .onEnter(() -> {extended = false;})
+                .onExit(() -> {extended = false;})
+                .transitionTimed(0.4)
+                .transition(() -> cameraRead)
                 .state(LinearStates.RELOCALIZE)
                 .onEnter(() -> {
+                    cameraRead=false;
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(50.5, placementY, Math.toRadians(180)))
                             .build());
@@ -408,7 +407,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     turretLevel = 2;
                     manualSlides = false;
                     //robot.drive.setPoseEstimate(new Pose2d(robot.drive.getPoseEstimate().getX(),robot.drive.getPoseEstimate().getY()+3,robot.drive.getPoseEstimate().getHeading()));
-                    placementY = 32;
+                    placementY = 39;
                     slideHeight=250;
                 })
                 .onExit(() -> {
@@ -432,7 +431,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .splineToConstantHeading(new Vector2d(-48, 36), Math.toRadians(-135))
                             .build());
-                    intakeDistance = -58;
+                    intakeDistance = -58.5;
                 })
                 .transitionTimed(5.5, LinearStates.DISTANCERELOCALIZE)
                 // Fail safe
@@ -484,7 +483,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
 //                    relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
 //                    robot.drive.setPoseEstimate(relocalizePose);
 //                }
-                if (relocalizePose.getX() <= 72) {
+                if (relocalizePose.getX() <= 72 && relocalizePose.vec().minus(robot.drive.getPoseEstimate().vec()).norm() < 10) {
                     relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
                     kalman.update(robot.drive.getPoseEstimate(), relocalizePose);
                     Log.d("Kalman Pose: ", kalman.getPose().toString());
@@ -492,6 +491,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     Pose2d input = kalman.getPose();
                     input = new Pose2d(input.getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
                     robot.drive.setPoseEstimate(input);
+                    cameraRead=true;
                 }
             }
             if (read) {
@@ -504,6 +504,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
                     Pose2d input = kalman.getPose();
                     input = new Pose2d(robot.drive.getPoseEstimate().getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
                     robot.drive.setPoseEstimate(input);
+                    distanceRead=true;
                 }
             }
             if (numCycles > cycles) {
@@ -566,6 +567,7 @@ public class BlueFarTrussSTATE extends  LinearOpMode{
         robot.outtake.retractSlides();
         robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                 .lineToLinearHeading(new Pose2d(48, 36, Math.toRadians(180)))
+                        .lineToLinearHeading(new Pose2d(48, 64, Math.toRadians(180)))
                 .build());
         sleep(500);
     }

@@ -128,8 +128,10 @@ public class RedFarSTATE extends  LinearOpMode{
     private double intakeDistance=-56.5;
     private double purplePause=1.7;
     private double intakeTime = 0.7;
-    private int slideHeight = 100;
-    private boolean purpleIntake = true;
+    private int slideHeight = 130;
+    private double intakeY = -12;
+    private boolean camRead = false;
+    private boolean distanceRead=false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -205,18 +207,16 @@ public class RedFarSTATE extends  LinearOpMode{
                         case "none":
                             robot.drive.followTrajectorySequenceAsync(right);
                             placementY = -43;
-                            turretLevel = 2;
-                            purplePause = 1.7;
+                            turretLevel = 3;
                             break;
                         case "right":
                             robot.drive.followTrajectorySequenceAsync(middle);
-                            placementY = -37;
+                            placementY = -36.5;
                             turretLevel = 3;
-                            purplePause = 2.3;
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(left);
-                            placementY = -32;
+                            placementY = -30;
                             turretLevel=-3;
                             break;
                     }
@@ -236,40 +236,45 @@ public class RedFarSTATE extends  LinearOpMode{
                     robot.outtake.v4barStow();
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-52, -12, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-52, -12.5, Math.toRadians(180)))
                             .build());
                 })
-                .transitionTimed(1.5, LinearStates.INTAKE)
+                .transitionTimed(1.3, LinearStates.INTAKE)
                 .state(RedFarSTATE.LinearStates.DISTANCERELOCALIZE)
                 .onEnter(() -> read = true)
                 .onExit(() -> read = false)
                 .transitionTimed(0.4)
-
+                .transition(() -> distanceRead)
                 //.state(LinearStates.DISTANCERELOCALIZE)
                 //.onEnter(() -> robot.drive.setPoseEstimate(ak47.relocalize()))
                 .state(LinearStates.INTAKE)
                 .onEnter(() -> {
                     profileTimer.reset();
-
+                    distanceRead=false;
                     robot.intake.setStack(intakeNum); // Drop Intake
-                    robot.intake.setIntake(1); // Spin Intake
+                    robot.intake.setIntake(0.55); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
-                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(intakeDistance, -14, Math.toRadians(180)))
-                            .build());
+                    if (numCycles<=2) {
+                        robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(intakeDistance, intakeY, Math.toRadians(180)))
+                                .build());
+                    } else {
+                        robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+                                .splineToConstantHeading(new Vector2d(-55, -15), Math.toRadians(180))
+                                .splineToConstantHeading(new Vector2d(-57.5, -5), Math.toRadians(90))
+                                .build());
+                    }
                 })
                 //.transitionTimed(1.5) // if let go and not both pixels
-                .transitionTimed(0.7)
-                .state(LinearStates.SUCKY)
-                .transitionTimed(0.4)
-
+                .transitionTimed(1.3)
                 .state(LinearStates.SUCK)
                 .onEnter(() -> {
-                    robot.intake.setIntake(0.8); // keep Intaking
+                    robot.intake.setIntake(0.4); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barAngleTransfer();
+                    intakeNum=1;
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .setTangent(0)
 //                            .splineToConstantHeading(new Vector2d(5, 10), Math.toRadians(0))
@@ -277,12 +282,17 @@ public class RedFarSTATE extends  LinearOpMode{
                             .splineToSplineHeading(new Pose2d(4, -12, Math.toRadians(180)), Math.toRadians(0))
                             .splineToSplineHeading(new Pose2d(44, -34.5, Math.toRadians(180)), Math.toRadians(-35))
                             .build());
-                    intakeNum=1;
+                })
+                .onExit(() -> {
+//                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+//                            .setTangent(0)
+////                            .splineToConstantHeading(new Vector2d(5, 10), Math.toRadians(0))
+////                            .splineToConstantHeading(new Vector2d(44, 36), Math.toRadians(35))
+//                            .splineToSplineHeading(new Pose2d(4, -12, Math.toRadians(180)), Math.toRadians(0))
+//                            .splineToSplineHeading(new Pose2d(44, -34.5, Math.toRadians(180)), Math.toRadians(-35))
+//                            .build());
                 })
                 .transitionTimed(0.25)
-                .transition(() -> gamepad1.right_trigger > 0.5, LinearStates.IDLE1) // Intake Again if we missed
-
-
                 .state(LinearStates.SPIT)
                 .onEnter(() -> {
                     robot.intake.setIntake(-0.5);
@@ -361,21 +371,22 @@ public class RedFarSTATE extends  LinearOpMode{
                     robot.outtake.turretTo(turretLevel);
                     robot.outtake.setSlides(slideHeight);
                 })
-                .transitionTimed(0.8)
+                .transitionTimed(0.9)
                 //.transition(() -> !robot.drive.isBusy())
                 .state(LinearStates.EXTEND)
                 .onEnter(() -> {
                     //robot.outtake.slidesToLevel(slideLevel); // Extend Slide
-                    extended = false;
+                    extended = true;
                 })
                 .onExit(() -> {
                     extended = false;
                 })
                 .transitionTimed(0.4)
+                .transition(() -> camRead)
                 .state(LinearStates.RELOCALIZE)
                 .onEnter(() -> {
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(50.5, placementY, Math.toRadians(180)))
+                            .splineToLinearHeading(new Pose2d(50.5, placementY, Math.toRadians(180)), Math.toRadians(180))
                             .build());
                 })
                 .onExit(() -> {
@@ -408,18 +419,19 @@ public class RedFarSTATE extends  LinearOpMode{
                     robot.outtake.midSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.outtake.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 })
-                .transitionTimed(0.35)
+                .transitionTimed(0.4)
                 .state(LinearStates.TO_STACK)
                 .onEnter(() -> {
                     loc = "left";
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .setTangent(Math.toRadians(140))
+                            .setTangent(Math.toRadians(145))
 //                            .splineToConstantHeading(new Vector2d(4, 8), Math.toRadians(180))
 //                            .splineToConstantHeading(new Vector2d(-50,  10), Math.toRadians(180))
-                            .splineToSplineHeading(new Pose2d(8, -9, Math.toRadians(180)), Math.toRadians(180))
+                            .splineToSplineHeading(new Pose2d(10, -9, Math.toRadians(180)), Math.toRadians(180))
                             .splineToSplineHeading(new Pose2d(-46, -13, Math.toRadians(180)), Math.toRadians(180))
                             .build());
                     intakeDistance = -57.5;
+                    intakeY+=0.5;
                 })
                 .transitionTimed(3.25, LinearStates.DISTANCERELOCALIZE)
                 // Fail safe
@@ -471,7 +483,7 @@ public class RedFarSTATE extends  LinearOpMode{
 //                    relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
 //                    robot.drive.setPoseEstimate(relocalizePose);
 //                }
-                if (relocalizePose.getX() <= 72) {
+                if (relocalizePose.getX() <= 72 && relocalizePose.vec().minus(robot.drive.getPoseEstimate().vec()).norm() < 10) {
                     relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
                     kalman.update(robot.drive.getPoseEstimate(), relocalizePose);
                     Log.d("Kalman Pose: ", kalman.getPose().toString());
@@ -479,6 +491,7 @@ public class RedFarSTATE extends  LinearOpMode{
                     Pose2d input = kalman.getPose();
                     input = new Pose2d(input.getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
                     robot.drive.setPoseEstimate(input);
+                    camRead=true;
                 }
             }
             if (read) {
@@ -491,6 +504,7 @@ public class RedFarSTATE extends  LinearOpMode{
                     Pose2d input = kalman.getPose();
                     input = new Pose2d(robot.drive.getPoseEstimate().getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
                     robot.drive.setPoseEstimate(input);
+                    distanceRead=true;
                 }
             }
             if (numCycles > cycles) {
@@ -550,8 +564,11 @@ public class RedFarSTATE extends  LinearOpMode{
         relocalize.visionPortal.close();
         robot.outtake.v4barStow(); // V4b Stow Position
         robot.outtake.turretTransfer(); // Turret Vertical
+        robot.outtake.setV4BarAngle(robot.outtake.angleUp);
+        robot.outtake.retractSlides();
         robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                 .lineToLinearHeading(new Pose2d(48, -36, Math.toRadians(180)))
                 .build());
+        sleep(1000);
     }
 }

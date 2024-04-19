@@ -21,19 +21,15 @@ public class BluePropThreshold implements VisionProcessor {
     String outStr = "left"; //Set a default value in case vision does not work
     double avgLeft = 0;
     double avgRight = 0;
-// Fallback
-//    static final Rect LEFT_RECTANGLE = new Rect(
-//            new Point(140, 140),
-//            new Point(240, 270)
-//    );
-static final Rect LEFT_RECTANGLE = new Rect(
-        new Point(150, 600),
-        new Point(250, 700)
-);
+
+    static final Rect LEFT_RECTANGLE = new Rect(
+            new Point(150, 450),
+            new Point(250, 550)
+    );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
-            new Point(700, 500),
-            new Point(800, 600)
+            new Point(750, 450),
+            new Point(850, 550)
     );
 
     @Override
@@ -44,21 +40,25 @@ static final Rect LEFT_RECTANGLE = new Rect(
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
 //        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
-        Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_RGB2HSV);
 
+//// old
+//        Scalar lowHSVRedLower = new Scalar(0, 70, 20);  //Beginning of Color Wheel
+//        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
+//
+//        Scalar redHSVRedLower = new Scalar(160, 70, 20); //Wraps around Color Wheel
+//        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
+        Scalar lowHSVRedLower = new Scalar(90, 100, 100);  //Beginning of Color Wheel
+        Scalar lowHSVRedUpper = new Scalar(140, 255, 255);
 
-        Scalar lowHSVRedLower = new Scalar(0, 30, 10);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(40, 255, 255);
-
-        Scalar redHSVRedLower = new Scalar(140, 30, 10); //Wraps around Color Wheel
-        Scalar highHSVRedUpper = new Scalar(200, 255, 255);
 
         Core.inRange(testMat, lowHSVRedLower, lowHSVRedUpper, lowMat);
-        Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);
+//        Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);
 
         testMat.release();
 
-        Core.bitwise_or(lowMat, highMat, finalMat);
+//        Core.bitwise_or(lowMat, highMat, finalMat);
+        lowMat.copyTo(finalMat);
 
         lowMat.release();
         highMat.release();

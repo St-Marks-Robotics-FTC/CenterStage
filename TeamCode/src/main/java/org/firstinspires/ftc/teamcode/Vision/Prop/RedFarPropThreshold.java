@@ -23,8 +23,8 @@ public class RedFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(50, 475),
-            new Point(150, 575)
+            new Point(125, 475),
+            new Point(225, 575)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(

@@ -14,8 +14,8 @@ public class SpecialTeams {
 
 
     // Drone
-    public static double holdPos = 0.65;
-    public static double releasePos = 1;
+    public static double holdPos = 0.1;
+    public static double releasePos = 0.4;
 
     public SpecialTeams (HardwareMap hardwareMap) {
         drone = hardwareMap.get(Servo.class, "drone");
