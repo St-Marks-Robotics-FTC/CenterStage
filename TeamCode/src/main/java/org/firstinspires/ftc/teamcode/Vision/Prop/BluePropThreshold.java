@@ -16,20 +16,16 @@ public class BluePropThreshold implements VisionProcessor {
     Mat highMat = new Mat();
     Mat lowMat = new Mat();
     Mat finalMat = new Mat();
-    double blueThreshold = 0.7;
+    double blueThreshold = 0.4;
 
     String outStr = "left"; //Set a default value in case vision does not work
     double avgLeft = 0;
     double avgRight = 0;
-// Fallback
-//    static final Rect LEFT_RECTANGLE = new Rect(
-//            new Point(140, 140),
-//            new Point(240, 270)
-//    );
-static final Rect LEFT_RECTANGLE = new Rect(
-        new Point(150, 450),
-        new Point(250, 550)
-);
+
+    static final Rect LEFT_RECTANGLE = new Rect(
+            new Point(150, 450),
+            new Point(250, 550)
+    );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
             new Point(750, 450),
@@ -44,21 +40,25 @@ static final Rect LEFT_RECTANGLE = new Rect(
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
 //        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
-        Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_RGB2HSV);
 
+//// old
+//        Scalar lowHSVRedLower = new Scalar(0, 70, 20);  //Beginning of Color Wheel
+//        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
+//
+//        Scalar redHSVRedLower = new Scalar(160, 70, 20); //Wraps around Color Wheel
+//        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
+        Scalar lowHSVRedLower = new Scalar(90, 100, 100);  //Beginning of Color Wheel
+        Scalar lowHSVRedUpper = new Scalar(140, 255, 255);
 
-        Scalar lowHSVRedLower = new Scalar(0, 70, 20);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
-
-        Scalar redHSVRedLower = new Scalar(160, 70, 20); //Wraps around Color Wheel
-        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
 
         Core.inRange(testMat, lowHSVRedLower, lowHSVRedUpper, lowMat);
-        Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);
+//        Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);
 
         testMat.release();
 
-        Core.bitwise_or(lowMat, highMat, finalMat);
+//        Core.bitwise_or(lowMat, highMat, finalMat);
+        lowMat.copyTo(finalMat);
 
         lowMat.release();
         highMat.release();
@@ -86,8 +86,7 @@ static final Rect LEFT_RECTANGLE = new Rect(
         avgLeft = averagedLeftBox;
         avgRight = averagedRightBox;
 
-        finalMat.copyTo(frame);
-        /*This line should only be added in when you want to see your custom pipeline
+        finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as
                                   you use the "frame" mat for all of your pipelines, such as April Tags*/
         return null;            //You do not return the original mat anymore, instead return null

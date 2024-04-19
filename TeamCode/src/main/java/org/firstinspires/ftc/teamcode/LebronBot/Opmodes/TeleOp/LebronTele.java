@@ -105,7 +105,10 @@ public class LebronTele extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        telemetry.addLine("Init@");
+        telemetry.update();
 
         // Bulk Reading
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
@@ -131,13 +134,13 @@ public class LebronTele extends LinearOpMode {
 
 
         // PID
-        controller = new PIDController(p, i , d);
+//        controller = new PIDController(p, i , d);
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(IMU.class, "adafruit_imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
+//        imu = hardwareMap.get(IMU.class, "adafruit_imu");
+//        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+//                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
+//        imu.initialize(parameters);
 
 
         // V4B Motion Profile
@@ -502,6 +505,8 @@ public class LebronTele extends LinearOpMode {
                 .transitionTimed(0.5, LinearStates.IDLE1)
                 .build();
 
+        telemetry.addLine("After big state machine");
+        telemetry.update();
 
         // Init Procedure
         StateMachine initMachine = new StateMachineBuilder() // Intake Init
@@ -537,7 +542,7 @@ public class LebronTele extends LinearOpMode {
 
 //        waitForStart();
 
-        targetAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        targetAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
 //        robot.special.holdDrone();
         machine.start();
@@ -552,7 +557,7 @@ public class LebronTele extends LinearOpMode {
             }
 
 
-            currAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//            currAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 //            currAngle = AngleUnit.normalizeRadians(currAngle);
 
             if (gamepad1.dpad_left) {

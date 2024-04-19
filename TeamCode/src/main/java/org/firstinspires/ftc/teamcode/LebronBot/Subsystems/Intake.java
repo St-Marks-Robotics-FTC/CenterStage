@@ -28,11 +28,11 @@ public class Intake {
     public static double dropUp = 0.0;
 
 
-    public static double tiltUp = 0.735; // .7
+    public static double tiltUp = 0.58; // .7
     public static double tiltUpDegrees = 150;
-    public static double tiltDown =0.45;
-    public static double tiltStow = 0.65;
-    public static double tiltStack = 0.56;
+    public static double tiltDown =0.28;
+    public static double tiltStow = 0.5;
+    public static double tiltStack = 0.325;
     public static double tiltStackInc = 0.03;
 
     public Intake(HardwareMap hardwareMap) {
@@ -129,13 +129,13 @@ public class Intake {
         if (level == 1) {
             tiltDown();
         } else if (level == 2) {
-            setTilt(0.485);
+            setTilt(0.32);
         } else if (level == 3) {
-            setTilt(0.51);
+            setTilt(0.331);
         } else if (level == 4) {
-            setTilt(0.52);
+            setTilt(0.364);
         } else if (level == 5) {
-            setTilt(0.545);
+            setTilt(0.377);
         } else {
             tiltDown();
         }

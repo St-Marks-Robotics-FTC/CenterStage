@@ -128,8 +128,10 @@ public class RedFarSTATE extends  LinearOpMode{
     private double intakeDistance=-56.5;
     private double purplePause=1.7;
     private double intakeTime = 0.7;
-    private int slideHeight = 175;
+    private int slideHeight = 130;
     private double intakeY = -12;
+    private boolean camRead = false;
+    private boolean distanceRead=false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -209,7 +211,7 @@ public class RedFarSTATE extends  LinearOpMode{
                             break;
                         case "right":
                             robot.drive.followTrajectorySequenceAsync(middle);
-                            placementY = -37;
+                            placementY = -36.5;
                             turretLevel = 3;
                             break;
                         case "left":
@@ -237,18 +239,18 @@ public class RedFarSTATE extends  LinearOpMode{
                             .lineToLinearHeading(new Pose2d(-52, -12.5, Math.toRadians(180)))
                             .build());
                 })
-                .transitionTimed(1.7, LinearStates.INTAKE)
+                .transitionTimed(1.3, LinearStates.INTAKE)
                 .state(RedFarSTATE.LinearStates.DISTANCERELOCALIZE)
                 .onEnter(() -> read = true)
                 .onExit(() -> read = false)
-                .transitionTimed(0.3)
-
+                .transitionTimed(0.4)
+                .transition(() -> distanceRead)
                 //.state(LinearStates.DISTANCERELOCALIZE)
                 //.onEnter(() -> robot.drive.setPoseEstimate(ak47.relocalize()))
                 .state(LinearStates.INTAKE)
                 .onEnter(() -> {
                     profileTimer.reset();
-
+                    distanceRead=false;
                     robot.intake.setStack(intakeNum); // Drop Intake
                     robot.intake.setIntake(0.55); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
@@ -266,13 +268,13 @@ public class RedFarSTATE extends  LinearOpMode{
                 })
                 //.transitionTimed(1.5) // if let go and not both pixels
                 .transitionTimed(1.3)
-
                 .state(LinearStates.SUCK)
                 .onEnter(() -> {
-                    robot.intake.setIntake(0.5); // keep Intaking
+                    robot.intake.setIntake(0.4); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barAngleTransfer();
+                    intakeNum=1;
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .setTangent(0)
 //                            .splineToConstantHeading(new Vector2d(5, 10), Math.toRadians(0))
@@ -280,12 +282,17 @@ public class RedFarSTATE extends  LinearOpMode{
                             .splineToSplineHeading(new Pose2d(4, -12, Math.toRadians(180)), Math.toRadians(0))
                             .splineToSplineHeading(new Pose2d(44, -34.5, Math.toRadians(180)), Math.toRadians(-35))
                             .build());
-                    intakeNum=1;
+                })
+                .onExit(() -> {
+//                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+//                            .setTangent(0)
+////                            .splineToConstantHeading(new Vector2d(5, 10), Math.toRadians(0))
+////                            .splineToConstantHeading(new Vector2d(44, 36), Math.toRadians(35))
+//                            .splineToSplineHeading(new Pose2d(4, -12, Math.toRadians(180)), Math.toRadians(0))
+//                            .splineToSplineHeading(new Pose2d(44, -34.5, Math.toRadians(180)), Math.toRadians(-35))
+//                            .build());
                 })
                 .transitionTimed(0.25)
-                .transition(() -> gamepad1.right_trigger > 0.5, LinearStates.IDLE1) // Intake Again if we missed
-
-
                 .state(LinearStates.SPIT)
                 .onEnter(() -> {
                     robot.intake.setIntake(-0.5);
@@ -374,7 +381,8 @@ public class RedFarSTATE extends  LinearOpMode{
                 .onExit(() -> {
                     extended = false;
                 })
-                .transitionTimed(0.3)
+                .transitionTimed(0.4)
+                .transition(() -> camRead)
                 .state(LinearStates.RELOCALIZE)
                 .onEnter(() -> {
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
@@ -475,7 +483,7 @@ public class RedFarSTATE extends  LinearOpMode{
 //                    relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
 //                    robot.drive.setPoseEstimate(relocalizePose);
 //                }
-                if (relocalizePose.getX() <= 72) {
+                if (relocalizePose.getX() <= 72 && relocalizePose.vec().minus(robot.drive.getPoseEstimate().vec()).norm() < 10) {
                     relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
                     kalman.update(robot.drive.getPoseEstimate(), relocalizePose);
                     Log.d("Kalman Pose: ", kalman.getPose().toString());
@@ -483,6 +491,7 @@ public class RedFarSTATE extends  LinearOpMode{
                     Pose2d input = kalman.getPose();
                     input = new Pose2d(input.getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
                     robot.drive.setPoseEstimate(input);
+                    camRead=true;
                 }
             }
             if (read) {
@@ -495,6 +504,7 @@ public class RedFarSTATE extends  LinearOpMode{
                     Pose2d input = kalman.getPose();
                     input = new Pose2d(robot.drive.getPoseEstimate().getX(), input.getY(), robot.drive.getPoseEstimate().getHeading());
                     robot.drive.setPoseEstimate(input);
+                    distanceRead=true;
                 }
             }
             if (numCycles > cycles) {

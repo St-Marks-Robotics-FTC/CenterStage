@@ -23,8 +23,8 @@ public class BlueFarPropThreshold implements VisionProcessor {
     double avgRight = 0;
 
     static final Rect LEFT_RECTANGLE = new Rect(
-            new Point(300, 450),
-            new Point(400, 550)
+            new Point(400, 450),
+            new Point(500, 550)
     );
 
     static final Rect RIGHT_RECTANGLE = new Rect(
@@ -40,21 +40,25 @@ public class BlueFarPropThreshold implements VisionProcessor {
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
 //        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
-        Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(frame, testMat, Imgproc.COLOR_RGB2HSV);
 
+//// old
+//        Scalar lowHSVRedLower = new Scalar(0, 70, 20);  //Beginning of Color Wheel
+//        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
+//
+//        Scalar redHSVRedLower = new Scalar(160, 70, 20); //Wraps around Color Wheel
+//        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
+        Scalar lowHSVRedLower = new Scalar(90, 100, 100);  //Beginning of Color Wheel
+        Scalar lowHSVRedUpper = new Scalar(140, 255, 255);
 
-        Scalar lowHSVRedLower = new Scalar(0, 70, 20);  //Beginning of Color Wheel
-        Scalar lowHSVRedUpper = new Scalar(20, 255, 255);
-
-        Scalar redHSVRedLower = new Scalar(160, 70, 20); //Wraps around Color Wheel
-        Scalar highHSVRedUpper = new Scalar(180, 255, 255);
 
         Core.inRange(testMat, lowHSVRedLower, lowHSVRedUpper, lowMat);
-        Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);
+//        Core.inRange(testMat, redHSVRedLower, highHSVRedUpper, highMat);
 
         testMat.release();
 
-        Core.bitwise_or(lowMat, highMat, finalMat);
+//        Core.bitwise_or(lowMat, highMat, finalMat);
+        lowMat.copyTo(finalMat);
 
         lowMat.release();
         highMat.release();

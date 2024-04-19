@@ -46,7 +46,7 @@ public class Outtake {
     public static double angleTransfer = 0.815;
     public static double angleStow = 0.7;
     public static double angleScore = 0.03;
-    public static double angleUp = 0.5;
+    public static double angleUp = 0.4;
     public static double anglePurple = 0;
 
     // Claw
