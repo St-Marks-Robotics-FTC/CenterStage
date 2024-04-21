@@ -194,12 +194,12 @@ public class RedCloseSTATE extends  LinearOpMode{
         TrajectorySequence right = robot.drive.trajectorySequenceBuilder(startPose) // Truss side / No Prop Seen
                 // Drive to spike
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(23, -52, Math.toRadians(-90)), Math.toRadians(60))
+                .splineToSplineHeading(new Pose2d(23, -50, Math.toRadians(-90)), Math.toRadians(60))
                 .build();
         TrajectorySequence middle = robot.drive.trajectorySequenceBuilder(startPose) // middle
                 // Drive to spike
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(20, -33.5, Math.toRadians(-30)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(20, -33, Math.toRadians(-30)), Math.toRadians(90))
                 .build();
         TrajectorySequence left = robot.drive.trajectorySequenceBuilder(startPose) // left
                 // Drive to spike
@@ -229,7 +229,7 @@ public class RedCloseSTATE extends  LinearOpMode{
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(middle);
-                            placementY=-36;
+                            placementY=-37;
                             turretLevel = -2;
                             //tagPose=1;
                             break;
@@ -269,7 +269,7 @@ public class RedCloseSTATE extends  LinearOpMode{
                     profileTimer.reset();
                     distanceRead=false;
                     robot.intake.setStack(intakeNum); // Drop Intake
-                    robot.intake.setIntake(1); // Spin Intake
+                    robot.intake.setIntake(0.7); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
@@ -277,22 +277,26 @@ public class RedCloseSTATE extends  LinearOpMode{
                             .build());
                 })
                 //.transitionTimed(1.5) // if let go and not both pixels
-                .transitionTimed(0.8)
+                .transitionTimed(1)
                 .state(BlueFarSTATE.LinearStates.SUCKY)
+                .onEnter(() -> {
+                    intakeNum--;
+                    robot.intake.setStack(intakeNum);
+                })
                 .transitionTimed(0.4)
 
                 .state(LinearStates.SUCK)
                 .onEnter( () -> {
-                    robot.intake.setIntake(0.8); // keep Intaking
+                    robot.intake.setIntake(0.6); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barAngleTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .setTangent(0)
                             .splineToSplineHeading(new Pose2d(4, -12, Math.toRadians(180)), Math.toRadians(0))
-                            .splineToSplineHeading(new Pose2d(43, -34.5, Math.toRadians(180)), Math.toRadians(-35))
+                            .splineToSplineHeading(new Pose2d(43, -32, Math.toRadians(180)), Math.toRadians(-35))
                             .build());
-                    intakeNum-=2;
+                    intakeNum--;
                 })
                 .transitionTimed(0.25)
                 .transition( () ->  gamepad1.right_trigger > 0.5 , LinearStates.IDLE1) // Intake Again if we missed
@@ -388,7 +392,7 @@ public class RedCloseSTATE extends  LinearOpMode{
                 .onEnter(() -> {
                     cameraRead=false;
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(50.5, placementY, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(49.5, placementY, Math.toRadians(180)))
                             .build());
                 })
                 .onExit(() -> {
@@ -404,7 +408,7 @@ public class RedCloseSTATE extends  LinearOpMode{
                 .onEnter(() -> {
                     numCycles++;
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(47, placementY, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(46, placementY, Math.toRadians(180)))
                             .build());
                     slideLevel = 1;
                     turretLevel = 2;
@@ -433,7 +437,7 @@ public class RedCloseSTATE extends  LinearOpMode{
                             .splineToSplineHeading(new Pose2d(9, -8, Math.toRadians(180)), Math.toRadians(180))
                             .splineToSplineHeading(new Pose2d(-44, -12, Math.toRadians(180)), Math.toRadians(180))
                             .build());
-                    intakeDistance = -58;
+                    intakeDistance = -58.;
                 })
                 .transitionTimed(3.6, BlueFarSTATE.LinearStates.DISTANCERELOCALIZE)
                 // Fail safe
@@ -449,6 +453,7 @@ public class RedCloseSTATE extends  LinearOpMode{
 
         robot.outtake.closeBothClaws();
         robot.outtake.closeRightMore();
+        robot.outtake.closeLeftMore();
         robot.outtake.turretTransfer();
         robot.intake.tiltUp();
 

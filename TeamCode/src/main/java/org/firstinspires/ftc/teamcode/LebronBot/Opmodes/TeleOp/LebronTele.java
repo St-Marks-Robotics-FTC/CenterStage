@@ -100,6 +100,7 @@ public class LebronTele extends LinearOpMode {
 
     boolean slideBumper = true;
     boolean imuReset = false;
+    private double offset = 0;
 
 
 
@@ -659,7 +660,7 @@ public class LebronTele extends LinearOpMode {
 
             if (pad1.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
                 if (!hangReady) {
-                    robot.outtake.setSlides(735);
+                    robot.outtake.hang(735);
                     robot.outtake.v4barScore();
                     hangReady = true;
                 } else {
@@ -681,7 +682,7 @@ public class LebronTele extends LinearOpMode {
 
             // Telemetry
             telemetry.addData("Turret Pos", robot.outtake.turret.getPosition());
-
+            telemetry.addData("Tilt Offset", offset);   
             telemetry.addData("State", machine.getState());
 
             telemetry.addData("Slide Level", slideLevel);
@@ -705,7 +706,8 @@ public class LebronTele extends LinearOpMode {
 
 //            telemetry.addData("Servo Current", robot.outtake.v4barLeft.get)
 
-
+//            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) offset-=0.01;
+//            if (pad2.wasJustPressed(GamepadKeys.Button.DPAD_UP)) offset+=0.01;
 
 
             machine.update();
@@ -715,6 +717,8 @@ public class LebronTele extends LinearOpMode {
             leftTrigger.readValue();
             rightTrigger.readValue();
             pad2.readButtons();
+
+            robot.intake.setOffset(offset);
 
 
             // in da loop

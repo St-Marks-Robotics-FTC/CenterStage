@@ -113,13 +113,12 @@ public class MeepMeepTesting {
                 .setConstraints(70, 60, Math.toRadians(120), Math.toRadians(120), 15)
                 .setDimensions(18, 18) // Set size of bot
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-50, 10, Math.toRadians(180))) //  Far
-                                .setTangent(Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(4, 8, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(44, 36, Math.toRadians(180)), Math.toRadians(35))
-                                .setTangent(Math.toRadians(-145))
-                                .splineToSplineHeading(new Pose2d(4, 8, Math.toRadians(180)), Math.toRadians(180))
-                                .splineToSplineHeading(new Pose2d(-50,  10, Math.toRadians(180)), Math.toRadians(180))
+                        drive.trajectorySequenceBuilder(new Pose2d(50, -36, Math.toRadians(180))) //  Far
+                                .setTangent(Math.toRadians(-110))
+                                .splineToLinearHeading(new Pose2d(20, -60, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(-36, -58, Math.toRadians(180)), Math.toRadians(180))
+                                .waitSeconds(2)
+                                .splineToLinearHeading(new Pose2d(-47, -36, Math.toRadians(180)), Math.toRadians(135))
                                 //Far Truss
 //                                .setReversed(true)
 //                                .setTangent(Math.toRadians(-90))

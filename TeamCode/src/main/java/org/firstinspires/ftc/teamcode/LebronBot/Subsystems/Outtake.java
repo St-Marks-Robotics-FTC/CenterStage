@@ -120,7 +120,7 @@ public class Outtake {
         } else if (level == 2) {
             setSlides(120);
         } else if (level == 3) {
-            setSlides(270);
+            setSlides(240);
         } else if (level == 4) {
             setSlides(390);
         } else if (level == 5) {
@@ -169,9 +169,9 @@ public class Outtake {
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         midSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setPower(getSlidePos() > pos ? slideUpPower + 0.1 : 1);
-        midSlide.setPower(getSlidePos() > pos ? slideUpPower : 1);
-        rightSlide.setPower(getSlidePos() > pos ? slideUpPower : 1);
+        leftSlide.setPower(getSlidePos() > pos ? 1 : 1);
+        midSlide.setPower(getSlidePos() > pos ? 1 : 1);
+        rightSlide.setPower(getSlidePos() > pos ? 1 : 1);
     }
 
     public void setSlidesPower(double power) {

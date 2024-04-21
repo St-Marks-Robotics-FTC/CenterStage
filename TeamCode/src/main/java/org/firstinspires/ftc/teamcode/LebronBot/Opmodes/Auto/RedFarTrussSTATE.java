@@ -219,7 +219,7 @@ public class RedFarTrussSTATE extends  LinearOpMode{
                             break;
                         case "left":
                             robot.drive.followTrajectorySequenceAsync(left);
-                            placementY = -32;
+                            placementY = -33;
                             turretLevel = -2;
                             break;
                     }
@@ -255,7 +255,7 @@ public class RedFarTrussSTATE extends  LinearOpMode{
                     profileTimer.reset();
                     distanceRead=false;
                     robot.intake.setStack(intakeNum); // Drop Intake
-                    robot.intake.setIntake(1); // Spin Intake
+                    robot.intake.setIntake(0.8); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
                     robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
@@ -265,11 +265,11 @@ public class RedFarTrussSTATE extends  LinearOpMode{
                 //.transitionTimed(1.5) // if let go and not both pixels
                 .transitionTimed(0.5)
                 .state(LinearStates.SUCKY)
-                .transitionTimed(0.4)
+                .transitionTimed(0.6)
 
                 .state(LinearStates.SUCK)
                 .onEnter(() -> {
-                    robot.intake.setIntake(0.8); // keep Intaking
+                    robot.intake.setIntake(0.6); // keep Intaking
                     robot.intake.tiltUp(); // Intake tilts up
                     robot.outtake.turretTransfer();
                     robot.outtake.v4barAngleTransfer();
@@ -438,7 +438,7 @@ public class RedFarTrussSTATE extends  LinearOpMode{
                     robot.drive.followTrajectorySequence(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
                             .splineToConstantHeading(new Vector2d(-47, -36), Math.toRadians(135))
                             .build());
-                    intakeDistance = -58;
+                    intakeDistance = -58.6;
                 })
                 .transitionTimed(5.5, LinearStates.DISTANCERELOCALIZE)
                 // Fail safe

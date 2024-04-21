@@ -28,12 +28,13 @@ public class Intake {
     public static double dropUp = 0.0;
 
 
-    public static double tiltUp = 0.58; // .7
+    public static double tiltUp = 0.52; // .7
     public static double tiltUpDegrees = 150;
-    public static double tiltDown =0.28;
-    public static double tiltStow = 0.5;
+    public static double tiltDown =0.22;
+    public static double tiltStow = 0.48;
     public static double tiltStack = 0.325;
     public static double tiltStackInc = 0.03;
+    public static double offset = 0;
 
     public Intake(HardwareMap hardwareMap) {
         //intake
@@ -55,6 +56,9 @@ public class Intake {
 //        alignSwitch = hardwareMap.get(TouchSensor.class, "alignSwitch");
     }
 
+    public void setOffset(double pos) {
+        offset = pos;
+    }
 
     // Intake Motor
     public void setIntake(double power) {
@@ -93,8 +97,8 @@ public class Intake {
     }
 
     public void setTilt(double pos) {
-        tilt1.setPosition(pos);
-        tilt2.setPosition(pos);
+        tilt1.setPosition(pos+offset);
+        tilt2.setPosition(pos+offset);
     }
 
     // Sensors
@@ -129,13 +133,13 @@ public class Intake {
         if (level == 1) {
             tiltDown();
         } else if (level == 2) {
-            setTilt(0.32);
+            setTilt(0.254);
         } else if (level == 3) {
-            setTilt(0.331);
+            setTilt(0.263);
         } else if (level == 4) {
-            setTilt(0.364);
+            setTilt(0.287);
         } else if (level == 5) {
-            setTilt(0.377);
+            setTilt(0.317);
         } else {
             tiltDown();
         }

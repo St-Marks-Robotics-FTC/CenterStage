@@ -28,6 +28,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import java.util.List;
 
 @Config
+@Disabled
 @Autonomous (group = "Blue", preselectTeleOp = "JankTele")
 public class RedFar2_0 extends LinearOpMode {
     FtcDashboard dashboard;
