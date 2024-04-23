@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
@@ -67,6 +68,11 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
+    private Vector2d prevPos = new Vector2d(0, 0);
+    private Vector2d prevVel = new Vector2d(0, 0);
+    private Vector2d vel = new Vector2d(0, 0);
+    private Vector2d accel = new Vector2d(0, 0);
+
     public MecanumDrive(HardwareMap hardwareMap) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, DriveConstants.TRACK_WIDTH, DriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
 
@@ -125,6 +131,14 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
                 follower, HEADING_PID, batteryVoltageSensor,
                 lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
         );
+    }
+
+    public Vector2d getVelocity() {
+        return vel;
+    }
+
+    public Vector2d getAccel() {
+        return accel;
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
@@ -188,6 +202,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public void update() {
         updatePoseEstimate();
+        vel= getPoseEstimate().vec().minus(prevPos);
+        accel= vel.minus(prevVel);
+        prevPos = getPoseEstimate().vec();
+        prevVel = vel;
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
     }
