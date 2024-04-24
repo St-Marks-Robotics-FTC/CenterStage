@@ -9,23 +9,28 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
+import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.CurvePoint;
 import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.RobotMovement;
+
+import java.util.ArrayList;
 
 @Autonomous
 public class PPTest extends LinearOpMode {
 
     private LebronClass robot;
-    private Pose2d target = new Pose2d(12, 0, Math.toRadians(0));
+    private Pose2d target = new Pose2d(36, 0, Math.toRadians(180));
     public void runOpMode() {
         robot = new LebronClass(hardwareMap);
         robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
         waitForStart();
         //RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 0.5, 0.5);
-        RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 0.5, 0.5);
+//        RobotMovement.setTarget(target);
+        ArrayList<CurvePoint> path = new ArrayList<>();
+        path.add(new CurvePoint(72, 0, 0.5, 0.5, 50, 0, 0));
+        path.add(new CurvePoint(72, 24, 0.5, 0.5, 50, 0, 0));
         while(!isStopRequested() && opModeIsActive()) {
-            Log.d("robot pose: ", robot.drive.getPoseEstimate().toString());
-            Log.d("distance: ", Double.toString(robot.drive.getPoseEstimate().vec().minus(target.vec()).norm()));
             RobotMovement.update(robot.drive);
+            RobotMovement.followCurve(path, Math.toRadians(0), robot.drive.getPoseEstimate(), robot.drive);
 //            if (robot.drive.getPoseEstimate().vec().minus(target.vec()).norm()>1) {
 //                RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 0.5, 0.5);
 //            } else {

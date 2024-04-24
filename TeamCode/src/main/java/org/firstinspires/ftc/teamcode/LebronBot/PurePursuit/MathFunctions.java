@@ -22,7 +22,20 @@ public class MathFunctions {
             angle -= 2 * Math.PI;
         }
         return angle;
-
+    }
+    /*
+    * Returns the difference between two angles in radians
+    * angle 1 is the end angle
+    * angle 2 is the start angle
+     */
+    public static double AngleDiff(double angle1, double angle2) {
+        if (angle1-angle2>Math.PI) {
+            return angle1-angle2-2*Math.PI;
+        } else if (angle1-angle2<-Math.PI) {
+            return angle1-angle2+2*Math.PI;
+        } else {
+            return angle1-angle2;
+        }
     }
 
     public static ArrayList<Vector2d> lineCircleIntersection(Vector2d circleCenter, double radius, Vector2d lineStart, Vector2d lineEnd) {
