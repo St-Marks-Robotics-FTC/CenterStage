@@ -13,25 +13,43 @@ import java.util.ArrayList;
 
 public class RobotMovement {
     private static double turnTolerance=10;
-    private static double posTolerance = 0.5;
-    private static double headingTolerance = 1;
+    private static double posTolerance = 5;
+    private static double headingTolerance = 10;
     private static double turnP=1;
     public static boolean isBusy = false;
     public static Pose2d target;
+    public static Pose2d endPose;
     private static double dampener = 1.5;
+    private static double decceleration = 0.5; // in inches/this is for the wolfpack glide
+    private static ArrayList<CurvePoint> path = new ArrayList<>();
+    private static double followAngle;
+
+//    public static void glide(MecanumDrive drive, Pose2d position, Pose2d desired, double movementSpeed, double turnSpeed) {
+//        target =
+//    }
 
     public static void setTarget(Pose2d input) {
         target = input;
     }
 
-    public static void followCurve(ArrayList<CurvePoint> allPoints, double followAngle, Pose2d robotPose, MecanumDrive drive) {
-        CurvePoint followMe = getFollowPointPath(allPoints, allPoints.get(0).followDistance,robotPose);
-        goToPosition(drive, robotPose, new Pose2d(followMe.x, followMe.y, followAngle), followMe.moveSpeed, followMe.turnSpeed);
+    public static void followCurve(ArrayList<CurvePoint> allPoints, double prefAngle) {
+        // always keep prefAngle 90 degrees
+        path = extendPoint(allPoints);
+        target = new Pose2d(allPoints.get(allPoints.size()-2).x, allPoints.get(allPoints.size()-2).y, prefAngle);
+        followAngle = prefAngle;
+    }
+
+    public static ArrayList<CurvePoint> extendPoint(ArrayList<CurvePoint> allPoints) {
+        double angle = Math.atan2(allPoints.get(allPoints.size()-1).y-allPoints.get(allPoints.size()-2).y, allPoints.get(allPoints.size()-1).x-allPoints.get(allPoints.size()-2).x);
+        Vector2d resultant = new Vector2d(allPoints.get(0).followDistance*Math.cos(angle), allPoints.get(0).followDistance*Math.sin(angle));
+        CurvePoint extend =new CurvePoint(allPoints.get(allPoints.size()-1).x+resultant.getX(), allPoints.get(allPoints.size()-1).y+resultant.getY(), allPoints.get(allPoints.size()-1).moveSpeed, allPoints.get(allPoints.size()-1).turnSpeed, allPoints.get(allPoints.size()-1).followDistance, allPoints.get(allPoints.size()-1).slowDownTurnRadians, allPoints.get(allPoints.size()-1).slowDownTurnAmount);
+        allPoints.add(extend);
+        return allPoints;
     }
 
     public static CurvePoint getFollowPointPath(ArrayList<CurvePoint> pathPoints, double followRadius, Pose2d robotPose) {
         CurvePoint followMe = new CurvePoint(pathPoints.get(0));
-        for (int i = 0; i < pathPoints.size() - 1; i++) {
+        for (int i = 0; i < pathPoints.size(); i++) {
             CurvePoint startLine = pathPoints.get(i);
             CurvePoint endLine = pathPoints.get(i + 1);
 
@@ -53,7 +71,6 @@ public class RobotMovement {
     }
 
     public static void goToPosition(MecanumDrive drive, Pose2d position, Pose2d desired,double movementSpeed, double turnSpeed) {
-        target = desired;
         double x = desired.getX(); double y = desired.getY(); double preferredAngle = desired.getHeading();
         double distanceToTarget = Math.hypot(x - position.getX(), y - position.getY());
         double absoluteAngleToTarget = Math.atan2(y - position.getY(), x - position.getX());
@@ -116,11 +133,14 @@ public class RobotMovement {
         Log.d("robot pose: ", drive.getPoseEstimate().toString());
         //Log.d("target: ", target.toString());
         //Log.d("bruh: ", Double.toString(Math.abs(MathFunctions.AngleWrap(drive.getPoseEstimate().getHeading()) - MathFunctions.AngleWrap(target.getHeading()))));
-        if (target!=null && withinPos(drive) && withinHead(drive)) {
+        if (target!=null && withinPos(drive) && withinHead(drive) && path!=null) {
             isBusy=false;
             drive.setMotorPowers(0, 0, 0, 0);
+            CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance,drive.getPoseEstimate());
+            goToPosition(drive, drive.getPoseEstimate(), new Pose2d(followMe.x, followMe.y, followAngle), followMe.moveSpeed, followMe.turnSpeed);
         } else {
             isBusy=true;
+            path=null;
             //Log.d("distance: ", Double.toString(drive.getPoseEstimate().vec().minus(target.vec()).norm()));
             //RobotMovement.goToPosition(drive, drive.getPoseEstimate(), target, 0.8, 0.8);
         }

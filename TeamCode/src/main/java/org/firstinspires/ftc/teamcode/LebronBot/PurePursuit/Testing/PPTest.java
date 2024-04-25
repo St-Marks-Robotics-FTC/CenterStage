@@ -28,9 +28,9 @@ public class PPTest extends LinearOpMode {
         ArrayList<CurvePoint> path = new ArrayList<>();
         path.add(new CurvePoint(72, 0, 0.5, 0.5, 50, 0, 0));
         path.add(new CurvePoint(72, 24, 0.5, 0.5, 50, 0, 0));
+        RobotMovement.followCurve(path, Math.toRadians(90));
         while(!isStopRequested() && opModeIsActive()) {
             RobotMovement.update(robot.drive);
-            RobotMovement.followCurve(path, Math.toRadians(0), robot.drive.getPoseEstimate(), robot.drive);
 //            if (robot.drive.getPoseEstimate().vec().minus(target.vec()).norm()>1) {
 //                RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 0.5, 0.5);
 //            } else {
