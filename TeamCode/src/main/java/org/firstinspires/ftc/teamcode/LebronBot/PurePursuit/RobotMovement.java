@@ -133,7 +133,10 @@ public class RobotMovement {
         Log.d("robot pose: ", drive.getPoseEstimate().toString());
         //Log.d("target: ", target.toString());
         //Log.d("bruh: ", Double.toString(Math.abs(MathFunctions.AngleWrap(drive.getPoseEstimate().getHeading()) - MathFunctions.AngleWrap(target.getHeading()))));
-        if (target!=null && withinPos(drive) && withinHead(drive) && path!=null) {
+        if (path!=null) {
+            if (target!=null && withinPos(drive) && withinHead(drive)) {
+                goToPosition(drive, drive.getPoseEstimate(), target,path.get(0).moveSpeed,path.get(0).turnSpeed);
+            }
             isBusy=false;
             drive.setMotorPowers(0, 0, 0, 0);
             CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance,drive.getPoseEstimate());
