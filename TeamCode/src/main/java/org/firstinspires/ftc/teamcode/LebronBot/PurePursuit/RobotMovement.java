@@ -27,8 +27,8 @@ public class RobotMovement {
     private static double decceleration = 0.5; // in inches/this is for the wolfpack glide
     private static ArrayList<CurvePoint> path = new ArrayList<>();
     private static double followAngle;
-    private static PID translation = new PID(0.2, 0, 0.1);
-    private static PID heading = new PID(1, 0, 0);
+    private static PID translation = new PID(0.04, 0, 5);
+    private static PID heading = new PID(0.2, 0, 0.2);
 
 //    public static void glide(MecanumDrive drive, Pose2d position, Pose2d desired, double movementSpeed, double turnSpeed) {
 //        target =
@@ -99,7 +99,7 @@ public class RobotMovement {
             movementYPower=0;
         }
         double pid = translation.update(distanceToTarget);
-        Log.d("pid: ", Double.toString(pid));
+        //Log.d("pid: ", Double.toString(pid));
         movementXPower = movementXPower * movementSpeed * (pid);
         movementYPower = movementYPower * movementSpeed * (pid);
         if (withinPos(drive)) {
@@ -108,16 +108,19 @@ public class RobotMovement {
         }
 
         double relativeTurnAngle = relativeAngleToPoint + preferredAngle;
+        double headingPID = heading.update(MathFunctions.AngleDiff(preferredAngle, position.getHeading()));
 //        Log.d("relativeTurnAngle: ", Double.toString(relativeTurnAngle));
-        double movementTurn = -Range.clip(MathFunctions.AngleDiff(preferredAngle, position.getHeading())*turnP, -1, 1)*turnSpeed;
+        double movementTurn = -Range.clip(headingPID*MathFunctions.AngleDiff(preferredAngle, position.getHeading()), -1, 1)*turnSpeed;
 //        Log.d("movementTurn: ", Double.toString(movementTurn));
         //if (distanceToTarget<4) movementTurn=0;
         double FL = (movementXPower - movementYPower + movementTurn);
         double BL = (movementXPower + movementYPower + movementTurn);
         double BR = (movementXPower - movementYPower - movementTurn);
         double FR = (movementXPower + movementYPower - movementTurn);
+        Log.d("pid", Double.toString(pid));
+        Log.d("heading pid", Double.toString(headingPID));
 //        Log.d("movement: ", movementXPower+" "+movementYPower+" " + movementTurn);
-//        Log.d("movement powers: ", FL + " " + BL + " " + BR + " " + FR);
+        Log.d("movement powers: ", FL + " " + BL + " " + BR + " " + FR);
 //        Log.d("relative angle: ", relativeAngleToPoint+" "+Math.toDegrees(relativeAngleToPoint));
         drive.setMotorPowers(FL, BL, BR, FR);
     }
@@ -144,18 +147,12 @@ public class RobotMovement {
         Log.d("robot pose: ", drive.getPoseEstimate().toString());
         //Log.d("target: ", target.toString());
         //Log.d("bruh: ", Double.toString(Math.abs(MathFunctions.AngleWrap(drive.getPoseEstimate().getHeading()) - MathFunctions.AngleWrap(target.getHeading()))));
-        if (path!=null) {
-            if (target!=null && withinPos(drive) && withinHead(drive)) {
-                goToPosition(drive, drive.getPoseEstimate(), target,path.get(0).moveSpeed,path.get(0).turnSpeed);
-            }
-            isBusy=false;
-            drive.setMotorPowers(0, 0, 0, 0);
+        if (path!=null && (!withinPos(drive) || !withinHead(drive))) {
             CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance,drive);
             Log.d("target go to: ", new Pose2d(followMe.x, followMe.y, followMe.h).toString());
             goToPosition(drive, drive.getPoseEstimate(), new Pose2d(followMe.x, followMe.y, followMe.h), followMe.moveSpeed, followMe.turnSpeed);
         } else {
-            isBusy=true;
-            path=null;
+            drive.setMotorPowers(0, 0, 0, 0);
             //Log.d("distance: ", Double.toString(drive.getPoseEstimate().vec().minus(target.vec()).norm()));
             //RobotMovement.goToPosition(drive, drive.getPoseEstimate(), target, 0.8, 0.8);
         }
