@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.StandardTrackingWheelLocalizer;
 
 @Config
 @TeleOp
@@ -47,7 +48,7 @@ public class PID2PointTest extends LinearOpMode {
 
         MecanumDrive drive = new MecanumDrive(hardwareMap);
 
-
+        drive.setPoseEstimate(new Pose2d(0, 0, 0));
 
         waitForStart();
         while (opModeIsActive()) {
