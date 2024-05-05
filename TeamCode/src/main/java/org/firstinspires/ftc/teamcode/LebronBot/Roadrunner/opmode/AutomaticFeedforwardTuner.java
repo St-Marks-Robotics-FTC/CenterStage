@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.opmode;
 
-import static org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants.MAX_RPM;
-import static org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.LM2.Roadrunner.DriveConstants.rpmToVelocity;
+import static org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.DriveConstants.MAX_RPM;
+import static org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.DriveConstants.rpmToVelocity;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
