@@ -6,17 +6,22 @@ public class PID {
     private double p;
     private double i;
     private double d;
+    private double f;
     private ArrayList<Double> lastError;
-
     public PID(double p, double i, double d) {
+        this(p, i, d, 0);
+    }
+
+    public PID(double p, double i, double d, double f) {
         this.p=p;
         this.i=i;
         this.d=d;
+        this.f=f;
         lastError = new ArrayList<>();
     }
 
     public double update(double error) {
-        return P(error)+I(error)-D(error);
+        return P(error)+I(error)-D(error)+F();
     }
 
     private double P(double error) {
@@ -32,5 +37,9 @@ public class PID {
 
     private double D(double error) {
         return d*Math.abs(Math.abs(error)-lastError.get(lastError.size()-1));
+    }
+
+    private double F() {
+        return f;
     }
 }

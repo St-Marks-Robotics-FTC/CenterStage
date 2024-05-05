@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Roadrunner;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -72,6 +74,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     private Vector2d prevVel = new Vector2d(0, 0);
     private Vector2d vel = new Vector2d(0, 0);
     private Vector2d accel = new Vector2d(0, 0);
+    private long lastRead = 0;
 
     public MecanumDrive(HardwareMap hardwareMap) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, DriveConstants.TRACK_WIDTH, DriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -202,10 +205,17 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public void update() {
         updatePoseEstimate();
+        double timeGap = (double)(System.currentTimeMillis()-lastRead)/1000;
+        Log.d("System: ", Double.toString(System.currentTimeMillis()));
+        Log.d("diff: ", Double.toString((System.currentTimeMillis()-lastRead)));
+        Log.d("time: ", Double.toString(timeGap));
         vel= getPoseEstimate().vec().minus(prevPos);
+        vel = new Vector2d(vel.getX()/timeGap, vel.getY()/timeGap);
         accel= vel.minus(prevVel);
+        accel = new Vector2d(accel.getX()/timeGap, accel.getY()/timeGap);
         prevPos = getPoseEstimate().vec();
         prevVel = vel;
+        lastRead = System.currentTimeMillis();
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
     }

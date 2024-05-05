@@ -18,25 +18,22 @@ import java.util.ArrayList;
 public class PPTest extends LinearOpMode {
 
     private LebronClass robot;
-    private Pose2d target = new Pose2d(36, 0, Math.toRadians(180));
+    private Pose2d target = new Pose2d(72, 0, Math.toRadians(90));
     public void runOpMode() {
         robot = new LebronClass(hardwareMap);
-        robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
+        robot.drive.setPoseEstimate(new Pose2d(-40.5, -64, Math.toRadians(-90)));
         waitForStart();
         //RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 0.5, 0.5);
-//        RobotMovement.setTarget(target);
+        //RobotMovement.setTarget(target);
         ArrayList<CurvePoint> path = new ArrayList<>();
-        path.add(new CurvePoint(0, 0, Math.toRadians(0), 1, 1, 12, 0, 0));
-        path.add(new CurvePoint(48, 0, Math.toRadians(45), 1, 1, 12, 0, 0));
-        path.add(new CurvePoint(48, 48, Math.toRadians(90), 1, 1, 12, 0, 0));
+        path.add(new CurvePoint(-40.5, -10, Math.toRadians(-135), 1, 1, 24, 0, 0));
+//        path.add(new CurvePoint(-60, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
+        path.add(new CurvePoint(0, -10, Math.toRadians(180), 1, 1, 48, 0, 0));
+        path.add(new CurvePoint(40, -30, Math.toRadians(180), 1, 1, 48, 0, 0));
         RobotMovement.followCurve(path);
         while(!isStopRequested() && opModeIsActive()) {
+            //RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 1, 1);
             RobotMovement.update(robot.drive);
-//            if (robot.drive.getPoseEstimate().vec().minus(target.vec()).norm()>1) {
-//                RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 0.5, 0.5);
-//            } else {
-//                robot.drive.setMotorPowers(0, 0, 0, 0);
-//            }
         }
     }
 }
