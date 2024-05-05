@@ -93,8 +93,9 @@ public class RobotMovement {
         double relativeYToPoint = Math.sin(relativeAngleToPoint) * distanceToTarget;
 //        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
 //        Log.d("relativeYToPoint:  ", Double.toString(relativeYToPoint));
-        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint)) / dampener - (radiusMulti * antiRadius(drive));
-        double movementYPower = relativeYToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint)) / dampener - (radiusMulti * antiRadius(drive));
+        double curvature = 1/antiRadius(drive);
+        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint))+antiRadius(drive)*radiusMulti;
+        double movementYPower = relativeYToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
         if (relativeXToPoint == 0 && relativeYToPoint == 0) {
             movementXPower=0;
             movementYPower=0;
@@ -103,8 +104,8 @@ public class RobotMovement {
         pid = 1;
         //Log.d("pid: ", Double.toString(pid));
         Vector2d limiter = speedLimit(drive);
-        movementXPower = movementXPower * movementSpeed * (pid) - limiter.getX();
-        movementYPower = movementYPower * movementSpeed * (pid) - limiter.getY();
+        movementXPower = movementXPower * movementSpeed * (pid);// - limiter.getX();
+        movementYPower = movementYPower * movementSpeed * (pid);// - limiter.getY();
         if (withinPos(drive)) {
             movementXPower=0;
             movementYPower=0;
@@ -138,7 +139,7 @@ public class RobotMovement {
         Log.d("vel: ", vel.toString());
         Vector2d accel = drive.getAccel();
         if (((accel.getY()*vel.getX())-(accel.getX()*vel.getY())) == 0) return 0;
-        double radius = Math.abs(Math.pow(vel.norm(), 1.5)/((accel.getY()*vel.getX())-(accel.getX()*vel.getY())));
+        double radius = Math.pow(1/Math.sin(Math.atan2(vel.getY(),vel.getX())), 3)/(accel.getY()/accel.getX());
         Log.d("radius: ", Double.toString(radius));
         return radius;
     }
