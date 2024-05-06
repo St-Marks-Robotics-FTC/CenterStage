@@ -206,9 +206,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public void update() {
         updatePoseEstimate();
         double timeGap = (double)(System.currentTimeMillis()-lastRead)/1000;
-        Log.d("System: ", Double.toString(System.currentTimeMillis()));
-        Log.d("diff: ", Double.toString((System.currentTimeMillis()-lastRead)));
-        Log.d("time: ", Double.toString(timeGap));
+//        Log.d("System: ", Double.toString(System.currentTimeMillis()));
+//        Log.d("diff: ", Double.toString((System.currentTimeMillis()-lastRead)));
+//        Log.d("time: ", Double.toString(timeGap));
         vel= getPoseEstimate().vec().minus(prevPos);
         vel = new Vector2d(vel.getX()/timeGap, vel.getY()/timeGap);
         accel= vel.minus(prevVel);
