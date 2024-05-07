@@ -212,7 +212,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         vel= getPoseEstimate().vec().minus(prevPos);
         vel = new Vector2d(vel.getX()/timeGap, vel.getY()/timeGap);
         accel= vel.minus(prevVel);
-        accel = new Vector2d(accel.getX()/timeGap, accel.getY()/timeGap);
+        accel = new Vector2d(accel.getX(), accel.getY());
         prevPos = getPoseEstimate().vec();
         prevVel = vel;
         lastRead = System.currentTimeMillis();
