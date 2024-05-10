@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class Drivetrain extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        BozoBot bozoBot = new BozoBot(hardwareMap);
+
         // Declare our motors
         // Make sure your ID's match your configuration
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
@@ -52,6 +54,40 @@ public class Drivetrain extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
 
+            if (gamepad1.right_bumper){
+                bozoBot.ArmUp();
+            }else if (gamepad1.right_trigger > 0.5){
+                bozoBot.ArmDown();
+            }
+            //gamepad1.right_bumper = !gamepad1.right_bumper;
+
+            if (gamepad1.y){
+                bozoBot.LeftOpen();
+                bozoBot.RightOpen();
+            }else if(gamepad1.a){
+                bozoBot.LeftClose();
+                bozoBot.RightClose();
+            }
+            //gamepad1.y = !gamepad1.y;
+
+            //if (gamepad1.x){
+                //bozoBot.LeftOpen();
+            //}else {
+                //bozoBot.LeftClose();
+            //}
+            //gamepad1.x = !gamepad1.x;
+
+            //if (gamepad1.b){
+                //bozoBot.RightOpen();
+            //}else{
+                //bozoBot.RightClose();
+            //}
+            //gamepad1.b = !gamepad1.b;
+
+            telemetry.addData("ArmPosition", bozoBot.arm.getCurrentPosition());
+            telemetry.addData("LeftClawPosition", bozoBot.leftclaw.getPosition());
+            telemetry.addData("RightClawPosition", bozoBot.rightclaw.getPosition());
+            telemetry.update();
 
         }
     }
