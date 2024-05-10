@@ -26,8 +26,9 @@ public class RobotMovement {
     private static ArrayList<CurvePoint> path = new ArrayList<>();
     private static PID translation = new PID(0.015, 0, 0.5, 0.25);
     private static PID heading = new PID(0.4, 0, 0.2, 0.1);
-    private static double radiusMulti = 0.01;
+    private static double radiusMulti = 0.008;
     private static double startTime = 0;
+    private static CurvePoint prevPoint = null;
 
     public static void setTarget(Pose2d input) {
         target = input;
@@ -44,9 +45,12 @@ public class RobotMovement {
         if (allPoints.size()>1) {
             angle = Math.atan2(allPoints.get(allPoints.size()-1).y-allPoints.get(allPoints.size()-2).y, allPoints.get(allPoints.size()-1).x-allPoints.get(allPoints.size()-2).x);
         }
-        Vector2d resultant = new Vector2d(allPoints.get(0).followDistance*Math.cos(angle), allPoints.get(0).followDistance*Math.sin(angle));
+        Vector2d resultant = new Vector2d((allPoints.get(0).followDistance+6)*Math.cos(angle), (allPoints.get(0).followDistance+6)*Math.sin(angle));
         CurvePoint extend =new CurvePoint(allPoints.get(allPoints.size()-1).x+resultant.getX(), allPoints.get(allPoints.size()-1).y+resultant.getY(), allPoints.get(allPoints.size()-1).h, allPoints.get(allPoints.size()-1).moveSpeed, allPoints.get(allPoints.size()-1).turnSpeed, allPoints.get(allPoints.size()-1).followDistance, allPoints.get(allPoints.size()-1).slowDownTurnRadians, allPoints.get(allPoints.size()-1).slowDownTurnAmount);
         allPoints.add(extend);
+        for (CurvePoint p : allPoints) {
+            Log.d("point: ", Double.toString(p.x)+" "+Double.toString(p.y));
+        }
         return allPoints;
     }
 
@@ -62,7 +66,13 @@ public class RobotMovement {
 
             for (Vector2d thisIntersection : intersections) {
                 double angle = Math.atan2(thisIntersection.getY() - drive.getPoseEstimate().getY(), thisIntersection.getX() - drive.getPoseEstimate().getX());
-                double deltaAngle = Math.abs(MathFunctions.AngleDiff(angle, drive.getVelocity().angle()));
+                double deltaAngle;
+                if (prevPoint!=null) {
+                    double prevAngle = prevPoint.toPoint().minus(drive.getPoseEstimate().vec()).angle();
+                    deltaAngle=Math.abs(MathFunctions.AngleDiff(angle,prevAngle));
+                } else {
+                    deltaAngle = Math.abs(MathFunctions.AngleDiff(angle, drive.getVelocity().angle()));
+                }
 
                 if (deltaAngle < closestAngle) {
                     followMe = new CurvePoint(pathPoints.get(i+1));
@@ -75,6 +85,7 @@ public class RobotMovement {
                 }
             }
         }
+        prevPoint=followMe;
         return followMe;
     }
 
@@ -88,6 +99,8 @@ public class RobotMovement {
     public static void goToPosition(MecanumDrive drive, Pose2d position, Pose2d desired,double movementSpeed, double turnSpeed) {
 //        setTarget(desired);
         double x = desired.getX(); double y = desired.getY(); double preferredAngle = desired.getHeading();
+        double centrifuge = antiRadius(drive);
+        Log.d("curvature: ", Double.toString(centrifuge));
 //        position = new Pose2d(position.getX(), position.getY(), MathFunctions.AngleWrap(position.getHeading()));
         double distanceToTarget = Math.hypot(x - position.getX(), y - position.getY());
         double absoluteAngleToTarget = Math.atan2(y - position.getY(), x - position.getX());
@@ -96,16 +109,12 @@ public class RobotMovement {
         double relativeAngleToPoint = MathFunctions.AngleDiff(absoluteAngleToTarget, position.getHeading());
 //        Log.d("relativeAngleToPoint", Double.toString(relativeAngleToPoint));
 //        Log.d("prefferedAngle ", Double.toString(preferredAngle));
-        double relativeXToPoint = Math.cos(relativeAngleToPoint) * distanceToTarget;
-        double relativeYToPoint = Math.sin(relativeAngleToPoint) * distanceToTarget;
+        double relativeXToPoint = Math.cos(relativeAngleToPoint) * (distanceToTarget-Math.abs(centrifuge));
+        double relativeYToPoint = Math.sin(relativeAngleToPoint) * (distanceToTarget-Math.abs(centrifuge));
 //        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
 //        Log.d("relativeYToPoint:  ", Double.toString(relativeYToPoint));
-        Vector2d curvature = antiRadius(drive);
-        Log.d("curvature: ", curvature.toString());
-        curvature = new Vector2d((double)curvature.getX()*radiusMulti, (double)1/curvature.getY()*radiusMulti);
-        Log.d("scaled curvature: ", curvature.toString());
-        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint))-curvature.getX();
-        double movementYPower = relativeYToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint))-curvature.getY();
+        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
+        double movementYPower = relativeYToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
         if (relativeXToPoint == 0 && relativeYToPoint == 0) {
             movementXPower=0;
             movementYPower=0;
@@ -144,16 +153,17 @@ public class RobotMovement {
         drive.setMotorPowers(FL, BL, BR, FR);
     }
 
-    public static Vector2d antiRadius(MecanumDrive drive) {
+    public static double antiRadius(MecanumDrive drive) {
         //wolfpack's anticentrifugal force correction
         Vector2d vel = drive.getVelocity();
         Log.d("vel: ", vel.toString());
         Vector2d accel = drive.getAccel();
         Log.d("accel: ", accel.toString());
-        if (((accel.getY()*vel.getX())-(accel.getX()*vel.getY())) == 0) return new Vector2d(0,0);
+        if ((accel.getY()==0)  && accel.getX()==0) return 0;
         double radius = Math.pow(1/Math.sin(Math.atan2(vel.getY(),vel.getX())), 3)/(accel.getY()/accel.getX());
         Log.d("radius: ", Double.toString(radius));
-        return new Vector2d(Math.abs(radius*Math.cos(Math.atan2(vel.getY(), vel.getX()+Math.PI/2))), Math.abs(radius*Math.sin(Math.atan2(vel.getY(), vel.getX())+Math.PI/2)));
+        double force = Math.pow(vel.norm(), 2)/radius*radiusMulti;
+        return force;
     }
 
     public static boolean glide(MecanumDrive drive) {
