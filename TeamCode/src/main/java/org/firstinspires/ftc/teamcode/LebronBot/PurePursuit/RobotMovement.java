@@ -27,7 +27,6 @@ public class RobotMovement {
     private static PID translation = new PID(0.015, 0, 0.5, 0.25);
     private static PID heading = new PID(0.4, 0, 0.2, 0.1);
     private static double radiusMulti = 0.008;
-    private static double startTime = 0;
     private static CurvePoint prevPoint = null;
 
     public static void setTarget(Pose2d input) {
@@ -48,9 +47,9 @@ public class RobotMovement {
         Vector2d resultant = new Vector2d((allPoints.get(0).followDistance+6)*Math.cos(angle), (allPoints.get(0).followDistance+6)*Math.sin(angle));
         CurvePoint extend =new CurvePoint(allPoints.get(allPoints.size()-1).x+resultant.getX(), allPoints.get(allPoints.size()-1).y+resultant.getY(), allPoints.get(allPoints.size()-1).h, allPoints.get(allPoints.size()-1).moveSpeed, allPoints.get(allPoints.size()-1).turnSpeed, allPoints.get(allPoints.size()-1).followDistance, allPoints.get(allPoints.size()-1).slowDownTurnRadians, allPoints.get(allPoints.size()-1).slowDownTurnAmount);
         allPoints.add(extend);
-        for (CurvePoint p : allPoints) {
-            Log.d("point: ", Double.toString(p.x)+" "+Double.toString(p.y));
-        }
+//        for (CurvePoint p : allPoints) {
+//            Log.d("point: ", Double.toString(p.x)+" "+Double.toString(p.y));
+//        }
         return allPoints;
     }
 
@@ -67,12 +66,13 @@ public class RobotMovement {
             for (Vector2d thisIntersection : intersections) {
                 double angle = Math.atan2(thisIntersection.getY() - drive.getPoseEstimate().getY(), thisIntersection.getX() - drive.getPoseEstimate().getX());
                 double deltaAngle;
-                if (prevPoint!=null) {
-                    double prevAngle = prevPoint.toPoint().minus(drive.getPoseEstimate().vec()).angle();
-                    deltaAngle=Math.abs(MathFunctions.AngleDiff(angle,prevAngle));
-                } else {
-                    deltaAngle = Math.abs(MathFunctions.AngleDiff(angle, drive.getVelocity().angle()));
-                }
+//                if (prevPoint!=null) {
+//                    double prevAngle = prevPoint.toPoint().minus(drive.getPoseEstimate().vec()).angle();
+//                    deltaAngle=Math.abs(MathFunctions.AngleDiff(angle,prevAngle));
+//                } else {
+//                    deltaAngle = Math.abs(MathFunctions.AngleDiff(angle, drive.getVelocity().angle()));
+//                }
+                deltaAngle = Math.abs(MathFunctions.AngleDiff(angle, drive.getVelocity().angle()));
 
                 if (deltaAngle < closestAngle) {
                     followMe = new CurvePoint(pathPoints.get(i+1));
@@ -109,8 +109,22 @@ public class RobotMovement {
         double relativeAngleToPoint = MathFunctions.AngleDiff(absoluteAngleToTarget, position.getHeading());
 //        Log.d("relativeAngleToPoint", Double.toString(relativeAngleToPoint));
 //        Log.d("prefferedAngle ", Double.toString(preferredAngle));
-        double relativeXToPoint = Math.cos(relativeAngleToPoint) * (distanceToTarget-Math.abs(centrifuge));
-        double relativeYToPoint = Math.sin(relativeAngleToPoint) * (distanceToTarget-Math.abs(centrifuge));
+        if (centrifuge<2.5 && Math.abs(Math.toDegrees(drive.getAccel().angle()))>1) {
+            centrifuge=0;
+        } else {
+            centrifuge=Math.abs(centrifuge);
+        }
+        Vector2d centrifuged = new Vector2d();
+        double ang = 0;
+        if (MathFunctions.AngleWrap(drive.getAccel().angle())<0) {
+            ang = drive.getVelocity().angle()-Math.PI/2;
+        } else {
+            ang = drive.getVelocity().angle()+Math.PI/2;
+        }
+        centrifuged=new Vector2d(Math.cos(ang)*centrifuge, Math.sin(ang)*centrifuge);
+        Log.d("centrifuged: ", centrifuged.toString());
+        double relativeXToPoint = Math.cos(relativeAngleToPoint) * (distanceToTarget);
+        double relativeYToPoint = Math.sin(relativeAngleToPoint) * (distanceToTarget);
 //        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
 //        Log.d("relativeYToPoint:  ", Double.toString(relativeYToPoint));
         double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
@@ -120,9 +134,9 @@ public class RobotMovement {
             movementYPower=0;
         }
         double pid = translation.update(distanceToTarget);
-        pid = 1;
+        pid = 1; // for now no pid because doesn't seem necessary
         //Log.d("pid: ", Double.toString(pid));
-        Vector2d limiter = speedLimit(drive);
+        //Vector2d limiter = speedLimit(drive);
         movementXPower = movementXPower * movementSpeed * (pid);// - limiter.getX();
         movementYPower = movementYPower * movementSpeed * (pid);// - limiter.getY();
         if (withinPos(drive)) {
@@ -173,11 +187,11 @@ public class RobotMovement {
         double distance = vel.norm()*time - 0.5*decceleration*Math.pow(time, 2);
         double angle = Math.atan2(vel.getY(), vel.getX());
         Vector2d estimated = new Vector2d(pose.getX()+distance*Math.cos(angle), pose.getY()+distance*Math.sin(angle));
-        Log.d("estimate overhsoot: ", estimated.toString());
-        Log.d("first term: ", Double.toString(estimated.minus(pose.vec()).norm()));
-        Log.d("target vec: ", target.vec().toString());
-        Log.d("target norm: ", Double.toString(target.vec().minus(pose.vec()).norm()));
-        Log.d("second term: ", Double.toString(target.vec().minus(pose.vec()).norm()-2));
+//        Log.d("estimate overhsoot: ", estimated.toString());
+//        Log.d("first term: ", Double.toString(estimated.minus(pose.vec()).norm()));
+//        Log.d("target vec: ", target.vec().toString());
+//        Log.d("target norm: ", Double.toString(target.vec().minus(pose.vec()).norm()));
+//        Log.d("second term: ", Double.toString(target.vec().minus(pose.vec()).norm()-2));
         if (estimated.minus(pose.vec()).norm()<target.vec().minus(pose.vec()).norm()-2) return false;
         Log.d("overshooted!", "overshooted!");
         Vector2d correction = target.vec().minus(estimated);
@@ -213,8 +227,8 @@ public class RobotMovement {
             if (glide(drive)) {
             } else if (!path.isEmpty() && (!withinPos(drive) || !withinHead(drive))) {
                 CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance,drive);
-                Log.d("target go to: ", new Pose2d(followMe.x, followMe.y, followMe.h).toString());
-                Log.d("yes!!!: ", path.get(path.size()-2).toPoint().toString());
+//                Log.d("target go to: ", new Pose2d(followMe.x, followMe.y, followMe.h).toString());
+//                Log.d("yes!!!: ", path.get(path.size()-2).toPoint().toString());
                 goToPosition(drive, drive.getPoseEstimate(), new Pose2d(followMe.x, followMe.y, followMe.h), followMe.moveSpeed, followMe.turnSpeed);
             }
         } else {
