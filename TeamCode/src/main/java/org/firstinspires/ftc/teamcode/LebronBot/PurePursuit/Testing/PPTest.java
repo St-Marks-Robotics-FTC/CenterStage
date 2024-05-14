@@ -22,13 +22,17 @@ public class PPTest extends LinearOpMode {
     public void runOpMode() {
         robot = new LebronClass(hardwareMap);
 //        robot.drive.setPoseEstimate(new Pose2d(-40.5, -64, Math.toRadians(-90)));
-        robot.drive.setPoseEstimate(new Pose2d(0,0,0));
+        robot.drive.setPoseEstimate(new Pose2d(-50,-50,Math.toRadians(90)));
         waitForStart();
         //RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 0.5, 0.5);
         //RobotMovement.setTarget(target);
         ArrayList<CurvePoint> path = new ArrayList<>();
-        path.add(new CurvePoint(100, 0, Math.toRadians(0), 1, 1, 24, 0, 0));
-        path.add(new CurvePoint(100, -50, Math.toRadians(-90), 1, 1, 24, 0, 0));
+        path.add(new CurvePoint(-50, 0, Math.toRadians(45), 0.8, 1, 20, 0, 0));
+        path.add(new CurvePoint(0, 0, Math.toRadians(0), 0.8, 1, 20, 0, 0));
+        path.add(new CurvePoint(0, -50, Math.toRadians(-45), 0.8, 1, 20, 0, 0));
+        path.add(new CurvePoint(50, -50, Math.toRadians(0), 0.8, 1, 20, 0, 0));
+        path.add(new CurvePoint(50, 0, Math.toRadians(90), 0.8, 1, 20, 0, 0));
+
 //        path.add(new CurvePoint(-40.5, -10, Math.toRadians(-135), 1, 1, 24, 0, 0));
 ////        path.add(new CurvePoint(-60, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
 //        path.add(new CurvePoint(0, -10, Math.toRadians(180), 1, 1, 48, 0, 0));

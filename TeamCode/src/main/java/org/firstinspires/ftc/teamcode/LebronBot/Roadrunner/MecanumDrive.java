@@ -75,6 +75,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     private Vector2d vel = new Vector2d(0, 0);
     private Vector2d accel = new Vector2d(0, 0);
     private long lastRead = 0;
+    private ArrayList<Vector2d> accelAvg = new ArrayList<>();
 
     public MecanumDrive(HardwareMap hardwareMap) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, DriveConstants.TRACK_WIDTH, DriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -211,14 +212,32 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 //        Log.d("time: ", Double.toString(timeGap));
         vel= getPoseEstimate().vec().minus(prevPos);
         vel = new Vector2d(vel.getX()/timeGap, vel.getY()/timeGap);
+//        vel = smoothAccel(vel);
         accel= vel.minus(prevVel);
         accel = new Vector2d(accel.getX(), accel.getY());
+        //accel = smoothAccel(accel);
         prevPos = getPoseEstimate().vec();
         prevVel = vel;
         lastRead = System.currentTimeMillis();
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
     }
+
+//    public Vector2d smoothAccel(Vector2d accel) {
+//        if (accelAvg.size()>3) {
+//            accelAvg.remove(0);
+//        }
+//        accelAvg.add(accel);
+//        double x = 0;
+//        double y = 0;
+//        for (Vector2d acc : accelAvg) {
+//            x+=acc.getX();
+//            y+=acc.getY();
+//        }
+//        x/=accelAvg.size();
+//        y/=accelAvg.size();
+//        return new Vector2d(x, y);
+//    }
 
     public void waitForIdle() {
         while (!Thread.currentThread().isInterrupted() && isBusy())
