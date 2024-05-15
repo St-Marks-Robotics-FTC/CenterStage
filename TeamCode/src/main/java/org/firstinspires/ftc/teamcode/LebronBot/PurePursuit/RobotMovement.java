@@ -123,8 +123,8 @@ public class RobotMovement {
     public static void goToPosition(MecanumDrive drive, Pose2d position, Pose2d desired,double movementSpeed, double turnSpeed) {
 //        setTarget(desired);
         double x = desired.getX(); double y = desired.getY(); double preferredAngle = desired.getHeading();
-        double centrifuge = Math.abs(antiRadius(drive, desired)*2);
-        Log.d("curvature: ", Double.toString(centrifuge));
+        double centrifuge = Math.abs(antiRadius(drive, desired)*5);
+//        Log.d("curvature: ", Double.toString(centrifuge));
 //        position = new Pose2d(position.getX(), position.getY(), MathFunctions.AngleWrap(position.getHeading()));
         double distanceToTarget = Math.hypot(x - position.getX(), y - position.getY());
         double absoluteAngleToTarget = Math.atan2(y - position.getY(), x - position.getX());
@@ -135,12 +135,12 @@ public class RobotMovement {
 //        Log.d("prefferedAngle ", Double.toString(preferredAngle));
         Vector2d accel1 = desired.minus(drive.getPoseEstimate()).vec();
         //if (preferredAngle==100) preferredAngle = accel.angle();
-        Log.d("accel1: ", accel1.toString());
+//        Log.d("accel1: ", accel1.toString());
         Vector2d vel = drive.getVelocity();
         Log.d("vel: ", vel.toString());
         Vector2d accel = scale(accel1, vel.norm());
         accel = accel.minus(vel);
-        Log.d("accel2: ", accel.toString());
+//        Log.d("accel2: ", accel.toString());
         if (Math.abs(Math.toDegrees(accel1.angle()))<30 || drive.getPoseEstimate().minus(target).vec().norm()<20) {
             centrifuge=0;
             smooC.clear();
@@ -154,8 +154,8 @@ public class RobotMovement {
         } else {
             ang = drive.getVelocity().angle()+Math.PI/2;
         }
-        Log.d("ang: ", Double.toString(Math.toDegrees(ang)));
-        centrifuged=new Vector2d(Math.cos(ang)*centrifuge, Math.sin(ang)*centrifuge);
+//        Log.d("ang: ", Double.toString(Math.toDegrees(ang)));
+        centrifuged=new Vector2d(Math.cos(ang + preferredAngle)*centrifuge, Math.sin(ang+preferredAngle)*centrifuge);
         centrifuged = smoothCentrifuge(centrifuged);
         Log.d("centrifuged: ", centrifuged.toString());
         double relativeXToPoint = Math.cos(relativeAngleToPoint) * (distanceToTarget);
@@ -304,7 +304,7 @@ public class RobotMovement {
         Log.d("robot pose: ", drive.getPoseEstimate().toString());
         //Log.d("target: ", target.toString());
         //Log.d("bruh: ", Double.toString(Math.abs(MathFunctions.AngleWrap(drive.getPoseEstimate().getHeading()) - MathFunctions.AngleWrap(target.getHeading()))));
-        if (withinPos(drive) && withinHead(drive)) target = null;
+        if (target!=null && withinPos(drive) && withinHead(drive)) target = null;
 //        if (withinPos(drive)) {
 //            drive.setWeightedDrivePower(new Pose2d(0,0,0));
 //            goToPosition(drive, drive.getPoseEstimate(), target, 0, 1);
