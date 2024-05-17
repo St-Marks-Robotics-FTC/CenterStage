@@ -39,12 +39,14 @@ public class RobotMovement {
     }
 
     public static void followCurve(ArrayList<CurvePoint> allPoints, MecanumDrive drive) {
-        // always keep prefAngle 90 degrees
+        // bruhbruhbruhbruhbruh
         path = extendPoint(allPoints, drive);
         target = new Pose2d(allPoints.get(allPoints.size()-2).x, allPoints.get(allPoints.size()-2).y, allPoints.get(allPoints.size()-2).h);
     }
 
     public static ArrayList<CurvePoint> extendPoint(ArrayList<CurvePoint> allPoints, MecanumDrive drive) {
+        //extend the path so it doesn't oscillate at the end
+        // this is kind of hard to explain in comments the only real way to explain this is to draw it out
         double angle = Math.atan2(allPoints.get(allPoints.size()-1).y-drive.getPoseEstimate().getY(), allPoints.get(allPoints.size()-1).y-drive.getPoseEstimate().getX());
         if (allPoints.size()>1) {
             angle = Math.atan2(allPoints.get(allPoints.size()-1).y-allPoints.get(allPoints.size()-2).y, allPoints.get(allPoints.size()-1).x-allPoints.get(allPoints.size()-2).x);
@@ -59,6 +61,7 @@ public class RobotMovement {
     }
 
     public static CurvePoint getFollowPointPath(ArrayList<CurvePoint> pathPoints, double followRadius, MecanumDrive drive) {
+        //find all intersections between the circle and piecewise path
         CurvePoint followMe = new CurvePoint(pathPoints.get(0));
         if (drive.getPoseEstimate().minus(target).vec().norm()<followMe.followDistance) {
             return new CurvePoint(target.getX(), target.getY(), target.getHeading(), followMe.moveSpeed,followMe.turnSpeed,followMe.followDistance, followMe.slowDownTurnRadians, followMe.slowDownTurnAmount);
@@ -97,14 +100,16 @@ public class RobotMovement {
         return followMe;
     }
 
-    public static Vector2d speedLimit(MecanumDrive drive) {
-        double ratio = 0.08;
-        double minimum = 30;
-        Vector2d output = new Vector2d((drive.getVelocity().getX()-minimum)*ratio, (drive.getVelocity().getY()-minimum)*ratio);
-        return output;
-    }
+//    public static Vector2d speedLimit(MecanumDrive drive) {
+//        //ignore this it doesnt do anything
+//        double ratio = 0.08;
+//        double minimum = 30;
+//        Vector2d output = new Vector2d((drive.getVelocity().getX()-minimum)*ratio, (drive.getVelocity().getY()-minimum)*ratio);
+//        return output;
+//    }
 
     private static Vector2d smoothCentrifuge(Vector2d centrifuge) {
+        //smooth it out because the acceleration is very noisy
         if (smooC.size()>3) {
             smooC.remove(0);
         }
@@ -124,6 +129,8 @@ public class RobotMovement {
 //        setTarget(desired);
         double x = desired.getX(); double y = desired.getY(); double preferredAngle = desired.getHeading();
         double centrifuge = Math.abs(antiRadius(drive, desired)*5);
+        //use the centrifuge to calculate the force needed to keep the robot on the path
+//        centrifuge=0;
 //        Log.d("curvature: ", Double.toString(centrifuge));
 //        position = new Pose2d(position.getX(), position.getY(), MathFunctions.AngleWrap(position.getHeading()));
         double distanceToTarget = Math.hypot(x - position.getX(), y - position.getY());
@@ -173,7 +180,7 @@ public class RobotMovement {
             movementYPower=0;
         }
         double pid = translation.update(distanceToTarget);
-        pid = 1; // for now no pid because doesn't seem necessary
+        pid = 1; // for now no translational pid because doesn't seem necessary
         //Log.d("pid: ", Double.toString(pid));
         //Vector2d limiter = speedLimit(drive);
         movementXPower = movementXPower * movementSpeed * (pid);// - limiter.getX();
@@ -210,43 +217,45 @@ public class RobotMovement {
         drive.setMotorPowers(FL, BL, BR, FR);
     }
 
-    private static double smoothX(double x) {
-        if (smooX.size()>3) {
-            smooX.remove(0);
-        }
-        smooX.add(x);
-        double avg = 0;
-        for (double i : smooX) {
-            avg+=i;
-        }
-        return avg/=smooX.size();
-    }
-
-    private static double smoothY(double x) {
-        if (smooY.size()>4) {
-            smooY.remove(0);
-        }
-        smooY.add(x);
-        double avg = 0;
-        for (double i : smooY) {
-            avg+=i;
-        }
-        return avg/=smooY.size();
-    }
-
-    private static double smoothH(double x) {
-        if (smooH.size()>3) {
-            smooH.remove(0);
-        }
-        smooH.add(x);
-        double avg = 0;
-        for (double i : smooH) {
-            avg+=i;
-        }
-        return avg/=smooH.size();
-    }
+//    private static double smoothX(double x) {
+    //ignore these next 3 functions
+//        if (smooX.size()>3) {
+//            smooX.remove(0);
+//        }
+//        smooX.add(x);
+//        double avg = 0;
+//        for (double i : smooX) {
+//            avg+=i;
+//        }
+//        return avg/=smooX.size();
+//    }
+//
+//    private static double smoothY(double x) {
+//        if (smooY.size()>4) {
+//            smooY.remove(0);
+//        }
+//        smooY.add(x);
+//        double avg = 0;
+//        for (double i : smooY) {
+//            avg+=i;
+//        }
+//        return avg/=smooY.size();
+//    }
+//
+//    private static double smoothH(double x) {
+//        if (smooH.size()>3) {
+//            smooH.remove(0);
+//        }
+//        smooH.add(x);
+//        double avg = 0;
+//        for (double i : smooH) {
+//            avg+=i;
+//        }
+//        return avg/=smooH.size();
+//    }
 
     public static Vector2d scale(Vector2d input, double scale) {
+        //scale a vector to the prescribed magnitude
         double multi = scale/input.norm();
         return new Vector2d(input.getX()*multi, input.getY()*multi);
     }
@@ -268,6 +277,7 @@ public class RobotMovement {
     }
 
     public static boolean glide(MecanumDrive drive, Pose2d target) {
+        //calculate the overshoot shit
         Pose2d pose = drive.getPoseEstimate();
         Vector2d vel = drive.getVelocity();
         double time = vel.norm()/decceleration;
@@ -304,12 +314,14 @@ public class RobotMovement {
         Log.d("robot pose: ", drive.getPoseEstimate().toString());
         //Log.d("target: ", target.toString());
         //Log.d("bruh: ", Double.toString(Math.abs(MathFunctions.AngleWrap(drive.getPoseEstimate().getHeading()) - MathFunctions.AngleWrap(target.getHeading()))));
+        //if there is a path, but we are near the end kill the path
         if (target!=null && withinPos(drive) && withinHead(drive)) target = null;
 //        if (withinPos(drive)) {
 //            drive.setWeightedDrivePower(new Pose2d(0,0,0));
 //            goToPosition(drive, drive.getPoseEstimate(), target, 0, 1);
 //            return;
 //        }
+        //if we have a path run it
         if (target!=null) {
             if (glide(drive, target)) {
             } else if (!path.isEmpty() && (!withinPos(drive) || !withinHead(drive))) {
