@@ -116,11 +116,11 @@ public class PPAutoTest extends  LinearOpMode{
     private VisionPortal portal;
     private RedFarPropThreshold redFarPropThreshold;
     private AprilTagRelocalize relocalize;
-    private int delay = 8;
+    private int delay = 0;
     private int exposure = 6;
     private int gain = 100;
     private double placementY=43;
-    private int cycles = 1;
+    private int cycles = 2;
     private int numCycles=0;
     private int tagPose = 3;
     private boolean read = false;
@@ -202,9 +202,9 @@ public class PPAutoTest extends  LinearOpMode{
                 .splineToSplineHeading(new Pose2d(-56, -21, Math.toRadians(135)), Math.toRadians(120))
                 .build();
         ArrayList<CurvePoint> leftPP = new ArrayList<>();
-        leftPP.add(new CurvePoint(-38, -43, Math.toRadians(-150), 0.75, 0.75, 24, 0, 0));
+        leftPP.add(new CurvePoint(-38, -43, Math.toRadians(-150), 0.8, 0.5, 12, 0, 0));
         ArrayList<CurvePoint> P2S = new ArrayList<>();
-        leftPP.add(new CurvePoint(-52, -12.5, Math.toRadians(180), 1, 1, 24, 0, 0));
+        P2S.add(new CurvePoint(-52, -12.5, Math.toRadians(180), 0.8, 0.5, 12, 0, 0));
         // MAIN State Machine
         StateMachine machine = new StateMachineBuilder()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ public class PPAutoTest extends  LinearOpMode{
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
                     ArrayList<CurvePoint> intakePP = new ArrayList<>();
-                    intakePP.add(new CurvePoint(intakeDistance, intakeY, Math.toRadians(180), 0.25, 1, 10, 0, 0));
+                    intakePP.add(new CurvePoint(intakeDistance, intakeY, Math.toRadians(180), 0.2, 1, 10, 0, 0));
                     RobotMovement.followCurve(intakePP, robot.drive);
 //                    if (numCycles<=2) {
 //                        robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
@@ -294,13 +294,17 @@ public class PPAutoTest extends  LinearOpMode{
                     robot.outtake.v4barAngleTransfer();
                     purple = false;
                     intakeNum--;
-                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .setTangent(0)
-//                            .splineToConstantHeading(new Vector2d(5, 10), Math.toRadians(0))
-//                            .splineToConstantHeading(new Vector2d(44, 36), Math.toRadians(35))
-                            .splineToSplineHeading(new Pose2d(4, -12, Math.toRadians(180)), Math.toRadians(0))
-                            .splineToSplineHeading(new Pose2d(44, -36, Math.toRadians(180)), Math.toRadians(-35))
-                            .build());
+//                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+//                            .setTangent(0)
+////                            .splineToConstantHeading(new Vector2d(5, 10), Math.toRadians(0))
+////                            .splineToConstantHeading(new Vector2d(44, 36), Math.toRadians(35))
+//                            .splineToSplineHeading(new Pose2d(4, -12, Math.toRadians(180)), Math.toRadians(0))
+//                            .splineToSplineHeading(new Pose2d(44, -36, Math.toRadians(180)), Math.toRadians(-35))
+//                            .build());
+                    ArrayList<CurvePoint> GTB = new ArrayList<>();
+                    GTB.add(new CurvePoint(0, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
+                    GTB.add(new CurvePoint(48, -36, Math.toRadians(180), 1, 1, 24, 0, 0));
+                    RobotMovement.followCurve(GTB, robot.drive);
                 })
                 .onExit(() -> {
 //                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
@@ -404,9 +408,12 @@ public class PPAutoTest extends  LinearOpMode{
                 .transition(() -> camRead)
                 .state(LinearStates.RELOCALIZE)
                 .onEnter(() -> {
-                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .splineToLinearHeading(new Pose2d(50, placementY, Math.toRadians(180)), Math.toRadians(180))
-                            .build());
+//                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+//                            .splineToLinearHeading(new Pose2d(50, placementY, Math.toRadians(180)), Math.toRadians(180))
+//                            .build());
+                    ArrayList<CurvePoint> POB = new ArrayList<>();
+                    POB.add(new CurvePoint(50, placementY, Math.toRadians(180), 0.25, 0.25, 12, 0, 0));
+                    RobotMovement.followCurve(POB, robot.drive);
                 })
                 .onExit(() -> {
                     robot.outtake.openLeft();
@@ -420,9 +427,12 @@ public class PPAutoTest extends  LinearOpMode{
                 .state(LinearStates.RETRACT)
                 .onEnter(() -> {
                     numCycles++;
-                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(47, placementY, Math.toRadians(180)))
-                            .build());
+//                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
+//                            .lineToLinearHeading(new Pose2d(47, placementY, Math.toRadians(180)))
+//                            .build());
+//                    ArrayList<CurvePoint> RFB = new ArrayList<>();
+//                    RFB.add(new CurvePoint(47, placementY, Math.toRadians(180), 0.5, 0, 12, 0, 0));
+//                    RobotMovement.followCurve(RFB, robot.drive);
                     slideLevel = 1;
                     turretLevel = 2;
                     manualSlides = false;
@@ -451,7 +461,7 @@ public class PPAutoTest extends  LinearOpMode{
 //                            .build());
                     ArrayList<CurvePoint> I2S = new ArrayList<>();
                     I2S.add(new CurvePoint(0, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
-                    I2S.add(new CurvePoint(-48,-12,Math.toRadians(180),1,1,24,0,0));
+                    I2S.add(new CurvePoint(-52,-12.5,Math.toRadians(180),1,1,24,0,0));
                     RobotMovement.followCurve(I2S, robot.drive);
                     intakeDistance = -58.3;
                     intakeY+=0.5;
@@ -498,7 +508,7 @@ public class PPAutoTest extends  LinearOpMode{
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
-            if (extended) {
+            if (extended && false) {
                 //relocalize.setManualExposure(exposure, gain);
                 relocalizePose = relocalize.getTagPos(new int[]{1, 2, 3});
                 Log.d("Relocalize Pose: ", relocalizePose.toString());
@@ -517,7 +527,7 @@ public class PPAutoTest extends  LinearOpMode{
                     camRead=true;
                 }
             }
-            if (read) {
+            if (read && false) {
                 Pose2d sensorytouch = ak47.relocalize(robot.drive.getPoseEstimate().getHeading());
                 Log.d("Sensory: ", sensorytouch.toString());
                 if (sensorytouch.vec().minus(robot.drive.getPoseEstimate().vec()).norm() < 10) {
@@ -535,6 +545,7 @@ public class PPAutoTest extends  LinearOpMode{
             }
             machine.update();
             robot.drive.update();
+            RobotMovement.update(robot.drive);
             // Will run one bulk read per cycle,
             for (LynxModule hub : allHubs) {
                 hub.clearBulkCache();

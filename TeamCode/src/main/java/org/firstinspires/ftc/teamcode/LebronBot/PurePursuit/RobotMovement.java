@@ -24,8 +24,8 @@ public class RobotMovement {
     private static double dampener = 1;
     private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path = new ArrayList<>();
-    private static PID translation = new PID(0.015, 0, 0.5, 0.25);
-    private static PID heading = new PID(0.4, 0, 0.2, 0.1);
+    private static PID translation = new PID(0.03, 0, 0.5, 0.25);
+    private static PID heading = new PID(0.3, 0, 0.2, 0.1);
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
     private static Vector2d prevCentri = null;
@@ -128,7 +128,7 @@ public class RobotMovement {
     public static void goToPosition(MecanumDrive drive, Pose2d position, Pose2d desired,double movementSpeed, double turnSpeed) {
 //        setTarget(desired);
         double x = desired.getX(); double y = desired.getY(); double preferredAngle = desired.getHeading();
-        double centrifuge = Math.abs(antiRadius(drive, desired)*5);
+        double centrifuge = Math.abs(antiRadius(drive, desired)*3);
         //use the centrifuge to calculate the force needed to keep the robot on the path
 //        centrifuge=0;
 //        Log.d("curvature: ", Double.toString(centrifuge));
@@ -180,7 +180,7 @@ public class RobotMovement {
             movementYPower=0;
         }
         double pid = translation.update(distanceToTarget);
-        pid = 1; // for now no translational pid because doesn't seem necessary
+//        pid = 1; // for now no translational pid because doesn't seem necessary
         //Log.d("pid: ", Double.toString(pid));
         //Vector2d limiter = speedLimit(drive);
         movementXPower = movementXPower * movementSpeed * (pid);// - limiter.getX();
