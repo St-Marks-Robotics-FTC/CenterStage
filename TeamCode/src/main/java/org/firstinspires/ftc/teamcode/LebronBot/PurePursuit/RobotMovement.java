@@ -24,7 +24,7 @@ public class RobotMovement {
     private static double dampener = 1;
     private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path = new ArrayList<>();
-    private static PID translation = new PID(0.03, 0, 0.5, 0.25);
+    private static PID translation = new PID(0.0325, 0, 0.5, 0.25);
     private static PID heading = new PID(0.3, 0, 0.2, 0.1);
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
