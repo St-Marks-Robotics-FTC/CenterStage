@@ -179,9 +179,11 @@ public class RobotMovement {
             movementXPower=0;
             movementYPower=0;
         }
-        double pid = translation.update(distanceToTarget);
+        double pid = 1;
+        if (path!=null) pid = translation.update(distanceToTarget/path.get(0).followDistance); //TODO: RETUNE THE PID NOW
+        //make the pid proportional to the distance to the target
 //        pid = 1; // for now no translational pid because doesn't seem necessary
-        //Log.d("pid: ", Double.toString(pid));
+        Log.d("pid: ", Double.toString(pid));
         //Vector2d limiter = speedLimit(drive);
         movementXPower = movementXPower * movementSpeed * (pid);// - limiter.getX();
         movementYPower = movementYPower * movementSpeed * (pid);// - limiter.getY();
