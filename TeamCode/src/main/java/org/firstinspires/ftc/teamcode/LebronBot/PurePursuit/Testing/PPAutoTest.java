@@ -302,7 +302,9 @@ public class PPAutoTest extends  LinearOpMode{
 //                            .splineToSplineHeading(new Pose2d(44, -36, Math.toRadians(180)), Math.toRadians(-35))
 //                            .build());
                     ArrayList<CurvePoint> GTB = new ArrayList<>();
-                    GTB.add(new CurvePoint(0, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
+                    Pose2d PE = robot.drive.getPoseEstimate();
+                    GTB.add(new CurvePoint(PE.getX(), PE.getY(), PE.getHeading(), 1, 1, 24, 0, 0));
+                    GTB.add(new CurvePoint(30, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
                     GTB.add(new CurvePoint(48, -36, Math.toRadians(180), 1, 1, 24, 0, 0));
                     RobotMovement.followCurve(GTB, robot.drive);
                 })
@@ -411,9 +413,10 @@ public class PPAutoTest extends  LinearOpMode{
 //                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
 //                            .splineToLinearHeading(new Pose2d(50, placementY, Math.toRadians(180)), Math.toRadians(180))
 //                            .build());
-                    ArrayList<CurvePoint> POB = new ArrayList<>();
-                    POB.add(new CurvePoint(50, placementY, Math.toRadians(180), 0.25, 0.25, 12, 0, 0));
-                    RobotMovement.followCurve(POB, robot.drive);
+//                    ArrayList<CurvePoint> POB = new ArrayList<>();
+//                    POB.add(new CurvePoint(50, placementY, Math.toRadians(180), 0.25, 0.25, 12, 0, 0));
+//                    RobotMovement.followCurve(POB, robot.drive);
+                    RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), new Pose2d(50, placementY, Math.toRadians(180)),0.5,0.5);
                 })
                 .onExit(() -> {
                     robot.outtake.openLeft();
@@ -460,7 +463,9 @@ public class PPAutoTest extends  LinearOpMode{
 //                            .splineToSplineHeading(new Pose2d(-46, -13, Math.toRadians(180)), Math.toRadians(180))
 //                            .build());
                     ArrayList<CurvePoint> I2S = new ArrayList<>();
-                    I2S.add(new CurvePoint(0, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
+                    Pose2d PE = robot.drive.getPoseEstimate();
+                    I2S.add(new CurvePoint(PE.getX(), PE.getY(), PE.getHeading(), 1, 1, 24, 0, 0));
+                    I2S.add(new CurvePoint(30, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
                     I2S.add(new CurvePoint(-52,-12.5,Math.toRadians(180),1,1,24,0,0));
                     RobotMovement.followCurve(I2S, robot.drive);
                     intakeDistance = -58.3;

@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 @Autonomous
-public class BlueCloseSTATE extends  LinearOpMode{
+public class BlueCloseSTATE extends LinearOpMode{
     enum LinearStates {
         PURPLE,
         PURPLEPAUSE,
