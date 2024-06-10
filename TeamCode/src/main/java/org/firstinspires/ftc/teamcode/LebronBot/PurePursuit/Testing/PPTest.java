@@ -38,7 +38,7 @@ public class PPTest extends LinearOpMode {
 //        path1.add(new CurvePoint(50, 0, Math.toRadians(90), 0.85, 0.5, 20, 0, 0));
         path1.add(new CurvePoint(-50,0,0, 1, 1, 30,0,0));
         path1.add(new CurvePoint(50,0,0, 1, 1, 30,0,0));
-        path1.add(new CurvePoint(50,-50,Math.toRadians(-90), 1, 1, 30,0,0));
+        path1.add(new CurvePoint(50,30,Math.toRadians(90), 1, 1, 30,0,0));
 //        path1.add(new CurvePoint(-40.5, -34, Math.toRadians(-135), 0.75, 0.75, 24, 0, 0));
 //        ArrayList<CurvePoint> path2 = new ArrayList<>();
 //        path2.add(new CurvePoint(-60, -10, Math.toRadians(180), 1, 1, 24, 0, 0));

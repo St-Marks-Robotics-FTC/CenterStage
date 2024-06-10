@@ -201,10 +201,10 @@ public class PPAutoTest extends  LinearOpMode{
                 .setTangent(Math.toRadians(110))
                 .splineToSplineHeading(new Pose2d(-56, -21, Math.toRadians(135)), Math.toRadians(120))
                 .build();
-        ArrayList<CurvePoint> leftPP = new ArrayList<>();
-        leftPP.add(new CurvePoint(-38, -43, Math.toRadians(-150), 0.8, 0.5, 12, 0, 0));
-        ArrayList<CurvePoint> P2S = new ArrayList<>();
-        P2S.add(new CurvePoint(-52, -12.5, Math.toRadians(180), 0.8, 0.5, 12, 0, 0));
+//        ArrayList<CurvePoint> leftPP = new ArrayList<>();
+//        leftPP.add(new CurvePoint(-38, -43, Math.toRadians(-150), 0.8, 0.5, 12, 0, 0));
+//        ArrayList<CurvePoint> P2S = new ArrayList<>();
+//        P2S.add(new CurvePoint(-52, -12.5, Math.toRadians(180), 1, 0.5, 12, 0, 0));
         // MAIN State Machine
         StateMachine machine = new StateMachineBuilder()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,7 +223,8 @@ public class PPAutoTest extends  LinearOpMode{
                             break;
                         case "left":
 //                            robot.drive.followTrajectorySequenceAsync(left);
-                            RobotMovement.followCurve(leftPP, robot.drive);
+//                            RobotMovement.followCurve(leftPP, robot.drive);
+                            RobotMovement.goTO(robot.drive, new Pose2d(-38,  -43, Math.toRadians(-150)), 0.8, 0.8);
                             placementY = -30;
                             turretLevel=-3;
                             break;
@@ -246,7 +247,8 @@ public class PPAutoTest extends  LinearOpMode{
 //                    robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
 //                            .lineToLinearHeading(new Pose2d(-52, -12.5, Math.toRadians(180)))
 //                            .build());
-                    RobotMovement.followCurve(P2S, robot.drive);
+//                    RobotMovement.followCurve(P2S, robot.drive);
+                    RobotMovement.goTO(robot.drive, new Pose2d(-52,  -12.5, Math.toRadians(180)), 1, 0.8);
                 })
                 .transitionTimed(1.3, LinearStates.INTAKE)
                 .state(LinearStates.DISTANCERELOCALIZE)
@@ -264,9 +266,10 @@ public class PPAutoTest extends  LinearOpMode{
                     robot.intake.setIntake(1); // Spin Intake
                     robot.outtake.openBothClaws(); // Claw Open
                     robot.outtake.turretTransfer();
-                    ArrayList<CurvePoint> intakePP = new ArrayList<>();
-                    intakePP.add(new CurvePoint(intakeDistance, intakeY, Math.toRadians(180), 0.2, 1, 10, 0, 0));
-                    RobotMovement.followCurve(intakePP, robot.drive);
+//                    ArrayList<CurvePoint> intakePP = new ArrayList<>();
+//                    intakePP.add(new CurvePoint(intakeDistance, intakeY, Math.toRadians(180), 0.2, 1, 10, 0, 0));
+//                    RobotMovement.followCurve(intakePP, robot.drive);
+                    RobotMovement.goTO(robot.drive, new Pose2d(intakeDistance, intakeY, Math.toRadians(180)), 0.2, 1);
 //                    if (numCycles<=2) {
 //                        robot.drive.followTrajectorySequenceAsync(robot.drive.trajectorySequenceBuilder(robot.drive.getPoseEstimate())
 //                                .lineToLinearHeading(new Pose2d(intakeDistance, intakeY, Math.toRadians(180)))
@@ -465,7 +468,7 @@ public class PPAutoTest extends  LinearOpMode{
                     ArrayList<CurvePoint> I2S = new ArrayList<>();
                     Pose2d PE = robot.drive.getPoseEstimate();
                     I2S.add(new CurvePoint(PE.getX(), PE.getY(), PE.getHeading(), 1, 1, 24, 0, 0));
-                    I2S.add(new CurvePoint(30, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
+//                    I2S.add(new CurvePoint(30, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
                     I2S.add(new CurvePoint(-52,-12.5,Math.toRadians(180),1,1,24,0,0));
                     RobotMovement.followCurve(I2S, robot.drive);
                     intakeDistance = -58.3;

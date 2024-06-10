@@ -19,13 +19,14 @@ import java.util.Vector;
 public class RobotMovement {
     private static double posTolerance = 0.5;
     private static double headingTolerance = 1;
+    private static double centriDamp = 3.3;
     public static boolean isBusy = false;
     public static Pose2d target;
     private static double dampener = 1;
     private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
-    private static ArrayList<CurvePoint> path = new ArrayList<>();
-    private static PID translation = new PID(0.0325, 0, 0.5, 0.25);
-    private static PID heading = new PID(0.3, 0, 0.2, 0.1);
+    private static ArrayList<CurvePoint> path;
+    private static PID translation = new PID(0.85, 0, 0.1, 0.25);
+    private static PID heading = new PID(0.5, 0, 0.1, 0.1);
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
     private static Vector2d prevCentri = null;
@@ -33,6 +34,8 @@ public class RobotMovement {
     private static ArrayList<Double> smooY = new ArrayList<Double>();
     private static ArrayList<Double> smooH = new ArrayList<Double>();
     private static ArrayList<Vector2d> smooC = new ArrayList<>();
+    private static double movementSpeed = 0.0;
+    private static double turnSpeed = 0.0;
 
     public static void setTarget(Pose2d input) {
         target = input;
@@ -125,10 +128,16 @@ public class RobotMovement {
         return new Vector2d(x,y);
     }
 
+    public static void goTO(MecanumDrive drive, Pose2d desired,double moveSpeed, double turSpeed) {
+        setTarget(desired);
+        movementSpeed=moveSpeed;
+        turnSpeed = turSpeed;
+    }
+
     public static void goToPosition(MecanumDrive drive, Pose2d position, Pose2d desired,double movementSpeed, double turnSpeed) {
 //        setTarget(desired);
         double x = desired.getX(); double y = desired.getY(); double preferredAngle = desired.getHeading();
-        double centrifuge = Math.abs(antiRadius(drive, desired)*3);
+        double centrifuge = Math.abs(antiRadius(drive, desired)*centriDamp);
         //use the centrifuge to calculate the force needed to keep the robot on the path
 //        centrifuge=0;
 //        Log.d("curvature: ", Double.toString(centrifuge));
@@ -317,7 +326,10 @@ public class RobotMovement {
         //Log.d("target: ", target.toString());
         //Log.d("bruh: ", Double.toString(Math.abs(MathFunctions.AngleWrap(drive.getPoseEstimate().getHeading()) - MathFunctions.AngleWrap(target.getHeading()))));
         //if there is a path, but we are near the end kill the path
-        if (target!=null && withinPos(drive) && withinHead(drive)) target = null;
+        if (target!=null && withinPos(drive) && withinHead(drive)) {
+            target = null;
+            path = null;
+        }
 //        if (withinPos(drive)) {
 //            drive.setWeightedDrivePower(new Pose2d(0,0,0));
 //            goToPosition(drive, drive.getPoseEstimate(), target, 0, 1);
@@ -326,11 +338,13 @@ public class RobotMovement {
         //if we have a path run it
         if (target!=null) {
             if (glide(drive, target)) {
-            } else if (!path.isEmpty() && (!withinPos(drive) || !withinHead(drive))) {
+            } else if (path!=null && !path.isEmpty() && (!withinPos(drive) || !withinHead(drive))) {
                 CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance, drive);
 //                Log.d("target go to: ", new Pose2d(followMe.x, followMe.y, followMe.h).toString());
 //                Log.d("yes!!!: ", path.get(path.size()-2).toPoint().toString());
                 goToPosition(drive, drive.getPoseEstimate(), new Pose2d(followMe.x, followMe.y, followMe.h), followMe.moveSpeed, followMe.turnSpeed);
+            } else {
+                goToPosition(drive, drive.getPoseEstimate(), target, movementSpeed, turnSpeed);
             }
         } else {
             drive.setMotorPowers(0,0,0,0);
