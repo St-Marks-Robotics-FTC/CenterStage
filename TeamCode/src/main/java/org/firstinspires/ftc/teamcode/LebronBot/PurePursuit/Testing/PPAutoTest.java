@@ -224,7 +224,7 @@ public class PPAutoTest extends  LinearOpMode{
                         case "left":
 //                            robot.drive.followTrajectorySequenceAsync(left);
 //                            RobotMovement.followCurve(leftPP, robot.drive);
-                            RobotMovement.goTO(robot.drive, new Pose2d(-38,  -43, Math.toRadians(-150)), 0.7, 0.6);
+                            RobotMovement.goTO(robot.drive, new Pose2d(-38,  -43, Math.toRadians(-150)), 0.55, 0.8);
                             placementY = -30;
                             turretLevel=-3;
                             break;
@@ -248,9 +248,9 @@ public class PPAutoTest extends  LinearOpMode{
 //                            .lineToLinearHeading(new Pose2d(-52, -12.5, Math.toRadians(180)))
 //                            .build());
 //                    RobotMovement.followCurve(P2S, robot.drive);
-                    RobotMovement.goTO(robot.drive, new Pose2d(-52,  -12.5, Math.toRadians(180)), 0.8, 0.5);
+                    RobotMovement.goTO(robot.drive, new Pose2d(-52,  -12.5, Math.toRadians(180)), 0.65, 0.7);
                 })
-                .transitionTimed(1.3, LinearStates.INTAKE)
+                .transitionTimed(1.5, LinearStates.INTAKE)
                 .state(LinearStates.DISTANCERELOCALIZE)
                 .onEnter(() -> read = true)
                 .onExit(() -> read = false)
@@ -306,9 +306,10 @@ public class PPAutoTest extends  LinearOpMode{
 //                            .build());
                     ArrayList<CurvePoint> GTB = new ArrayList<>();
                     Pose2d PE = robot.drive.getPoseEstimate();
-                    GTB.add(new CurvePoint(PE.getX(), PE.getY(), PE.getHeading(), 1, 1, 30, 0, 0));
-                    GTB.add(new CurvePoint(20, -10, Math.toRadians(180), 1, 1, 30, 0, 0));
-                    GTB.add(new CurvePoint(48, -36, Math.toRadians(180), 1, 1, 30, 0, 0));
+                    GTB.add(new CurvePoint(PE.getX(), PE.getY(), PE.getHeading(), 1, 1, 24, 0, 0));
+                    GTB.add(new CurvePoint(20, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
+                    //GTB.add(new CurvePoint(40,-20, Math.toRadians(180),1,1,24,0,0));
+                    GTB.add(new CurvePoint(48, -36, Math.toRadians(180), 1, 1, 24, 0, 0));
                     RobotMovement.followCurve(GTB, robot.drive);
                 })
                 .onExit(() -> {
@@ -399,7 +400,7 @@ public class PPAutoTest extends  LinearOpMode{
                     robot.outtake.turretTo(turretLevel);
                     robot.outtake.setSlides(slideHeight);
                 })
-                .transitionTimed(0.9)
+                .transitionTimed(0.6)
                 //.transition(() -> !robot.drive.isBusy())
                 .state(LinearStates.EXTEND)
                 .onEnter(() -> {
@@ -424,12 +425,12 @@ public class PPAutoTest extends  LinearOpMode{
                 .onExit(() -> {
                     robot.outtake.openLeft();
                 })
-                .transitionTimed(0.6)
+                .transitionTimed(0.5)
                 .state(LinearStates.PAUSE)
                 .onExit(() -> robot.outtake.openBothClaws())
-                .transitionTimed(0.3)
+                .transitionTimed(0.2)
                 .state(LinearStates.IDLE1)
-                .transitionTimed(0.3)
+                .transitionTimed(0.2)
                 .state(LinearStates.RETRACT)
                 .onEnter(() -> {
                     numCycles++;
@@ -467,14 +468,14 @@ public class PPAutoTest extends  LinearOpMode{
 //                            .build());
                     Log.d("I2S: ", "FOLLOWING");
                     ArrayList<CurvePoint> I2S = new ArrayList<>();
-                    I2S.add(new CurvePoint(48, -30, Math.toRadians(180), 1, 1, 30, 0, 0));
-                    I2S.add(new CurvePoint(20, -10, Math.toRadians(180), 1, 1, 30, 0, 0));
-                    I2S.add(new CurvePoint(-52,-12.5,Math.toRadians(180),1,1,30,0,0));
+                    I2S.add(new CurvePoint(48, -30, Math.toRadians(180), 1, 1, 24, 0, 0));
+                    I2S.add(new CurvePoint(35, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
+                    I2S.add(new CurvePoint(-52,-12.5,Math.toRadians(180),1,1,24,0,0));
                     RobotMovement.followCurve(I2S, robot.drive);
                     intakeDistance = -58.3;
                     intakeY+=0.5;
                 })
-                .transitionTimed(3, LinearStates.DISTANCERELOCALIZE)
+                .transitionTimed(2.8, LinearStates.DISTANCERELOCALIZE)
                 // Fail safe
                 .state(LinearStates.INTAKE_AGAIN)
                 .onEnter(() -> {
