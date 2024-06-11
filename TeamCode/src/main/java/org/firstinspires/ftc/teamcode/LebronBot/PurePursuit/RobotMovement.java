@@ -19,14 +19,14 @@ import java.util.Vector;
 public class RobotMovement {
     private static double posTolerance = 0.5;
     private static double headingTolerance = 1;
-    private static double centriDamp = 3.3;
+    private static double centriDamp = 3;
     public static boolean isBusy = false;
     public static Pose2d target;
     private static double dampener = 1;
     private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
-    private static PID translation = new PID(0.85, 0, 0.1, 0.25);
-    private static PID heading = new PID(0.5, 0, 0.1, 0.1);
+    private static PID translation = new PID(0.85, 0, 0.2, 0.25);
+    private static PID heading = new PID(0.3, 0, 0.1, 0.1);
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
     private static Vector2d prevCentri = null;
@@ -43,6 +43,7 @@ public class RobotMovement {
 
     public static void followCurve(ArrayList<CurvePoint> allPoints, MecanumDrive drive) {
         // bruhbruhbruhbruhbruh
+        target = null; path = null;
         path = extendPoint(allPoints, drive);
         target = new Pose2d(allPoints.get(allPoints.size()-2).x, allPoints.get(allPoints.size()-2).y, allPoints.get(allPoints.size()-2).h);
     }
@@ -149,15 +150,15 @@ public class RobotMovement {
         double relativeAngleToPoint = MathFunctions.AngleDiff(absoluteAngleToTarget, position.getHeading());
 //        Log.d("relativeAngleToPoint", Double.toString(relativeAngleToPoint));
 //        Log.d("prefferedAngle ", Double.toString(preferredAngle));
-        Vector2d accel1 = desired.minus(drive.getPoseEstimate()).vec();
         //if (preferredAngle==100) preferredAngle = accel.angle();
 //        Log.d("accel1: ", accel1.toString());
         Vector2d vel = drive.getVelocity();
+        Vector2d accel1 = vel.minus(desired.minus(drive.getPoseEstimate()).vec());
         Log.d("vel: ", vel.toString());
         Vector2d accel = scale(accel1, vel.norm());
         accel = accel.minus(vel);
 //        Log.d("accel2: ", accel.toString());
-        if (Math.abs(Math.toDegrees(accel1.angle()))<30 || drive.getPoseEstimate().minus(target).vec().norm()<20) {
+        if (target!=null && Math.abs(Math.toDegrees(accel1.angle()))<25 || drive.getPoseEstimate().minus(target).vec().norm()<20) {
             centrifuge=0;
             smooC.clear();
         } else {
@@ -178,6 +179,7 @@ public class RobotMovement {
         double relativeYToPoint = Math.sin(relativeAngleToPoint) * (distanceToTarget);
 //        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
 //        Log.d("relativeYToPoint:  ", Double.toString(relativeYToPoint));
+        Log.d("relative: ", Double.toString(relativeXToPoint)+" "+Double.toString(relativeYToPoint));
         relativeXToPoint+=centrifuged.getX();
         relativeYToPoint+=centrifuged.getY();
 //        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
@@ -337,6 +339,7 @@ public class RobotMovement {
 //        }
         //if we have a path run it
         if (target!=null) {
+            Log.d("target: ", target.toString());
             if (glide(drive, target)) {
             } else if (path!=null && !path.isEmpty() && (!withinPos(drive) || !withinHead(drive))) {
                 CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance, drive);
