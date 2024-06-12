@@ -19,14 +19,14 @@ import java.util.Vector;
 public class RobotMovement {
     private static double posTolerance = 0.5;
     private static double headingTolerance = 1;
-    private static double centriDamp = 2;
+    private static double centriDamp = 4.5;
     public static boolean isBusy = false;
     public static Pose2d target;
     private static double dampener = 1;
     private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
     private static PID translation = new PID(0.75, 0, 0.5, 0.25);
-    private static PID heading = new PID(0.3, 0, 0.4, 0.1);
+    private static PID heading = new PID(0.225, 0, 0.4, 0.1);
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
     private static Vector2d prevCentri = null;
@@ -157,8 +157,9 @@ public class RobotMovement {
         Log.d("vel: ", vel.toString());
         Vector2d accel = scale(accel1, vel.norm());
         accel = accel.minus(vel);
-//        Log.d("accel2: ", accel.toString());
-        if (Math.abs(Math.toDegrees(accel.angle()))<25 || drive.getPoseEstimate().minus(target).vec().norm()<20) {
+//        accel = drive.getAccel(); //TODO: should be .angle() but just test for now
+        Log.d("accel2: ", accel.toString());
+        if (Math.abs(accel.norm())<15 || drive.getPoseEstimate().minus(target).vec().norm()<20) {
             centrifuge=0;
             smooC.clear();
         } else {
@@ -248,6 +249,7 @@ public class RobotMovement {
         double radius = Math.pow(1/Math.sin(desired.minus(drive.getPoseEstimate()).vec().angle()), 3)/(accel.getY()/accel.getX());
         Log.d("radius: ", Double.toString(radius));
         double force = Math.pow(vel.norm(), 2)/radius*radiusMulti;
+//        if (vel.norm()<30)  return 0;
         return force;
     }
 
