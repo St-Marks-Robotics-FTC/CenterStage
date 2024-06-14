@@ -10,7 +10,7 @@ public class DistanceSensorTest extends OpMode {
     DistanceRelocalize relocalize;
     @Override
     public void init() {
-        relocalize=new DistanceRelocalize(hardwareMap, DistanceRelocalize.Side.BLUE);
+        relocalize=new DistanceRelocalize(hardwareMap, DistanceRelocalize.Side.RED);
     }
 
     @Override

@@ -50,8 +50,8 @@ public class AprilTagTest extends OpMode {
 
     @Override
     public void init_loop() {
-        Log.d("bruh: ", relocalize.getTagPos(new int[]{1,2,3}).toString());
-        Pose2d relocalizePose = relocalize.getTagPos(new int[]{1,2,3});
+        Log.d("bruh: ", relocalize.getTagPos(new int[]{1,2,3,4,5,6}).toString());
+        Pose2d relocalizePose = relocalize.getTagPos(new int[]{1,2,34,5,6});
         Pose2d predictPose = tagPose1.minus(relocalizePose);
         relocalizePose = new Pose2d(relocalizePose.getX(), relocalizePose.getY(), robot.drive.getPoseEstimate().getHeading());
         robot.drive.setPoseEstimate(relocalizePose);

@@ -112,7 +112,7 @@ public class DistanceRelocalize {
         if(side == BLUE){
             pose=new Pose2d(-72-pose.getX(),72-pose.getY(), pose.getHeading());
         }else{
-            pose=new Pose2d(-72+pose.getX(),-72-pose.getY(), pose.getHeading());
+            pose=new Pose2d(-72-pose.getX(),-72-pose.getY(), pose.getHeading());
         }
         oldPose=pose;
         return pose;

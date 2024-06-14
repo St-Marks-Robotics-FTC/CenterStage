@@ -133,13 +133,14 @@ public class Intake {
         if (level == 1) {
             tiltDown();
         } else if (level == 2) {
-            setTilt(0.184);
+//            setTilt(0.177);
+            tiltDown();
         } else if (level == 3) {
-            setTilt(0.196);
+            setTilt(0.191);
         } else if (level == 4) {
-            setTilt(0.213);
+            setTilt(0.21);
         } else if (level == 5) {
-            setTilt(0.24);
+            setTilt(0.23);
         } else {
             tiltDown();
         }

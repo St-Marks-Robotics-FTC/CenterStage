@@ -128,14 +128,15 @@ public class PPAutoTest extends  LinearOpMode{
     private KALMAN kalman;
     private int intakeNum = 5;
     private DistanceRelocalize ak47;
-    private double intakeDistance=-59;
+    private double intakeDistance=-58;
     private double purplePause=1.7;
     private double intakeTime = 0.7;
     private int slideHeight = 125;
-    private double intakeY = -12;
+    private double intakeY = -13;
     private boolean camRead = false;
     private boolean distanceRead=false;
     private boolean purple = true;
+    private boolean useRelocal = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -225,7 +226,7 @@ public class PPAutoTest extends  LinearOpMode{
 //                            robot.drive.followTrajectorySequenceAsync(left);
 //                            RobotMovement.followCurve(leftPP, robot.drive);
                             RobotMovement.goTO(robot.drive, new Pose2d(-38,  -43, Math.toRadians(-150)), 0.55, 0.75);
-                            placementY = -30;
+                            placementY = -32;
                             turretLevel=-3;
                             break;
                     }
@@ -309,7 +310,7 @@ public class PPAutoTest extends  LinearOpMode{
                     GTB.add(new CurvePoint(PE.getX(), PE.getY(), PE.getHeading(), 1, 1, 24, 0, 0));
                     GTB.add(new CurvePoint(10, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
                     GTB.add(new CurvePoint(30,-20, Math.toRadians(140),1,1,24,0,0));
-                    GTB.add(new CurvePoint(48, -36, Math.toRadians(180), 0.7, 1, 24, 0, 0));
+                    GTB.add(new CurvePoint(42, placementY, Math.toRadians(180), 0.7, 1, 24, 0, 0));
                     RobotMovement.followCurve(GTB, robot.drive);
                 })
                 .onExit(() -> {
@@ -420,7 +421,7 @@ public class PPAutoTest extends  LinearOpMode{
 //                    ArrayList<CurvePoint> POB = new ArrayList<>();
 //                    POB.add(new CurvePoint(50, placementY, Math.toRadians(180), 0.25, 0.25, 12, 0, 0));
 //                    RobotMovement.followCurve(POB, robot.drive);
-                    RobotMovement.goTO(robot.drive, new Pose2d(50, placementY, Math.toRadians(180)),0.5,0.5);
+                    RobotMovement.goTO(robot.drive, new Pose2d(49, placementY, Math.toRadians(180)),0.4,0.5);
                 })
                 .onExit(() -> {
                     robot.outtake.openLeft();
@@ -430,7 +431,7 @@ public class PPAutoTest extends  LinearOpMode{
                 .onExit(() -> robot.outtake.openBothClaws())
                 .transitionTimed(0.2)
                 .state(LinearStates.IDLE1)
-                .transitionTimed(0.2)
+                .transitionTimed(0.35)
                 .state(LinearStates.RETRACT)
                 .onEnter(() -> {
                     numCycles++;
@@ -444,7 +445,7 @@ public class PPAutoTest extends  LinearOpMode{
                     turretLevel = 2;
                     manualSlides = false;
                     //robot.drive.setPoseEstimate(new Pose2d(robot.drive.getPoseEstimate().getX(),robot.drive.getPoseEstimate().getY()+3,robot.drive.getPoseEstimate().getHeading()));
-                    placementY = -32;
+                    placementY = -34;
                     slideHeight=250;
                 })
                 .onExit(() -> {
@@ -469,11 +470,11 @@ public class PPAutoTest extends  LinearOpMode{
 //                    Log.d("I2S: ", "FOLLOWING");
                     ArrayList<CurvePoint> I2S = new ArrayList<>();
                     I2S.add(new CurvePoint(48, -30, Math.toRadians(180), 1, 1, 24, 0, 0));
-                    I2S.add(new CurvePoint(25, -10, Math.toRadians(140), 1, 1, 24, 0, 0));
-                    I2S.add(new CurvePoint(-52,-12.5,Math.toRadians(180),1,1,24,0,0));
+                    I2S.add(new CurvePoint(35, -10, Math.toRadians(140), 1, 1, 24, 0, 0));
+                    I2S.add(new CurvePoint(-49,-9,Math.toRadians(180),1,1,24,0,0));
                     RobotMovement.followCurve(I2S, robot.drive);
-                    intakeDistance = -58.3;
-                    intakeY+=0.5;
+                    intakeDistance = -57.5;
+                    intakeY-=0.7;
                 })
                 .transitionTimed(2.5, LinearStates.DISTANCERELOCALIZE)
                 // Fail safe
@@ -517,7 +518,7 @@ public class PPAutoTest extends  LinearOpMode{
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
-            if (extended && false) {
+            if (extended && useRelocal) {
                 //relocalize.setManualExposure(exposure, gain);
                 relocalizePose = relocalize.getTagPos(new int[]{1, 2, 3});
                 Log.d("Relocalize Pose: ", relocalizePose.toString());
@@ -536,8 +537,9 @@ public class PPAutoTest extends  LinearOpMode{
                     camRead=true;
                 }
             }
-            if (read && false) {
-                Pose2d sensorytouch = ak47.relocalize(robot.drive.getPoseEstimate().getHeading());
+            if (read && useRelocal) {
+//                Pose2d sensorytouch = ak47.relocalize(robot.drive.getPoseEstimate().getHeading());
+                Pose2d sensorytouch = ak47.relocalize(Math.toRadians(180));
                 Log.d("Sensory: ", sensorytouch.toString());
                 if (sensorytouch.vec().minus(robot.drive.getPoseEstimate().vec()).norm() < 10) {
                     kalman.update(robot.drive.getPoseEstimate(), sensorytouch);
