@@ -45,6 +45,15 @@ public class AprilTagRelocalize {
         aprilTagProcessorBuilder = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(1428.5532386128232,  1428.5174844713965, 662.6856180303788, 310.1945772625487)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES);
+        /*
+        "distortion_coefficients": [
+        0.154756593908351,
+                -1.1030342056281155,
+                -0.007649558434921426,
+                0.0110835553346491,
+                2.540956166820038
+    ],
+         */
         aprilTagProcessorBuilder.setTagLibrary(aprilTagLibrary);
         aprilTagProcessor = aprilTagProcessorBuilder.build();
         aprilTagProcessor.setDecimation(3);
