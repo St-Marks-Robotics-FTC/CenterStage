@@ -31,22 +31,22 @@ public class PPTest extends LinearOpMode {
         //RobotMovement.goToPosition(robot.drive, robot.drive.getPoseEstimate(), target, 0.5, 0.5);
         //RobotMovement.setTarget(target);
         ArrayList<CurvePoint> path1 = new ArrayList<>();
-        path1.add(new CurvePoint(-50, 0, Math.toRadians(0), 1, 1, 30, 0, 0));
+        path1.add(new CurvePoint(-50, 0, Math.toRadians(0), 1, 1, 40, 0, 0));
 //        path1.add(new CurvePoint(0, 0, Math.toRadians(0), 0.85, 0.5, 20, 0, 0));
 //        path1.add(new CurvePoint(0, -50, Math.toRadians(-60), 0.85, 0.5, 20, 0, 0));
 //        path1.add(new CurvePoint(50, -50, Math.toRadians(0), 0.85, 0.5, 20, 0, 0));
 //        path1.add(new CurvePoint(50, 0, Math.toRadians(90), 0.85, 0.5, 20, 0, 0));
 //        path1.add(new CurvePoint(-50,0,0, 1, 1, 30,0,0));
-        path1.add(new CurvePoint(50,0,0, 1, 1, 30,0,0));
-        path1.add(new CurvePoint(50,30,Math.toRadians(90), 1, 1, 30,0,0));
+        path1.add(new CurvePoint(50,0,0, 1, 1, 40,0,0));
+        path1.add(new CurvePoint(50,30,Math.toRadians(0), 1, 1, 40,0,0));
 //        path1.add(new CurvePoint(-40.5, -34, Math.toRadians(-135), 0.75, 0.75, 24, 0, 0));
 //        ArrayList<CurvePoint> path2 = new ArrayList<>();
 //        path2.add(new CurvePoint(-60, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
 //        ArrayList<CurvePoint> path3 = new ArrayList<>();
 //        path3.add(new CurvePoint(0, -10, Math.toRadians(180), 1, 1, 24, 0, 0));
 //        path3.add(new CurvePoint(48, -36, Math.toRadians(180), 1, 1, 24, 0, 0));
-        RobotMovement.followCurve(path1, robot.drive);
-//        RobotMovement.goTO(robot.drive, new Pose2d(-30, -5, Math.toRadians(-60)), 0.6, 0.6);
+//        RobotMovement.followCurve(path1, robot.drive);
+        RobotMovement.goTO(robot.drive, new Pose2d(-30, -20, Math.toRadians(-60)), 0.7, 0.75);
         ElapsedTime time = new ElapsedTime();
         time.reset();
         while(!isStopRequested() && opModeIsActive()) {

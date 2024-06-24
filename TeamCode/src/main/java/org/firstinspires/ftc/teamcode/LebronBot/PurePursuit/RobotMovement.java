@@ -17,25 +17,23 @@ import java.util.Vector;
 
 @Config
 public class RobotMovement {
-    private static double posTolerance = 0.5;
-    private static double headingTolerance = 1;
-    private static double centriDamp = 4.5;
+    private static double posTolerance = 0.5; //recommended constant
+    private static double headingTolerance = 1; //recommended constant
+    private static double centriDamp = 4.5; //centrifugal dampener
     public static boolean isBusy = false;
     public static Pose2d target;
-    private static double dampener = 1;
     private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
-    private static PID translation = new PID(0.75, 0, 0.5, 0.25);
-    private static PID heading = new PID(0.225, 0, 0.4, 0.1);
+    private static PID translation = new PID(0.85, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
+    private static PID heading = new PID(0.25, 0, 0.4, 0.2); //TUNABLE its pid duhhh
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
-    private static Vector2d prevCentri = null;
-    private static ArrayList<Double> smooX = new ArrayList<Double>();
-    private static ArrayList<Double> smooY = new ArrayList<Double>();
-    private static ArrayList<Double> smooH = new ArrayList<Double>();
     private static ArrayList<Vector2d> smooC = new ArrayList<>();
-    private static double movementSpeed = 0.0;
-    private static double turnSpeed = 0.0;
+    private static double movementSpeed = 0.0; // don't worry about this
+    private static double turnSpeed = 0.0; // don't worry abou this
+    private static double piDAMP = 4; //how much to damp the goTO pid TUNABLE
+    private static double minAccelNorm = 15; //minimum norm between centrifugal correction and velocity TUNABLE
+    private static double minVel = 20; //minimum robot velocity for centrifugal correction to be used TUNABLE
 
     public static void setTarget(Pose2d input) {
         target = input;
@@ -141,7 +139,6 @@ public class RobotMovement {
         double centrifuge = Math.abs(antiRadius(drive, desired)*centriDamp);
         //use the centrifuge to calculate the force needed to keep the robot on the path
 //        centrifuge=0;
-        Log.d("curvature: ", Double.toString(centrifuge));
 //        position = new Pose2d(position.getX(), position.getY(), MathFunctions.AngleWrap(position.getHeading()));
         double distanceToTarget = Math.hypot(x - position.getX(), y - position.getY());
         double absoluteAngleToTarget = Math.atan2(y - position.getY(), x - position.getX());
@@ -158,8 +155,12 @@ public class RobotMovement {
         Vector2d accel = scale(accel1, vel.norm());
         accel = accel.minus(vel);
 //        accel = drive.getAccel(); //TODO: should be .angle() but just test for now
-        Log.d("accel2: ", accel.toString());
-        if (Math.abs(accel.norm())<15 || drive.getPoseEstimate().minus(target).vec().norm()<20) {
+//        Log.d("accel2: ", accel.toString());
+//        Log.d("accel2 angle: ", Double.toString(Math.toDegrees(accel.angle())));
+//        Log.d("curvature: ", Double.toString(centrifuge));
+        centrifuge = centrifuge+Math.sin(centrifuge);
+//        Log.d("curvature: ", Double.toString(centrifuge));
+        if (Math.abs(accel.norm())<minAccelNorm || drive.getPoseEstimate().minus(target).vec().norm()<minVel) {
             centrifuge=0;
             smooC.clear();
         } else {
@@ -175,7 +176,7 @@ public class RobotMovement {
 //        Log.d("ang: ", Double.toString(Math.toDegrees(ang)));
         centrifuged=new Vector2d(Math.cos(ang + preferredAngle)*centrifuge, Math.sin(ang+preferredAngle)*centrifuge);
         centrifuged = smoothCentrifuge(centrifuged);
-        Log.d("centrifuged: ", centrifuged.toString());
+//        Log.d("centrifuged: ", centrifuged.toString());
         double relativeXToPoint = Math.cos(relativeAngleToPoint) * (distanceToTarget);
         double relativeYToPoint = Math.sin(relativeAngleToPoint) * (distanceToTarget);
 //        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
@@ -190,8 +191,10 @@ public class RobotMovement {
             movementXPower=0;
             movementYPower=0;
         }
-        double pid = 1;
+        double pid;
+//        Log.d("bruh: ", Double.toString(distanceToTarget/path.get(0).followDistance));
         if (path!=null) pid = translation.update(distanceToTarget/path.get(0).followDistance);
+        else pid = translation.update(distanceToTarget)/piDAMP;
         //make the pid proportional to the distance to the target
 //        pid = 1; // for now no translational pid because doesn't seem necessary
         Log.d("pid: ", Double.toString(pid));
@@ -244,10 +247,10 @@ public class RobotMovement {
         Vector2d accel = desired.minus(drive.getPoseEstimate()).vec();
         accel = scale(accel, vel.norm());
         accel = accel.minus(vel);
-        Log.d("accel: ", accel.toString());
+//        Log.d("accel: ", accel.toString());
         if ((accel.getY()==0)  && accel.getX()==0) return 0;
         double radius = Math.pow(1/Math.sin(desired.minus(drive.getPoseEstimate()).vec().angle()), 3)/(accel.getY()/accel.getX());
-        Log.d("radius: ", Double.toString(radius));
+//        Log.d("radius: ", Double.toString(radius));
         double force = Math.pow(vel.norm(), 2)/radius*radiusMulti;
 //        if (vel.norm()<30)  return 0;
         return force;
@@ -303,7 +306,7 @@ public class RobotMovement {
 //        }
         //if we have a path run it
         if (target!=null) {
-            Log.d("target: ", target.toString());
+//            Log.d("target: ", target.toString());
             if (glide(drive, target)) {
             } else if (path!=null && !path.isEmpty() && (!withinPos(drive) || !withinHead(drive))) {
                 CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance, drive);
