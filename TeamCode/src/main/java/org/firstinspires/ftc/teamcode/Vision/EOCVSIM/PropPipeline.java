@@ -83,7 +83,7 @@ public class PropPipeline extends OpenCvPipeline {
     static boolean work = false;
     boolean[] covered = {true, true, true};
     private Telemetry telemetry;
-    public Scalar lower = new Scalar(200, 125, 125);
+    public Scalar lower = new Scalar(230, 125, 125);
     public Scalar upper = new Scalar(255, 137, 137);
     private Rect answer = new Rect();
     public PropPipeline (Telemetry telemetry){

@@ -25,7 +25,7 @@ public class RobotMovement {
     private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
     private static PID translation = new PID(0.85, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
-    private static PID heading = new PID(0.25, 0, 0.4, 0.2); //TUNABLE its pid duhhh
+    private static PID heading = new PID(0.3, 0, 0.3, 0.2); //TUNABLE its pid duhhh
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
     private static ArrayList<Vector2d> smooC = new ArrayList<>();
@@ -68,6 +68,7 @@ public class RobotMovement {
         if (drive.getPoseEstimate().minus(target).vec().norm()<followMe.followDistance) {
             return new CurvePoint(target.getX(), target.getY(), target.getHeading(), followMe.moveSpeed,followMe.turnSpeed,followMe.followDistance, followMe.slowDownTurnRadians, followMe.slowDownTurnAmount);
         }
+//        int idx = 0;
         for (int i = 0; i < pathPoints.size()-1; i++) {
             CurvePoint startLine = pathPoints.get(i);
             CurvePoint endLine = pathPoints.get(i + 1);
@@ -88,7 +89,8 @@ public class RobotMovement {
                 deltaAngle = Math.abs(MathFunctions.AngleDiff(angle, drive.getVelocity().angle()));
 
                 if (deltaAngle < closestAngle) {
-                    followMe = new CurvePoint(pathPoints.get(i+1));
+                    followMe = new CurvePoint(pathPoints.get(i + 1));
+//                    idx = i + 1;
 //                    Log.d("target heading: ", Double.toString(followMe.h));
 //                    Log.d("i+1: ", Integer.toString(i+1));
 //                    Log.d("bruhhhh: ", Double.toString(pathPoints.get(i+1).h));
@@ -99,6 +101,8 @@ public class RobotMovement {
             }
         }
         prevPoint=followMe;
+//        if (idx==pathPoints.size()-1) idx--;
+//        target = new Pose2d(followMe.x, followMe.y, followMe.h);
         return followMe;
     }
 
