@@ -1,17 +1,18 @@
-package org.firstinspires.ftc.teamcode.Vision.EOCVSIM;
+package org.firstinspires.ftc.teamcode.Vision.Misc;
 
-import static org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvCvtcolor;
 import static org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvDilate;
 import static org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvErode;
-import static org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvExtractchannel;
-import static org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.cvThreshold;
 import static org.firstinspires.ftc.teamcode.Vision.EOCVSIM.VisionUtil.findContours;
 
-import android.graphics.Bitmap;
+import android.graphics.Canvas;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.android.Utils;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+
+import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
@@ -19,13 +20,11 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvPipeline;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PropPipeline extends OpenCvPipeline {
+public class FullPixelDetection implements VisionProcessor {
     public static double location;
     public static boolean blue = false;
     public static double filterContoursMinArea = 00.0;
@@ -82,20 +81,15 @@ public class PropPipeline extends OpenCvPipeline {
     static boolean processing = true;
     static boolean work = false;
     boolean[] covered = {true, true, true};
-    private Telemetry telemetry;
-    public Scalar lower = new Scalar(245, 127, 127);
+    public Scalar lower = new Scalar(235, 125, 125);
     public Scalar upper = new Scalar(255, 133, 133);
     private Rect answer = new Rect();
-    public PropPipeline (Telemetry telemetry){
-        this.telemetry = telemetry;
-    }
+    private Point output = new Point();
+    private Vector2d pixelcoord = new Vector2d();
 
-    public void stopProcessing() {
-        processing = false;
-    }
+    @Override
+    public void init(int width, int height, CameraCalibration calibration) {
 
-    public void startProcessing() {
-        processing = true;
     }
 
     public Point analyzeRect(Mat src, Rect rect) {
@@ -108,89 +102,115 @@ public class PropPipeline extends OpenCvPipeline {
     }
 
     @Override
-    public void init(Mat firstFrame) {
-
-    }
-
-    @Override
-    public Mat processFrame(Mat source0) {
-        if (processing) {
-            if(source0.width() == 0) return new Mat();
-            invertThreshold  = blue;
-            pipelineImg[0] = source0;// Step CV_cvtColor0:
-            blueWorkingMat = source0;
+    public Object processFrame(Mat frame, long captureTimeNanos) {
+        if(frame.width() == 0) return new Mat();
+        invertThreshold  = blue;
+        pipelineImg[0] = frame;// Step CV_cvtColor0:
+        blueWorkingMat = frame;
 //            cvCvtcolor(source0, cvCvtcolorCode, cvCvtcolorOutput);
-            Imgproc.cvtColor(source0, cvCvtcolorOutput, Imgproc.COLOR_RGB2YCrCb);
-            pipelineImg[1] = cvCvtcolorOutput;
-            blueWorkingMat = cvCvtcolorOutput;
+        Imgproc.cvtColor(frame, cvCvtcolorOutput, Imgproc.COLOR_RGB2YCrCb);
+        pipelineImg[1] = cvCvtcolorOutput;
+        blueWorkingMat = cvCvtcolorOutput;
 
 //            cvExtractchannel(blueWorkingMat, blue?cvExtractchannelChannel:cvExtractchannelChannelRed, cvExtractchannelOutput);
 //            pipelineImg[2] = cvExtractchannelOutput;
 //            blueWorkingMat = cvExtractchannelOutput;
 
-            Core.inRange(blueWorkingMat, lower, upper, cvThresholdOutput);
+        Core.inRange(blueWorkingMat, lower, upper, cvThresholdOutput);
 
-            blueWorkingMat = cvThresholdOutput;
-            pipelineImg[3] = cvThresholdOutput;
-            // Step CV_erode0:
+        blueWorkingMat = cvThresholdOutput;
+        pipelineImg[3] = cvThresholdOutput;
+        // Step CV_erode0:
 
-            cvErodeKernel = new Mat();
+        cvErodeKernel = new Mat();
 
-            cvErode(blueWorkingMat, cvErodeKernel, new Point(-1, -1), cvErodeIterations, Core.BORDER_CONSTANT, new Scalar(-1), cvErodeOutput);
-            blueWorkingMat = cvErodeOutput;
+        cvErode(blueWorkingMat, cvErodeKernel, new Point(-1, -1), cvErodeIterations, Core.BORDER_CONSTANT, new Scalar(-1), cvErodeOutput);
+        blueWorkingMat = cvErodeOutput;
 
-            pipelineImg[4] = cvErodeOutput;
+        pipelineImg[4] = cvErodeOutput;
 
-            // Step CV_dilate0:
+        // Step CV_dilate0:
 
-            cvDilateKernel = new Mat();
+        cvDilateKernel = new Mat();
 
-            cvDilate(blueWorkingMat, cvDilateKernel, new Point(-1, -1), cvDilateIterations, Core.BORDER_CONSTANT, new Scalar(-1), cvDilateOutput);
-            blueWorkingMat = cvDilateOutput;
-            pipelineImg[5] = cvDilateOutput;
+        cvDilate(blueWorkingMat, cvDilateKernel, new Point(-1, -1), cvDilateIterations, Core.BORDER_CONSTANT, new Scalar(-1), cvDilateOutput);
+        blueWorkingMat = cvDilateOutput;
+        pipelineImg[5] = cvDilateOutput;
 
 
-            // Step Find_Contours0:
-            Mat showContours = new Mat(source0.rows(), source0.cols(),source0.type());
+        // Step Find_Contours0:
+        Mat showContours = new Mat(frame.rows(), frame.cols(),frame.type());
 
-            findContours(blueWorkingMat, true, findContoursOutput);
+        findContours(blueWorkingMat, true, findContoursOutput);
 
-            pipelineImg[6] = showContours;
-            displayMat = source0;
-            Imgproc.drawContours(displayMat, findContoursOutput, -1, new Scalar (0,255,0));
-            //telemetry.addData("Contour list size: ", findContoursOutput.size());
+        pipelineImg[6] = showContours;
+        displayMat = frame;
+        Imgproc.drawContours(displayMat, findContoursOutput, -1, new Scalar (0,255,0));
+        //telemetry.addData("Contour list size: ", findContoursOutput.size());
 
-            ArrayList<Rect> filterOutput = (ArrayList<Rect>) filterContours(findContoursOutput);
-            telemetry.addData("rect list size: ", filterOutput.size());
-            double highest = 0;
-            for (Rect a : filterOutput) {
-                Point found = analyzeRect(source0, a);
+        ArrayList<Rect> filterOutput = (ArrayList<Rect>) filterContours(findContoursOutput);
+//        telemetry.addData("rect list size: ", filterOutput.size());
+        double highest = 0;
+        answer = new Rect(-69, -69, -69, -69);
+        for (Rect a : filterOutput) {
+            Point found = analyzeRect(frame, a);
 //                telemetry.addData("found: ", found);
-                //telemetry.addData("highest", highest);
+            //telemetry.addData("highest", highest);
 //                Imgproc.rectangle(displayMat,a,new Scalar (0,255,0),2);
-                if (found.x != -69) {//hohahehhehehe
-                    Imgproc.rectangle(displayMat,a,new Scalar (0,255,0),2);
-                    if (a.area()>answer.area()) {
-                        answer=a;
-                    }
+            if (found.x != -69) {//hohahehhehehe
+                Imgproc.rectangle(displayMat,a,new Scalar (0,255,0),2);
+                if (a.area()>answer.area()) {
+                    answer=a;
                 }
             }
-
-            showContours.release();
-//            telemetry.addData("loationTSE: ", locationTSE);
-//            double a,b,c,d;
-            telemetry.addData("answer: ", answer.toString());
-            telemetry.addData("marker: ", new Point(answer.x + (double) answer.width / 2, answer.y + (double) answer.height / 2).toString());
-            Imgproc.drawMarker(displayMat, new Point(answer.x + (double) answer.width / 2, answer.y + (double) answer.height / 2), new Scalar(0, 0, 255),0,0,10);
-            Imgproc.line(displayMat,new Point(0,cutoffLine),new Point(source0.width()-1,cutoffLine),new Scalar(255,0,0),2);
-
-            return displayMat;
+        }
+        if (answer.x==-69) {
+            pixelcoord = new Vector2d(-69, -69);
+            return null;
+        } else {
+            output = new Point(answer.x + (double) answer.width / 2, answer.y + (double) answer.height / 2);
         }
 
-        telemetry.update();
-        return source0;
+        //homography time
+        List<Point> srcPointsList = new ArrayList<>();
+        srcPointsList.add(new Point(478,560));
+        srcPointsList.add(new Point(478+463, 560));
+        srcPointsList.add(new Point(429, 563+71));
+        srcPointsList.add(new Point(429+590, 563+71));
+        MatOfPoint2f srcPoints = new MatOfPoint2f();
+        srcPoints.fromList(srcPointsList);
+        double x = 24.5;
+        double y = -3.5;
+        double w = 8;
+        double h = 10.5;
+        List<Point> dstPointsList = new ArrayList<>();
+        dstPointsList.add(new Point(x+w, y));
+        dstPointsList.add(new Point(x+w, y+h));
+        dstPointsList.add(new Point(x, y));
+        dstPointsList.add(new Point(x, y+h));
+        MatOfPoint2f dstPoints = new MatOfPoint2f();
+        dstPoints.fromList(dstPointsList);
+        Mat homography = Calib3d.findHomography(srcPoints, dstPoints, Calib3d.RANSAC, 0.5);
+        Point pt = new Point(output.x, output.y);
+        Mat ptMat = new Mat(1, 1, CvType.CV_64FC2);
+        ptMat.put(0, 0, new double[]{pt.x, pt.y});
+        Mat transformedPtMat = new Mat();
+        Core.perspectiveTransform(ptMat, transformedPtMat, homography);
+        double[] transformedPt = transformedPtMat.get(0, 0);
+        Point transformedPoint = new Point(transformedPt[0], transformedPt[1]);
+        pixelcoord=new Vector2d(transformedPoint.x, -transformedPoint.y);
+        showContours.release();
+        return null;
     }
 
+    public Vector2d getPixelcoord() {
+        return pixelcoord;
+    }
+
+    @Override
+    public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
+
+    }
 
     private List<Rect> filterContours(List<MatOfPoint> inputContours) {
         List<Rect> outputContours = new ArrayList<>();
@@ -206,21 +226,5 @@ public class PropPipeline extends OpenCvPipeline {
             outputContours.add(bb);
         }
         return outputContours;
-    }
-
-    public int location (Point a) {
-        int loc = 0;
-        if (a.x>leftSep && a.x<rightSep) {
-            loc = 1;
-
-        } else if (a.x<leftSep) {
-            loc = 0;
-
-        } else if (a.x>rightSep) {
-            loc = 2;
-
-        }
-
-        return loc;
     }
 }

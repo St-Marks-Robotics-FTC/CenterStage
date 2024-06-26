@@ -38,17 +38,18 @@ public class pixelcoord extends OpenCvPipeline {
         Mat output = new Mat();
         Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2YCrCb);
         Core.inRange(input, lower, upper, output);
-//       answer:  : {528, 593, 193x47}
-//        answer:  : {248, 561, 588x70}
-        double xo = 248;
-        double yo = 561;
-        double wo = 588;
-        double ho = 70;
+//       answer:  : {478, 565, 463x67}
+//        answer:  : {429, 563, 594x71}
+        double xo = 427;
+        double yo = 553;
+        double wo = 592;
+        double ho = 71;
+
         List<Point> srcPointsList = new ArrayList<>();
-        srcPointsList.add(new Point(xo, yo));
-        srcPointsList.add(new Point(xo+wo, yo));
-        srcPointsList.add(new Point(xo, yo+ho));
-        srcPointsList.add(new Point(xo+wo, yo+ho));
+        srcPointsList.add(new Point(478,560));
+        srcPointsList.add(new Point(478+463, 560));
+        srcPointsList.add(new Point(429, 563+71));
+        srcPointsList.add(new Point(429+590, 563+71));
 
         MatOfPoint2f srcPoints = new MatOfPoint2f();
         srcPoints.fromList(srcPointsList);
@@ -63,10 +64,10 @@ public class pixelcoord extends OpenCvPipeline {
         double w = 8;
         double h = 10.5;
         List<Point> dstPointsList = new ArrayList<>();
-        dstPointsList.add(new Point(x, y));
         dstPointsList.add(new Point(x+w, y));
-        dstPointsList.add(new Point(x, y+h));
         dstPointsList.add(new Point(x+w, y+h));
+        dstPointsList.add(new Point(x, y));
+        dstPointsList.add(new Point(x, y+h));
         //answer:  : {979, 590, 204x64}
 
         MatOfPoint2f dstPoints = new MatOfPoint2f();
@@ -99,7 +100,7 @@ public class pixelcoord extends OpenCvPipeline {
         // Print the vector
 //        Imgproc.warpPerspective(input, input, homography, srcPoints.size());
         // Example point to transform
-        Point pt = new Point(933, 543); //542, 596
+        Point pt = new Point(1015,557); //542, 596
         //933 543
         // Transform point using homography
         Mat ptMat = new Mat(1, 1, CvType.CV_64FC2);

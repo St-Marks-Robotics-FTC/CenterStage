@@ -39,6 +39,7 @@ import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.Tr
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
@@ -74,6 +75,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     private Vector2d prevVel = new Vector2d(0, 0);
     private Vector2d vel = new Vector2d(0, 0);
     private Vector2d accel = new Vector2d(0, 0);
+
+    Vector2d vP=new Vector2d(0,0); //covariance guess
+    Vector2d vR=new Vector2d(1.5,1.5); //sensor covariance
+    Vector2d vQ = new Vector2d(12, 12); //model covariance
     private long lastRead = 0;
     private ArrayList<Vector2d> accelAvg = new ArrayList<>();
 
@@ -210,14 +215,20 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 //        Log.d("System: ", Double.toString(System.currentTimeMillis()));
 //        Log.d("diff: ", Double.toString((System.currentTimeMillis()-lastRead)));
 //        Log.d("time: ", Double.toString(timeGap));
+        Vector2d estimate = vel.plus(vel.minus(prevVel));
+        prevVel=vel;
         vel= getPoseEstimate().vec().minus(prevPos);
         vel = new Vector2d(vel.getX()/timeGap, vel.getY()/timeGap);
+//        Log.d("raw: ", vel.toString());
 //        vel = smoothAccel(vel);
+        vP=vP.plus(vQ);
+        Vector2d K = new Vector2d(vP.getX()/(vP.getX()+vR.getX()),vP.getY()/(vP.getY()+vR.getY()));
+        vel = new Vector2d(vel.getX() + K.getX()*(estimate.getX()-vel.getX()), vel.getY() + K.getY()*(estimate.getY()-vel.getY()));
+        vP = new Vector2d((1-K.getX())*vP.getX(), (1-K.getY())*vP.getY());
         accel= vel.minus(prevVel);
         accel = new Vector2d(accel.getX(), accel.getY());
         //accel = smoothAccel(accel);
         prevPos = getPoseEstimate().vec();
-        prevVel = vel;
         lastRead = System.currentTimeMillis();
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);

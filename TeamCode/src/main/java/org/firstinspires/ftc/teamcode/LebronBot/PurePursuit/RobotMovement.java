@@ -158,13 +158,13 @@ public class RobotMovement {
         Log.d("vel: ", vel.toString());
         Vector2d accel = scale(accel1, vel.norm());
         accel = accel.minus(vel);
-//        accel = drive.getAccel(); //TODO: should be .angle() but just test for now
+//        accel = drive.getAccel();
 //        Log.d("accel2: ", accel.toString());
 //        Log.d("accel2 angle: ", Double.toString(Math.toDegrees(accel.angle())));
 //        Log.d("curvature: ", Double.toString(centrifuge));
         centrifuge = centrifuge+Math.sin(centrifuge);
 //        Log.d("curvature: ", Double.toString(centrifuge));
-        if (Math.abs(accel.norm())<minAccelNorm || drive.getPoseEstimate().minus(target).vec().norm()<minVel) {
+        if ((Math.abs(accel.norm())<minAccelNorm || drive.getPoseEstimate().minus(target).vec().norm()<minVel)) {
             centrifuge=0;
             smooC.clear();
         } else {
@@ -201,7 +201,7 @@ public class RobotMovement {
         else pid = translation.update(distanceToTarget)/piDAMP;
         //make the pid proportional to the distance to the target
 //        pid = 1; // for now no translational pid because doesn't seem necessary
-        Log.d("pid: ", Double.toString(pid));
+//        Log.d("pid: ", Double.toString(pid));
         //Vector2d limiter = speedLimit(drive);
         movementXPower = movementXPower * movementSpeed * (pid);// - limiter.getX();
         movementYPower = movementYPower * movementSpeed * (pid);// - limiter.getY();
@@ -231,7 +231,7 @@ public class RobotMovement {
         double FR = (movementXPower + movementYPower - movementTurn);
 //        Log.d("pid", Double.toString(pid));
 //        Log.d("heading pid", Double.toString(headingPID));
-        Log.d("movement: ", movementXPower+" "+movementYPower+" " + movementTurn);
+//        Log.d("movement: ", movementXPower+" "+movementYPower+" " + movementTurn);
 //        Log.d("movement powers: ", FL + " " + BL + " " + BR + " " + FR);
 //        Log.d("relative angle: ", relativeAngleToPoint+" "+Math.toDegrees(relativeAngleToPoint));
         drive.setMotorPowers(FL, BL, BR, FR);
