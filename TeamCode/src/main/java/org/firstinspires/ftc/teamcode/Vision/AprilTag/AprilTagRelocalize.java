@@ -69,6 +69,8 @@ public class AprilTagRelocalize {
 
         visionPortal = visionPortalBuilder.build();
 
+        setManualExposure(6, 120);
+
     }
 
     public Pose2d getTagPos(int tag) {

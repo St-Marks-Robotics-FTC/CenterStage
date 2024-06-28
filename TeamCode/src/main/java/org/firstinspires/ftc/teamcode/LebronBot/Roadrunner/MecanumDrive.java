@@ -78,7 +78,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     Vector2d vP=new Vector2d(0,0); //covariance guess
     Vector2d vR=new Vector2d(1.5,1.5); //sensor covariance
-    Vector2d vQ = new Vector2d(12, 12); //model covariance
+    Vector2d vQ = new Vector2d(14, 14); //model covariance
     private long lastRead = 0;
     private ArrayList<Vector2d> accelAvg = new ArrayList<>();
 

@@ -24,7 +24,7 @@ public class RobotMovement {
     public static Pose2d target;
     private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
-    private static PID translation = new PID(0.85, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
+    private static PID translation = new PID(0.7, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
     private static PID heading = new PID(0.3, 0, 0.3, 0.2); //TUNABLE its pid duhhh
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
