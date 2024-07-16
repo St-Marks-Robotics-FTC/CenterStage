@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.opmode;
 
+import android.util.Log;
+
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,14 +21,18 @@ import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
 
 //@Disabled
 
-
+@Config
 @TeleOp(group = "drive")
 public class LocalizationTest extends LinearOpMode {
+    double loopTime = 0;
+    Vector2d prev = new Vector2d();
+    double total = 0;
     @Override
     public void runOpMode() throws InterruptedException {
+//        Drive2 drive = new Drive2(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap);
-
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        prev = drive.getPoseEstimate().vec();
 
         waitForStart();
 
@@ -40,10 +48,20 @@ public class LocalizationTest extends LinearOpMode {
             drive.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
+            total+=(poseEstimate.vec().minus(prev).norm());
+            prev=poseEstimate.vec();
+
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+
+            double loop = System.nanoTime();
+            double hz = 1000000000 / (loop - loopTime);
+            Log.d("hz ", Double.toString(1000000000 / (loop - loopTime)));
+            loopTime = loop;
+
             telemetry.update();
         }
+        Log.d("total: ", Double.toString(total));
     }
 }

@@ -123,6 +123,10 @@ public class PropPipeline extends OpenCvPipeline {
             Imgproc.cvtColor(source0, cvCvtcolorOutput, Imgproc.COLOR_RGB2YCrCb);
             pipelineImg[1] = cvCvtcolorOutput;
             blueWorkingMat = cvCvtcolorOutput;
+            List<Mat> labChannels = new ArrayList<>();
+            Core.split(blueWorkingMat, labChannels);
+            Imgproc.equalizeHist(labChannels.get(2), labChannels.get(2));
+            Core.merge(labChannels, blueWorkingMat);
 
 //            cvExtractchannel(blueWorkingMat, blue?cvExtractchannelChannel:cvExtractchannelChannelRed, cvExtractchannelOutput);
 //            pipelineImg[2] = cvExtractchannelOutput;

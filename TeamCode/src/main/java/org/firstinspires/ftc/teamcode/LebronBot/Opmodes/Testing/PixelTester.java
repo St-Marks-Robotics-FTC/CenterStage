@@ -32,6 +32,8 @@ public class PixelTester extends OpMode {
     private final double TURN_SENSITIVITY = 0.6;
     private int exposure = 6;
     private int gain = 100;
+    Vector2d lock = new Vector2d();
+    boolean follow = false;
     //1 = blue left
     //2 = blue middle
     //3 = blue right
@@ -53,7 +55,9 @@ public class PixelTester extends OpMode {
         Vector2d pixel = pixelDetect.getCoord().plus(robot.drive.getPoseEstimate().vec());
         telemetry.addData("pixel: ", pixel.toString());
         if (pad1.wasJustPressed(GamepadKeys.Button.A) && pixel.getX()!=-69) {
-            RobotMovement.goTO(robot.drive, new Pose2d(pixel.getX()+5, pixel.getY(), 0), 0.5, 0.5);
+            lock = pixel;
+            RobotMovement.goTO(robot.drive, new Pose2d(lock.getX()+5, lock.getY(), 0), 0.5, 0.5);
+            follow = true;
         } else {
             //normal drive control
             double r = Math.hypot(pad1.getLeftX(), pad1.getLeftY()); // Gets the amount that we want to translate
@@ -65,12 +69,15 @@ public class PixelTester extends OpMode {
 
             robot.drive.setMotorPowers(leftFrontSpeed, leftBackSpeed,  rightBackSpeed, rightFrontSpeed);
         }
+        if (pad1.wasJustPressed(GamepadKeys.Button.B)) {
+            follow = false;
+        }
 //        if (gamepad1.a) exposure++;
 //        if (gamepad1.b) exposure--;
 //        if (gamepad1.x) gain+=10;
 //        if (gamepad1.y) gain-=10;
         robot.drive.update();
-        RobotMovement.update(robot.drive);
+        if (follow) RobotMovement.update(robot.drive);
         telemetry.update();
         pad1.readButtons();
     }

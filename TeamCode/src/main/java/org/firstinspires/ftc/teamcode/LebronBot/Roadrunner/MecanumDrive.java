@@ -29,8 +29,12 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.ErrorCalculator;
+import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.Testing.BackTracking_TUNING;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.util.LynxModuleUtil;
@@ -55,7 +59,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-    private TrajectorySequenceRunner trajectorySequenceRunner;
+    protected TrajectorySequenceRunner trajectorySequenceRunner;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(DriveConstants.MAX_VEL, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(DriveConstants.MAX_ACCEL);
@@ -78,9 +82,25 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     Vector2d vP=new Vector2d(0,0); //covariance guess
     Vector2d vR=new Vector2d(1.5,1.5); //sensor covariance
-    Vector2d vQ = new Vector2d(14, 14); //model covariance
+    Vector2d vQ = new Vector2d(16, 16); //model covariance
     private long lastRead = 0;
     private ArrayList<Vector2d> accelAvg = new ArrayList<>();
+    Pose2d poseNew;
+    double[] lastErrors = new double[3];
+    static double [] TotalChange = new double[2];
+    double [] prevPose = new double[2];
+    double[] newPose= new double []{0.0,0.0};
+    static double [] Difference = new double[2];
+
+    //This is the exact percentage of the effectiveness of this Localizer
+    double [] percentage_Correction = new double[]{0.0,0.0};
+    public static ElapsedTime timer = new ElapsedTime();
+    private double heading=0;
+    private double lastHeading=0;
+    private double headingDelta=0;
+    ArrayList<Pose2d> listOfPoses = new ArrayList<>();
+    ErrorCalculator errorCalculator;
+    Pose2d prevPose2d = new Pose2d();
 
     public MecanumDrive(HardwareMap hardwareMap) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, DriveConstants.TRACK_WIDTH, DriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -95,9 +115,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
-
+        errorCalculator = new ErrorCalculator();
         // TODO: adjust the names of the following hardware devices to match your configuration
-//        imu = hardwareMap.get(IMU.class, "adafruit_imu");
+//        imu = hardwareMap.get(IMU.class, "imu");
 //        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
 //                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
 //        imu.initialize(parameters);
@@ -211,13 +231,22 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public void update() {
         updatePoseEstimate();
+        updateMech();
+        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
+        if (signal != null) setDriveSignal(signal);
+//        Log.d("updated!: ", "Updated");
+//        Log.d("pose estimate: ", getPoseEstimate().toString());
+    }
+
+    public void updateMech() {
         double timeGap = (double)(System.currentTimeMillis()-lastRead)/1000;
 //        Log.d("System: ", Double.toString(System.currentTimeMillis()));
 //        Log.d("diff: ", Double.toString((System.currentTimeMillis()-lastRead)));
 //        Log.d("time: ", Double.toString(timeGap));
+        Vector2d poseVec = getPoseEstimate().vec();
         Vector2d estimate = vel.plus(vel.minus(prevVel));
         prevVel=vel;
-        vel= getPoseEstimate().vec().minus(prevPos);
+        vel= poseVec.minus(prevPos);
         vel = new Vector2d(vel.getX()/timeGap, vel.getY()/timeGap);
 //        Log.d("raw: ", vel.toString());
 //        vel = smoothAccel(vel);
@@ -228,10 +257,8 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         accel= vel.minus(prevVel);
         accel = new Vector2d(accel.getX(), accel.getY());
         //accel = smoothAccel(accel);
-        prevPos = getPoseEstimate().vec();
+        prevPos = poseVec;
         lastRead = System.currentTimeMillis();
-        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
-        if (signal != null) setDriveSignal(signal);
     }
 
 //    public Vector2d smoothAccel(Vector2d accel) {
@@ -347,14 +374,14 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     @Override
     public double getRawExternalHeading() {
-        //return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return 0;
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        return 0;
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
-//        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).xRotationRate;
-        return (double)0;
+        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).xRotationRate;
+//        return (double)0;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

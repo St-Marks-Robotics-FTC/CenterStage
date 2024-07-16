@@ -101,6 +101,7 @@ public class LebronTele extends LinearOpMode {
     boolean slideBumper = true;
     boolean imuReset = false;
     private double offset = 0;
+    private double turnScale = 0.7;
 
 
 
@@ -614,6 +615,7 @@ public class LebronTele extends LinearOpMode {
             } else {
                 rx = gamepad1.right_stick_x;
                 rx *= rotScaleFactor;
+                rx *= turnScale;
             }
 
 

@@ -28,10 +28,10 @@ public class Intake {
     public static double dropUp = 0.0;
 
 
-    public static double tiltUp = 0.45; // .7
+    public static double tiltUp = 0.43; // .7
     public static double tiltUpDegrees = 150;
-    public static double tiltDown =0.15;
-    public static double tiltStow = 0.38;
+    public static double tiltDown =0.13;
+    public static double tiltStow = 0.36;
     public static double tiltStack = 0.255;
     public static double tiltStackInc = 0.03;
     public static double offset = 0;
@@ -39,6 +39,7 @@ public class Intake {
     public Intake(HardwareMap hardwareMap) {
         //intake
         intake = hardwareMap.get(DcMotorEx.class, "intake");
+//        intake = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "intake"));
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -136,15 +137,15 @@ public class Intake {
 //            setTilt(0.177);
             tiltDown();
         } else if (level == 3) {
-            setTilt(0.185);
+            setTilt(0.165);
         } else if (level == 4) {
-            setTilt(0.20);
+            setTilt(0.18);
         } else if (level == 5) {
-            setTilt(0.225);
+            setTilt(0.205);
         } else if (level == 6){
-            setTilt(0.21);
+            setTilt(0.19);
         } else if (level == 7) {
-            setTilt(0.23);
+            setTilt(0.21);
         }else {
             tiltDown();
         }

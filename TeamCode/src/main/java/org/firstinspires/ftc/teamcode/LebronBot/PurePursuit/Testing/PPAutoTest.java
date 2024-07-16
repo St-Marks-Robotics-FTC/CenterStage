@@ -143,11 +143,16 @@ public class PPAutoTest extends  LinearOpMode{
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Bulk Reading
-        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+//        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+//        // Will run one bulk read per cycle,
+//        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) { // turns on bulk reads cannot double read or it will call multiple bulkreads in the one thing
+//            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+//            module.clearBulkCache();
+//        }
+        LynxModule module = hardwareMap.get(LynxModule.class, "Control Hub");
+        module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        module.clearBulkCache();
 
-        for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         redFarPropThreshold = new RedFarPropThreshold();
@@ -518,6 +523,8 @@ public class PPAutoTest extends  LinearOpMode{
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
+            // Will run one bulk read per cycle,
+            module.clearBulkCache();
             if (extended && useRelocal) {
                 //relocalize.setManualExposure(exposure, gain);
                 relocalizePose = relocalize.getTagPos(new int[]{1, 2, 3});
@@ -557,10 +564,6 @@ public class PPAutoTest extends  LinearOpMode{
             machine.update();
             robot.drive.update();
             RobotMovement.update(robot.drive);
-            // Will run one bulk read per cycle,
-            for (LynxModule hub : allHubs) {
-                hub.clearBulkCache();
-            }
 
             if (robot.outtake.leftSlide.getVelocity() < 2 && robot.outtake.leftSlide.getCurrentPosition() < 0) {
                 robot.outtake.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

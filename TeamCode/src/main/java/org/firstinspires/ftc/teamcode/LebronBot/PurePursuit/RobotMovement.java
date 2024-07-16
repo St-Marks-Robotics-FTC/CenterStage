@@ -19,13 +19,13 @@ import java.util.Vector;
 public class RobotMovement {
     private static double posTolerance = 0.5; //recommended constant
     private static double headingTolerance = 1; //recommended constant
-    private static double centriDamp = 4.5; //centrifugal dampener
+    private static double centriDamp = 10; //centrifugal dampener(more amplifier)
     public static boolean isBusy = false;
     public static Pose2d target;
-    private static double decceleration = 135.337; // in inches/second this is for the wolfpack glide
+    private static double decceleration = 97.42154202846739; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
     private static PID translation = new PID(0.7, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
-    private static PID heading = new PID(0.3, 0, 0.3, 0.2); //TUNABLE its pid duhhh
+    private static PID heading = new PID(0.4, 0, 0.3, 0.2); //TUNABLE its pid duhhh
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
     private static ArrayList<Vector2d> smooC = new ArrayList<>();
@@ -140,7 +140,6 @@ public class RobotMovement {
     public static void goToPosition(MecanumDrive drive, Pose2d position, Pose2d desired,double movementSpeed, double turnSpeed) {
 //        setTarget(desired);
         double x = desired.getX(); double y = desired.getY(); double preferredAngle = desired.getHeading();
-        double centrifuge = Math.abs(antiRadius(drive, desired)*centriDamp);
         //use the centrifuge to calculate the force needed to keep the robot on the path
 //        centrifuge=0;
 //        position = new Pose2d(position.getX(), position.getY(), MathFunctions.AngleWrap(position.getHeading()));
@@ -154,32 +153,35 @@ public class RobotMovement {
         //if (preferredAngle==100) preferredAngle = accel.angle();
 //        Log.d("accel1: ", accel1.toString());
         Vector2d vel = drive.getVelocity();
-        Vector2d accel1 = desired.minus(drive.getPoseEstimate()).vec();
+        Vector2d accel1 = desired.minus(position).vec();
         Log.d("vel: ", vel.toString());
         Vector2d accel = scale(accel1, vel.norm());
         accel = accel.minus(vel);
+        double centrifuge = Math.abs(antiRadius(vel, position, desired)*centriDamp);
 //        accel = drive.getAccel();
 //        Log.d("accel2: ", accel.toString());
 //        Log.d("accel2 angle: ", Double.toString(Math.toDegrees(accel.angle())));
 //        Log.d("curvature: ", Double.toString(centrifuge));
-        centrifuge = centrifuge+Math.sin(centrifuge);
+//        centrifuge = centrifuge+Math.sin(centrifuge);
 //        Log.d("curvature: ", Double.toString(centrifuge));
         if ((Math.abs(accel.norm())<minAccelNorm || drive.getPoseEstimate().minus(target).vec().norm()<minVel)) {
             centrifuge=0;
-            smooC.clear();
+//            smooC.clear();
         } else {
             centrifuge=Math.abs(centrifuge);
         }
         Vector2d centrifuged;
         double ang = 0;
+//        Log.d("accel angle: ", Double.toString(Math.toDegrees(MathFunctions.AngleWrap(accel.angle()))));
+//        Log.d("accel1 angle: ", Double.toString(Math.toDegrees(MathFunctions.AngleWrap(accel1.angle()))));
         if (MathFunctions.AngleWrap(accel.angle())<0) {
-            ang = drive.getVelocity().angle()-Math.PI/2;
+            ang = accel1.angle()+Math.PI/2;
         } else {
-            ang = drive.getVelocity().angle()+Math.PI/2;
+            ang = accel1.angle()-Math.PI/2;
         }
 //        Log.d("ang: ", Double.toString(Math.toDegrees(ang)));
         centrifuged=new Vector2d(Math.cos(ang + preferredAngle)*centrifuge, Math.sin(ang+preferredAngle)*centrifuge);
-        centrifuged = smoothCentrifuge(centrifuged);
+//        centrifuged = smoothCentrifuge(centrifuged);
 //        Log.d("centrifuged: ", centrifuged.toString());
         double relativeXToPoint = Math.cos(relativeAngleToPoint) * (distanceToTarget);
         double relativeYToPoint = Math.sin(relativeAngleToPoint) * (distanceToTarget);
@@ -207,7 +209,7 @@ public class RobotMovement {
         movementYPower = movementYPower * movementSpeed * (pid);// - limiter.getY();
 //        movementXPower = smoothX(movementXPower);
 //        movementYPower = smoothY(movementYPower);
-        if (withinPos(drive)) {
+        if (withinPos(position)) {
             movementXPower=0;
             movementYPower=0;
         }
@@ -220,7 +222,7 @@ public class RobotMovement {
 //        Log.d("angle diff: ", Double.toString(MathFunctions.AngleDiff(preferredAngle, position.getHeading())));
         double movementTurn = -Range.clip(headingPID*(MathFunctions.AngleDiff(preferredAngle, position.getHeading()) > 0 ? 1 : -1), -1, 1)*turnSpeed;
 //        movementTurn = smoothH(movementTurn);
-        if (withinHead(drive)) movementTurn = 0;
+        if (withinHead(position)) movementTurn = 0;
 
         //Log.d("heading tolerance", Double.toString(Math.abs(MathFunctions.AngleDiff(target.getHeading(), drive.getPoseEstimate().getHeading()))));
 //        Log.d("movementTurn: ", Double.toString(movementTurn));
@@ -243,26 +245,26 @@ public class RobotMovement {
         return new Vector2d(input.getX()*multi, input.getY()*multi);
     }
 
-    public static double antiRadius(MecanumDrive drive, Pose2d desired) {
+    public static double antiRadius(Vector2d vel, Pose2d pose, Pose2d desired) {
         //wolfpack's anticentrifugal force correction
-        Vector2d vel = drive.getVelocity();
+//        Vector2d vel = drive.getVelocity();
 //        Log.d("vel: ", vel.toString());
         //Vector2d accel = drive.getAccel();
-        Vector2d accel = desired.minus(drive.getPoseEstimate()).vec();
+        Vector2d accel = desired.minus(pose).vec();
         accel = scale(accel, vel.norm());
         accel = accel.minus(vel);
 //        Log.d("accel: ", accel.toString());
         if ((accel.getY()==0)  && accel.getX()==0) return 0;
-        double radius = Math.pow(1/Math.sin(desired.minus(drive.getPoseEstimate()).vec().angle()), 3)/(accel.getY()/accel.getX());
+        double radius = Math.pow(1/Math.sin(desired.minus(pose).vec().angle()), 3)/(accel.getY()/accel.getX());
 //        Log.d("radius: ", Double.toString(radius));
         double force = Math.pow(vel.norm(), 2)/radius*radiusMulti;
 //        if (vel.norm()<30)  return 0;
         return force;
     }
 
-    public static boolean glide(MecanumDrive drive, Pose2d target) {
+    public static boolean glide(MecanumDrive drive, Pose2d pose, Pose2d target) {
         //calculate the overshoot shit
-        Pose2d pose = drive.getPoseEstimate();
+//        Pose2d pose = drive.getPoseEstimate();
         Vector2d vel = drive.getVelocity();
         double time = vel.norm()/decceleration;
         double distance = vel.norm()*time - 0.5*decceleration*Math.pow(time, 2);
@@ -277,7 +279,7 @@ public class RobotMovement {
 //        Log.d("overshooted!", "overshooted!");
         Vector2d correction = target.vec().minus(estimated);
         //drive.setMotorPowers(0,0,0,0);
-        goToPosition(drive, new Pose2d(0,0,drive.getPoseEstimate().getHeading()), new Pose2d(correction.getX(), correction.getY(), target.getHeading()), 1, 1);
+        goToPosition(drive, new Pose2d(0,0, pose.getHeading()), new Pose2d(correction.getX(), correction.getY(), target.getHeading()), 1, 1);
 //        if (withinPos(drive)) return true;
 //        drive.followTrajectorySequenceAsync(drive.trajectorySequenceBuilder(new Pose2d(0,0,0))
 //                .lineToLinearHeading(new Pose2d(correction.getX(), correction.getY(), target.getHeading()))
@@ -285,21 +287,22 @@ public class RobotMovement {
         return true;
     }
 
-    public static boolean withinPos(MecanumDrive drive) {
-        return drive.getPoseEstimate().vec().minus(target.vec()).norm()<posTolerance;
+    public static boolean withinPos(Pose2d pose) {
+        return pose.vec().minus(target.vec()).norm()<posTolerance;
     }
 
-    public static boolean withinHead(MecanumDrive drive) {
-        return Math.abs(MathFunctions.AngleDiff(target.getHeading(), drive.getPoseEstimate().getHeading()))<Math.toRadians(headingTolerance);
+    public static boolean withinHead(Pose2d pose) {
+        return Math.abs(MathFunctions.AngleDiff(target.getHeading(), pose.getHeading()))<Math.toRadians(headingTolerance);
     }
 
     public static void update(MecanumDrive drive) {
         drive.update();
-        Log.d("robot pose: ", drive.getPoseEstimate().toString());
+        Pose2d pose = drive.getPoseEstimate();
+        Log.d("robot pose: ", pose.toString());
         //Log.d("target: ", target.toString());
         //Log.d("bruh: ", Double.toString(Math.abs(MathFunctions.AngleWrap(drive.getPoseEstimate().getHeading()) - MathFunctions.AngleWrap(target.getHeading()))));
         //if there is a path, but we are near the end kill the path
-        if (target!=null && withinPos(drive) && withinHead(drive)) {
+        if (target!=null && withinPos(pose) && withinHead(pose)) {
             target = null;
             path = null;
         }
@@ -311,8 +314,8 @@ public class RobotMovement {
         //if we have a path run it
         if (target!=null) {
 //            Log.d("target: ", target.toString());
-            if (glide(drive, target)) {
-            } else if (path!=null && !path.isEmpty() && (!withinPos(drive) || !withinHead(drive))) {
+            if (glide(drive, pose, target)) {
+            } else if (path!=null && !path.isEmpty() && (!withinPos(pose) || !withinHead(pose))) {
                 CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance, drive);
 //                Log.d("target go to: ", new Pose2d(followMe.x, followMe.y, followMe.h).toString());
 //                Log.d("yes!!!: ", path.get(path.size()-2).toPoint().toString());

@@ -30,14 +30,14 @@ public class DecelerationTest extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             drive.update();
             Log.d("bruh bruh: ", drive.getVelocity().toString());
-            if (time.milliseconds()>1500 && stop) {
+            if (time.milliseconds()>1200 && stop) {
                 startStop=time.milliseconds();
                 maxVelocity=drive.getVelocity();
                 startStopPose=drive.getPoseEstimate();
                 drive.setWeightedDrivePower(new Pose2d(0,0, 0));
                 stop = false;
             }
-            if (time.milliseconds()>1500 && drive.getVelocity().norm()<0.1) {
+            if (time.milliseconds()>1200 && drive.getVelocity().norm()<0.1) {
                 endStop=time.milliseconds();
                 endStopPose=drive.getPoseEstimate();
                 break;
