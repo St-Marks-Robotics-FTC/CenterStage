@@ -19,12 +19,12 @@ import java.util.Vector;
 public class RobotMovement {
     private static double posTolerance = 0.5; //recommended constant
     private static double headingTolerance = 1; //recommended constant
-    private static double centriDamp = 10; //centrifugal dampener(more amplifier)
+    private static double centriDamp = 6; //centrifugal dampener(more amplifier)
     public static boolean isBusy = false;
     public static Pose2d target;
     private static double decceleration = 97.42154202846739; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
-    private static PID translation = new PID(0.7, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
+    private static PID translation = new PID(0.8, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
     private static PID heading = new PID(0.4, 0, 0.3, 0.2); //TUNABLE its pid duhhh
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
@@ -162,9 +162,11 @@ public class RobotMovement {
 //        Log.d("accel2: ", accel.toString());
 //        Log.d("accel2 angle: ", Double.toString(Math.toDegrees(accel.angle())));
 //        Log.d("curvature: ", Double.toString(centrifuge));
-//        centrifuge = centrifuge+Math.sin(centrifuge);
+//        Log.d("centrifuge: ", Double.toString(centrifuge));
+        centrifuge = centrifuge+Math.abs(centrifuge*Math.sin(accel1.angle()-position.getHeading())); // this is meant to double the correction when the robot's strafing because the velocity is obviously halfed
+//        Log.d("centrifuge: ", Double.toString(centrifuge));
 //        Log.d("curvature: ", Double.toString(centrifuge));
-        if ((Math.abs(accel.norm())<minAccelNorm || drive.getPoseEstimate().minus(target).vec().norm()<minVel)) {
+        if ((Math.abs(accel.norm())<minAccelNorm || position.minus(target).vec().norm()<minVel)) {
             centrifuge=0;
 //            smooC.clear();
         } else {
