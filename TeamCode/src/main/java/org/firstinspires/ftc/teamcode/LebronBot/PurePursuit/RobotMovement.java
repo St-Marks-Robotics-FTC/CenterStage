@@ -19,13 +19,13 @@ import java.util.Vector;
 public class RobotMovement {
     private static double posTolerance = 0.5; //recommended constant
     private static double headingTolerance = 1; //recommended constant
-    private static double centriDamp = 3; //centrifugal dampener(more amplifier)
+    private static double centriDamp = 2.5; //centrifugal dampener(more amplifier)
     public static boolean isBusy = false;
     public static Pose2d target;
     private static double decceleration = 97.42154202846739; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
-    private static PID translation = new PID(0.8, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
-    private static PID heading = new PID(0.3, 0, 0.3, 0.2); //TUNABLE its pid duhhh
+    private static PID translation = new PID(0.8, 0, 0.3, 0.3); //TUNABLE cmon bruhhh
+    private static PID heading = new PID(0.3, 0, 0.3, 0.175); //TUNABLE its pid duhhh
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
     private static ArrayList<Vector2d> smooC = new ArrayList<>();
@@ -106,31 +106,6 @@ public class RobotMovement {
         return followMe;
     }
 
-//    public static Vector2d speedLimit(MecanumDrive drive) {
-//        //ignore this it doesnt do anything
-//        double ratio = 0.08;
-//        double minimum = 30;
-//        Vector2d output = new Vector2d((drive.getVelocity().getX()-minimum)*ratio, (drive.getVelocity().getY()-minimum)*ratio);
-//        return output;
-//    }
-
-    private static Vector2d smoothCentrifuge(Vector2d centrifuge) {
-        //smooth it out because the acceleration is very noisy
-        if (smooC.size()>3) {
-            smooC.remove(0);
-        }
-        smooC.add(centrifuge);
-        double x = 0;
-        double y = 0;
-        for (Vector2d i : smooC) {
-            x+=i.getX();
-            y+=i.getY();
-        }
-        x/=smooC.size();
-        y/=smooC.size();
-        return new Vector2d(x,y);
-    }
-
     public static void goTO(MecanumDrive drive, Pose2d desired,double moveSpeed, double turSpeed) {
         setTarget(desired);
         movementSpeed=moveSpeed;
@@ -138,22 +113,11 @@ public class RobotMovement {
     }
 
     public static void goToPosition(MecanumDrive drive, Pose2d position, Pose2d desired,double movementSpeed, double turnSpeed) {
-//        setTarget(desired);
         double x = desired.getX(); double y = desired.getY(); double preferredAngle = desired.getHeading();
         //use the centrifuge to calculate the force needed to keep the robot on the path
-//        centrifuge=0;
-//        position = new Pose2d(position.getX(), position.getY(), MathFunctions.AngleWrap(position.getHeading()));
-        double distanceToTarget = Math.hypot(x - position.getX(), y - position.getY());
-        double absoluteAngleToTarget = Math.atan2(y - position.getY(), x - position.getX());
-//        Log.d("absoluteAngleToTarget: ", Double.toString(absoluteAngleToTarget));
-//        double relativeAngleToPoint = MathFunctions.AngleWrap(absoluteAngleToTarget - (position.getHeading()));
-        double relativeAngleToPoint = MathFunctions.AngleDiff(absoluteAngleToTarget, position.getHeading());
-//        Log.d("relativeAngleToPoint", Double.toString(relativeAngleToPoint));
-//        Log.d("prefferedAngle ", Double.toString(preferredAngle));
-        //if (preferredAngle==100) preferredAngle = accel.angle();
-//        Log.d("accel1: ", accel1.toString());
         Vector2d vel = drive.getVelocity();
         Vector2d accel1 = desired.minus(position).vec();
+//        Log.d("desired: ", desired.toString());
         Log.d("vel: ", vel.toString());
         Vector2d accel = scale(accel1, vel.norm());
         accel = accel.minus(vel);
@@ -176,23 +140,25 @@ public class RobotMovement {
         double ang = 0;
 //        Log.d("accel angle: ", Double.toString(Math.toDegrees(MathFunctions.AngleWrap(accel.angle()))));
 //        Log.d("accel1 angle: ", Double.toString(Math.toDegrees(MathFunctions.AngleWrap(accel1.angle()))));
-        if (MathFunctions.AngleWrap(accel.angle())<0) {
-            ang = accel1.angle()+Math.PI/2;
-        } else {
+        if (MathFunctions.AngleWrap(accel.angle()-accel1.angle())<0) {
             ang = accel1.angle()-Math.PI/2;
+        } else {
+            ang = accel1.angle()+Math.PI/2;
         }
         ang=MathFunctions.AngleWrap(ang);
-        Log.d("ang: ", Double.toString(Math.toDegrees(ang)));
-        if (ang>0) ang+=Math.toRadians(180);
-        centrifuged=new Vector2d(Math.cos(ang + preferredAngle)*centrifuge, Math.sin(ang+preferredAngle)*centrifuge);
-//        centrifuged = smoothCentrifuge(centrifuged);
-        Log.d("centrifuged: ", centrifuged.toString());
+        preferredAngle=MathFunctions.AngleWrap(preferredAngle);
+        centrifuged=new Vector2d(Math.cos(ang)*centrifuge, Math.sin(ang)*centrifuge);
+//        Log.d("ang: ", Double.toString(Math.toDegrees(ang)));
+//        Log.d("centrifuged: ", centrifuged.toString());
+        double distanceToTarget = Math.hypot(x - position.getX() + centrifuged.getX(), y - position.getY() + centrifuged.getY()); // adding the centrifuge vector and the target vector
+        double absoluteAngleToTarget = Math.atan2(y - position.getY() + centrifuged.getY(), x - position.getX() + centrifuged.getX());
+//        Log.d("absoluteAngleToTarget: ", Double.toString(absoluteAngleToTarget));
+//        double relativeAngleToPoint = MathFunctions.AngleWrap(absoluteAngleToTarget - (position.getHeading()));
+        double relativeAngleToPoint = MathFunctions.AngleDiff(absoluteAngleToTarget, position.getHeading());
+//        Log.d("relativeAngleToPoint", Double.toString(relativeAngleToPoint));
+//        Log.d("prefferedAngle ", Double.toString(preferredAngle));
         double relativeXToPoint = Math.cos(relativeAngleToPoint) * (distanceToTarget);
         double relativeYToPoint = Math.sin(relativeAngleToPoint) * (distanceToTarget);
-//        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
-//        Log.d("relativeYToPoint:  ", Double.toString(relativeYToPoint));
-        relativeXToPoint+=centrifuged.getX();
-        relativeYToPoint+=centrifuged.getY();
 //        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
 //        Log.d("relativeYToPoint:  ", Double.toString(relativeYToPoint));
         double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
@@ -203,7 +169,7 @@ public class RobotMovement {
         }
         double pid;
 //        Log.d("bruh: ", Double.toString(distanceToTarget/path.get(0).followDistance));
-        if (path!=null) pid = translation.update(distanceToTarget/path.get(0).followDistance); //TODO: TRY SETTING THE PID TO 1 WHEN PATHING
+        if (path!=null) pid = translation.update(distanceToTarget/path.get(0).followDistance);
         else pid = translation.update(distanceToTarget)/piDAMP;
         //make the pid proportional to the distance to the target
 //        pid = 1; // for now no translational pid because doesn't seem necessary

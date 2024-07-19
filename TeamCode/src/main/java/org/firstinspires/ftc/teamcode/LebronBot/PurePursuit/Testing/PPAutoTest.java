@@ -312,10 +312,10 @@ public class PPAutoTest extends  LinearOpMode{
 //                            .build());
                     ArrayList<CurvePoint> GTB = new ArrayList<>();
                     Pose2d PE = robot.drive.getPoseEstimate();
-                    GTB.add(new CurvePoint(PE.getX(), PE.getY(), PE.getHeading(), 1, 0.5, 36, 0, 0));
-                    GTB.add(new CurvePoint(35, -10, Math.toRadians(180), 1, 0.5, 36, 0, 0));
+                    GTB.add(new CurvePoint(PE.getX(), PE.getY(), PE.getHeading(), 1, 0.5, 48, 0, 0));
+                    GTB.add(new CurvePoint(35, -10, Math.toRadians(180), 1, 0.5, 48, 0, 0));
 //                    GTB.add(new CurvePoint(30,-20, Math.toRadians(140),1,0.5,24,0,0));
-                    GTB.add(new CurvePoint(42, placementY, Math.toRadians(180), 0.7, 0.5, 36, 0, 0));
+                    GTB.add(new CurvePoint(42, placementY, Math.toRadians(180), 0.7, 0.5, 48, 0, 0));
                     RobotMovement.followCurve(GTB, robot.drive);
                 })
                 .onExit(() -> {
