@@ -19,19 +19,19 @@ import java.util.Vector;
 public class RobotMovement {
     private static double posTolerance = 0.5; //recommended constant
     private static double headingTolerance = 1; //recommended constant
-    private static double centriDamp = 6; //centrifugal dampener(more amplifier)
+    private static double centriDamp = 3; //centrifugal dampener(more amplifier)
     public static boolean isBusy = false;
     public static Pose2d target;
     private static double decceleration = 97.42154202846739; // in inches/second this is for the wolfpack glide
     private static ArrayList<CurvePoint> path;
     private static PID translation = new PID(0.8, 0, 0.3, 0.25); //TUNABLE cmon bruhhh
-    private static PID heading = new PID(0.4, 0, 0.3, 0.2); //TUNABLE its pid duhhh
+    private static PID heading = new PID(0.3, 0, 0.3, 0.2); //TUNABLE its pid duhhh
     private static double radiusMulti = 0.008;
     private static CurvePoint prevPoint = null;
     private static ArrayList<Vector2d> smooC = new ArrayList<>();
     private static double movementSpeed = 0.0; // don't worry about this
     private static double turnSpeed = 0.0; // don't worry abou this
-    private static double piDAMP = 4; //how much to damp the goTO pid TUNABLE
+    private static double piDAMP = 9; //how much to damp the goTO pid TUNABLE
     private static double minAccelNorm = 15; //minimum norm between centrifugal correction and velocity TUNABLE
     private static double minVel = 20; //minimum robot velocity for centrifugal correction to be used TUNABLE
 
@@ -163,7 +163,7 @@ public class RobotMovement {
 //        Log.d("accel2 angle: ", Double.toString(Math.toDegrees(accel.angle())));
 //        Log.d("curvature: ", Double.toString(centrifuge));
 //        Log.d("centrifuge: ", Double.toString(centrifuge));
-        centrifuge = centrifuge+Math.abs(centrifuge*Math.sin(accel1.angle()-position.getHeading())); // this is meant to double the correction when the robot's strafing because the velocity is obviously halfed
+        centrifuge = centrifuge+Math.abs(centrifuge*Math.sin(accel1.angle()-position.getHeading()))*1.5; // this is meant to double the correction when the robot's strafing because the velocity is obviously halfed
 //        Log.d("centrifuge: ", Double.toString(centrifuge));
 //        Log.d("curvature: ", Double.toString(centrifuge));
         if ((Math.abs(accel.norm())<minAccelNorm || position.minus(target).vec().norm()<minVel)) {
@@ -181,10 +181,12 @@ public class RobotMovement {
         } else {
             ang = accel1.angle()-Math.PI/2;
         }
-//        Log.d("ang: ", Double.toString(Math.toDegrees(ang)));
+        ang=MathFunctions.AngleWrap(ang);
+        Log.d("ang: ", Double.toString(Math.toDegrees(ang)));
+        if (ang>0) ang+=Math.toRadians(180);
         centrifuged=new Vector2d(Math.cos(ang + preferredAngle)*centrifuge, Math.sin(ang+preferredAngle)*centrifuge);
 //        centrifuged = smoothCentrifuge(centrifuged);
-//        Log.d("centrifuged: ", centrifuged.toString());
+        Log.d("centrifuged: ", centrifuged.toString());
         double relativeXToPoint = Math.cos(relativeAngleToPoint) * (distanceToTarget);
         double relativeYToPoint = Math.sin(relativeAngleToPoint) * (distanceToTarget);
 //        Log.d("relativeXToPoint:  ", Double.toString(relativeXToPoint));
@@ -201,7 +203,7 @@ public class RobotMovement {
         }
         double pid;
 //        Log.d("bruh: ", Double.toString(distanceToTarget/path.get(0).followDistance));
-        if (path!=null) pid = translation.update(distanceToTarget/path.get(0).followDistance);
+        if (path!=null) pid = translation.update(distanceToTarget/path.get(0).followDistance); //TODO: TRY SETTING THE PID TO 1 WHEN PATHING
         else pid = translation.update(distanceToTarget)/piDAMP;
         //make the pid proportional to the distance to the target
 //        pid = 1; // for now no translational pid because doesn't seem necessary
@@ -301,7 +303,7 @@ public class RobotMovement {
         drive.update();
         Pose2d pose = drive.getPoseEstimate();
         Log.d("robot pose: ", pose.toString());
-        //Log.d("target: ", target.toString());
+//        Log.d("target: ", target.toString());
         //Log.d("bruh: ", Double.toString(Math.abs(MathFunctions.AngleWrap(drive.getPoseEstimate().getHeading()) - MathFunctions.AngleWrap(target.getHeading()))));
         //if there is a path, but we are near the end kill the path
         if (target!=null && withinPos(pose) && withinHead(pose)) {
