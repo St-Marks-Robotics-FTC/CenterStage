@@ -25,14 +25,14 @@ import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.MecanumDrive;
 @TeleOp(group = "drive")
 public class LocalizationTest extends LinearOpMode {
     double loopTime = 0;
-    Vector2d prev = new Vector2d();
-    double total = 0;
+    Pose2d prev = new Pose2d();
+    Pose2d total = new Pose2d();
     @Override
     public void runOpMode() throws InterruptedException {
 //        Drive2 drive = new Drive2(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        prev = drive.getPoseEstimate().vec();
+        prev = drive.getPoseEstimate();
 
         waitForStart();
 
@@ -41,16 +41,15 @@ public class LocalizationTest extends LinearOpMode {
                     new Pose2d(
                             -gamepad1.left_stick_y,
                             -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
+                            -gamepad1.right_stick_x*0.6
                     )
             );
 
             drive.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
-            total+=(poseEstimate.vec().minus(prev).norm());
-            prev=poseEstimate.vec();
-
+            total=new Pose2d(total.getX()+poseEstimate.getX()-prev.getX(),total.getY()+poseEstimate.getY()-prev.getY(),total.getHeading()+poseEstimate.getHeading()-prev.getHeading());
+            prev=new Pose2d(poseEstimate.vec(), poseEstimate.getHeading());
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
@@ -62,6 +61,6 @@ public class LocalizationTest extends LinearOpMode {
 
             telemetry.update();
         }
-        Log.d("total: ", Double.toString(total));
+        Log.d("total: ", total.toString());
     }
 }

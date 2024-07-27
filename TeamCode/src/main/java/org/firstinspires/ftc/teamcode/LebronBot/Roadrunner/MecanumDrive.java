@@ -234,48 +234,24 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         updateMech();
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
-//        Log.d("updated!: ", "Updated");
-//        Log.d("pose estimate: ", getPoseEstimate().toString());
     }
 
     public void updateMech() {
         double timeGap = (double)(System.currentTimeMillis()-lastRead)/1000;
-//        Log.d("System: ", Double.toString(System.currentTimeMillis()));
-//        Log.d("diff: ", Double.toString((System.currentTimeMillis()-lastRead)));
-//        Log.d("time: ", Double.toString(timeGap));
         Vector2d poseVec = getPoseEstimate().vec();
         Vector2d estimate = vel.plus(vel.minus(prevVel));
         prevVel=vel;
         vel= poseVec.minus(prevPos);
         vel = new Vector2d(vel.getX()/timeGap, vel.getY()/timeGap);
-//        Log.d("raw: ", vel.toString());
-//        vel = smoothAccel(vel);
         vP=vP.plus(vQ);
         Vector2d K = new Vector2d(vP.getX()/(vP.getX()+vR.getX()),vP.getY()/(vP.getY()+vR.getY()));
         vel = new Vector2d(vel.getX() + K.getX()*(estimate.getX()-vel.getX()), vel.getY() + K.getY()*(estimate.getY()-vel.getY()));
         vP = new Vector2d((1-K.getX())*vP.getX(), (1-K.getY())*vP.getY());
         accel= vel.minus(prevVel);
         accel = new Vector2d(accel.getX(), accel.getY());
-        //accel = smoothAccel(accel);
         prevPos = poseVec;
         lastRead = System.currentTimeMillis();
     }
-
-//    public Vector2d smoothAccel(Vector2d accel) {
-//        if (accelAvg.size()>3) {
-//            accelAvg.remove(0);
-//        }
-//        accelAvg.add(accel);
-//        double x = 0;
-//        double y = 0;
-//        for (Vector2d acc : accelAvg) {
-//            x+=acc.getX();
-//            y+=acc.getY();
-//        }
-//        x/=accelAvg.size();
-//        y/=accelAvg.size();
-//        return new Vector2d(x, y);
-//    }
 
     public void waitForIdle() {
         while (!Thread.currentThread().isInterrupted() && isBusy())
