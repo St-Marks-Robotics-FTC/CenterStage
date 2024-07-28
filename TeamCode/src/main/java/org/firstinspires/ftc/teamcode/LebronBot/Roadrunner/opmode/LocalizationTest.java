@@ -48,7 +48,7 @@ public class LocalizationTest extends LinearOpMode {
             drive.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
-            total=new Pose2d(total.getX()+poseEstimate.getX()-prev.getX(),total.getY()+poseEstimate.getY()-prev.getY(),total.getHeading()+poseEstimate.getHeading()-prev.getHeading());
+            total=new Pose2d(total.getX()+Math.abs(poseEstimate.getX()-prev.getX()),Math.abs(total.getY()+poseEstimate.getY()-prev.getY()),total.getHeading()+Math.abs(poseEstimate.getHeading()-prev.getHeading()));
             prev=new Pose2d(poseEstimate.vec(), poseEstimate.getHeading());
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());

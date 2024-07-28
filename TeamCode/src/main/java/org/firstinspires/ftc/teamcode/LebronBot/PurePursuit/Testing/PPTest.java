@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.LebronBot.LebronClass;
 import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.CurvePoint;
 import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.RobotMovement;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @Autonomous
@@ -23,6 +24,7 @@ public class PPTest extends LinearOpMode {
     private boolean folow = true;
     private boolean foloow = true;
     private double loopTime = 0;
+    private ArrayList<Double> hzA = new ArrayList<>();
     public void runOpMode() {
         robot = new LebronClass(hardwareMap);
 //        robot.drive.setPoseEstimate(new Pose2d(-40,-40,Math.toRadians(90)));
@@ -48,11 +50,11 @@ public class PPTest extends LinearOpMode {
 //        path1.add(new CurvePoint(0,0,Math.toRadians(0), 0.8, 0.8, 20, 0, 0));
 //        RobotMovement.goTO(robot.drive, new Pose2d(-30, -20, Math.toRadians(-60)), 0.7, 0.75);
 
-//        path1.add(new CurvePoint(40,0,Math.toRadians(-60), 1, 1, 30,0,0));
-//        path1.add(new CurvePoint(40,-90,Math.toRadians(-90), 1, 1, 30,0,0));
-//        path1.add(new CurvePoint(-8,-90,Math.toRadians(-180), 1, 1, 30,0,0));
-//        path1.add(new CurvePoint(-8,-72,Math.toRadians(90), 1, 1, 30,0,0));
-        path1.add(new CurvePoint(100,0,Math.toRadians(0), 1, 1, 20,0,0));
+        path1.add(new CurvePoint(40,0,Math.toRadians(-60), 1, 1, 30,0,0));
+        path1.add(new CurvePoint(40,-90,Math.toRadians(-90), 1, 1, 30,0,0));
+        path1.add(new CurvePoint(-10,-94,Math.toRadians(-180), 1, 1, 30,0,0));
+        path1.add(new CurvePoint(-6,-72,Math.toRadians(90), 1, 1, 30,0,0));
+//        path1.add(new CurvePoint(100,0,Math.toRadians(0), 1, 1, 20,0,0));
 
         ArrayList<CurvePoint> path2 = new ArrayList<>();
         path2.add(new CurvePoint(50,0,Math.toRadians(0), 1, 1, 20,0,0));
@@ -79,7 +81,12 @@ public class PPTest extends LinearOpMode {
 //            if (cycles>3) break;
             RobotMovement.update(robot.drive);
             double loop = System.nanoTime();
-            Log.d("hz ", Double.toString(1000000000 / (loop - loopTime)));
+            hzA.add(1000000000 / (loop - loopTime));
+            if (hzA.size()>5) hzA.remove(0);
+            double hz = 0;
+            for (double x : hzA) hz+=x;
+            hz/=5.0;
+            Log.d("hz ", Double.toString(hz));
             loopTime = loop;
         }
     }

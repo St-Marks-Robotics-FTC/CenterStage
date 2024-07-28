@@ -19,7 +19,7 @@ import java.util.Vector;
 public class RobotMovement {
     private static double posTolerance = 0.5; //recommended constant
     private static double headingTolerance = 1; //recommended constant
-    private static double centriDamp = 4; //centrifugal dampener(more amplifier)
+    private static double centriDamp = 10; //centrifugal dampener(more amplifier)
     private static double decceleration = 97.42154202846739; // in inches/second this is for the glide braking
     private static PID translation = new PID(0.8, 0, 0.3, 0.3); //TUNABLE cmon bruhhh
     private static PID heading = new PID(0.3, 0, 0.3, 0.175); //TUNABLE its pid duhhh
@@ -27,7 +27,7 @@ public class RobotMovement {
     private static double piDAMP = 9; //how much to damp the goTO pid TUNABLE
     private static double minAccelNorm = 15; //minimum norm between centrifugal correction and velocity TUNABLE
     private static double minVel = 20; //minimum robot velocity for centrifugal correction to be used TUNABLE
-    public static double strafeCentrifuge = 2.5; //how much more weight on centrifuge for when the robot's angle is skewed TUNABLE
+    public static double strafeCentrifuge = 6; //how much more weight on centrifuge for when the robot's angle is skewed TUNABLE
     private static CurvePoint prevPoint = null;
     private static ArrayList<CurvePoint> path;
     public static boolean isBusy = false;

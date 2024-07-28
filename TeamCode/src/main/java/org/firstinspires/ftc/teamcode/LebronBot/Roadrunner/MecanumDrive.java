@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.ErrorCalculator;
+import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.MotorCache;
 import org.firstinspires.ftc.teamcode.LebronBot.PurePursuit.Testing.BackTracking_TUNING;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.LebronBot.Roadrunner.trajectorysequence.TrajectorySequenceRunner;
@@ -101,6 +102,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     ArrayList<Pose2d> listOfPoses = new ArrayList<>();
     ErrorCalculator errorCalculator;
     Pose2d prevPose2d = new Pose2d();
+    MotorCache LF;
+    MotorCache LR;
+    MotorCache RR;
+    MotorCache RF;
 
     public MecanumDrive(HardwareMap hardwareMap) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, DriveConstants.TRACK_WIDTH, DriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -126,6 +131,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        LF = new MotorCache(leftFront);
+        LR = new MotorCache(leftRear);
+        RR = new MotorCache(rightRear);
+        RF = new MotorCache(rightFront);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -334,18 +343,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
-    }
-
-    public void setMotorPowersAndTrack(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
-        update();
+        LF.setPower(v);
+        LR.setPower(v1);
+        RR.setPower(v2);
+        RF.setPower(v3);
     }
 
     @Override
