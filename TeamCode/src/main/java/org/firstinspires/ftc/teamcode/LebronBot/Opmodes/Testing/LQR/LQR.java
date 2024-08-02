@@ -24,15 +24,21 @@ public class LQR {
     }
 
     public SimpleMatrix calculateK() {
-        Discretization.discretizeAB(a, b, dt);
+        Discretization.discretizeAB(a, b, dt); // VERIFIED
+        Log.d("discA: ", Discretization.discA.toString());
+        Log.d("discB: ", Discretization.discB.toString());
         RealMatrix P = solveDARE(
                 LQRUtil.SimpleReal(Discretization.discA),
                 LQRUtil.SimpleReal(Discretization.discB),
+//                LQRUtil.SimpleReal(a),
+//                LQRUtil.SimpleReal(b),
                 LQRUtil.SimpleReal(Q),
                 LQRUtil.SimpleReal(R));
         RealMatrix K = computeStateFeedbackGain(
                 LQRUtil.SimpleReal(Discretization.discA),
                 LQRUtil.SimpleReal(Discretization.discB),
+//                LQRUtil.SimpleReal(a),
+//                LQRUtil.SimpleReal(b),
                 P,
                 LQRUtil.SimpleReal(R));
         return LQRUtil.RealSimple(K);
@@ -40,10 +46,10 @@ public class LQR {
 
     public static RealMatrix solveDARE(RealMatrix A, RealMatrix B, RealMatrix Q, RealMatrix R) {
         //A+BR^-1B^T(A^-1)^TQ
-        RealMatrix z11 = A.add(B.multiply(MatrixUtils.inverse(R).multiply(B.transpose().multiply(MatrixUtils.inverse(A).transpose().multiply(Q)))));
+        RealMatrix z11 = B.multiply(MatrixUtils.inverse(R)).multiply(B.transpose()).multiply(MatrixUtils.inverse(A).transpose()).multiply(Q).add(A);
         Log.d("z11: ", Double.toString(z11.getEntry(0,0)));
         //-BR^-1B^T(A^-1)^T
-        RealMatrix z12 = B.multiply(MatrixUtils.inverse(R).multiply(B.transpose().multiply(MatrixUtils.inverse(A).transpose()))).scalarMultiply(-1);
+        RealMatrix z12 = B.multiply(MatrixUtils.inverse(R)).multiply(B.transpose()).multiply(MatrixUtils.inverse(A).transpose()).scalarMultiply(-1);
         Log.d("z12: ", Double.toString(z12.getEntry(0,0)));
         //-(A^-1)^TQ
         RealMatrix z21 = MatrixUtils.inverse(A).transpose().multiply(Q).scalarMultiply(-1);
@@ -58,20 +64,32 @@ public class LQR {
         z = assignBlock(0, A.getColumnDimension(), z12, z);
         z = assignBlock(A.getRowDimension(), 0, z21, z);
         z = assignBlock(A.getRowDimension(), A.getColumnDimension(), z22, z);
-        //QR Decomp
-        //Z = U*T
-        //Z = U^-1*U*T*U
-        //Z = U^-1*Zk*U
-        //Z = U*Zk*U^T
-        // where Zk is a converged upper triangular matrix
-        RealMatrix U = new QRDecomposition(z).getQ();
+        Log.d("z: ", z.toString());
+        //schur/QZ
+        RealMatrix U = schur(z); // VERIFIED
+        Log.d("U: ", U.toString());
         RealMatrix U11 = retrieveBlock(0, 0, A.getRowDimension(), U);
         Log.d("u11: ", Double.toString(U11.getEntry(0,0)));
         RealMatrix U21 = retrieveBlock(A.getRowDimension(), 0, A.getRowDimension(), U);
-        Log.d("u21: ", Double.toString(U11.getEntry(0,0)));
+        Log.d("u21: ", Double.toString(U21.getEntry(0,0)));
         RealMatrix P = U21.multiply(MatrixUtils.inverse(U11));
         Log.d("P: ", Double.toString(P.getEntry(0,0)));
         return P;
+    }
+
+    public static RealMatrix schur(RealMatrix A) {
+        //Z*T*Zt
+        RealMatrix T = A;
+        RealMatrix Z = MatrixUtils.createRealIdentityMatrix(A.getRowDimension());
+        for (int i = 0; i<1000; i++) {
+            QRDecomposition qr = new QRDecomposition(T);
+            RealMatrix Q = qr.getQ();
+            RealMatrix R = qr.getR(); //-0.2414297
+            T = R.multiply(Q);
+            Z = Z.multiply(Q);
+        }
+//        Log.d("T: ", T.toString());
+        return Z;
     }
 
     public static RealMatrix computeStateFeedbackGain(RealMatrix A, RealMatrix B, RealMatrix P, RealMatrix R) {

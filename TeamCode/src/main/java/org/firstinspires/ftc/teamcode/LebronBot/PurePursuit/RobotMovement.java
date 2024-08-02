@@ -27,7 +27,8 @@ public class RobotMovement {
     private static double piDAMP = 9; //how much to damp the goTO pid TUNABLE
     private static double minAccelNorm = 15; //minimum norm between centrifugal correction and velocity TUNABLE
     private static double minVel = 20; //minimum robot velocity for centrifugal correction to be used TUNABLE
-    public static double strafeCentrifuge = 6; //how much more weight on centrifuge for when the robot's angle is skewed TUNABLE
+    private static double strafeCentrifuge = 6; //how much more weight on centrifuge for when the robot's angle is skewed TUNABLE
+    private static double lookAheadGain = 0.02; //how much to look ahead TUNABLE (25 is recommended follow distance at full speed)
     private static CurvePoint prevPoint = null;
     private static ArrayList<CurvePoint> path;
     public static boolean isBusy = false;
@@ -61,6 +62,8 @@ public class RobotMovement {
 
     public static CurvePoint getFollowPointPath(ArrayList<CurvePoint> pathPoints, double followRadius, MecanumDrive drive) {
         //find all intersections between the circle and piecewise path
+        double vel = drive.getVelocity().norm();
+        followRadius=followRadius*vel*lookAheadGain;
         CurvePoint followMe = new CurvePoint(pathPoints.get(0));
         if (drive.getPoseEstimate().minus(target).vec().norm()<followMe.followDistance) {
             return new CurvePoint(target.getX(), target.getY(), target.getHeading(), followMe.moveSpeed,followMe.turnSpeed,followMe.followDistance, followMe.slowDownTurnRadians, followMe.slowDownTurnAmount);
@@ -204,7 +207,7 @@ public class RobotMovement {
 //            Log.d("target: ", target.toString());
             if (glide(drive, pose, target)) {
             } else if (path!=null && !path.isEmpty() && (!withinPos(pose) || !withinHead(pose))) {
-                CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance, drive);
+                CurvePoint followMe = getFollowPointPath(path, path.get(0).followDistance, drive); //Assume constant followDistance throughout path
                 goToPosition(drive, drive.getPoseEstimate(), new Pose2d(followMe.x, followMe.y, followMe.h), followMe.moveSpeed, followMe.turnSpeed);
             } else {
                 goToPosition(drive, drive.getPoseEstimate(), target, movementSpeed, turnSpeed);
